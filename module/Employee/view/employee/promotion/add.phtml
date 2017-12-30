@@ -1,0 +1,58 @@
+<?php 
+	$title = 'Add Promotion';
+	$this->headTitle($title);
+	// echo "<h3>".$title."</h3>";
+?>  
+<?php 
+    echo $this->form()->openTag($form);	
+?> 
+<div style="width:100%;"> 
+<div id="my" style="width:750px;float:left;clear:both;">
+<fieldset style="padding:5px;" > 
+<legend>Add Promotion Info</legend> 
+<div style="float:left;width:370px;margin:-10px 0 0 0;">
+<?php 
+echo $this->formLabel($form->get('employeeNumberPromo'));
+echo $this->formElement($form->get('employeeNumberPromo'));
+echo $this->formElementErrors($form->get('employeeNumberPromo'));
+echo $this->formLabel($form->get('incrementPercentage'));
+echo $this->formElement($form->get('incrementPercentage'));
+echo $this->formElementErrors($form->get('incrementPercentage'));
+echo $this->formLabel($form->get('promoSalaryGrade'));
+echo $this->formElement($form->get('promoSalaryGrade'));
+echo $this->formElementErrors($form->get('promoSalaryGrade'));
+echo $this->formLabel($form->get('promotedInitial'));
+echo $this->formElement($form->get('promotedInitial'));
+echo $this->formElementErrors($form->get('promotedInitial'));
+echo $this->formLabel($form->get('togglePromoOption'));
+echo $this->formElement($form->get('togglePromoOption'));
+echo $this->formElementErrors($form->get('togglePromoOption'));
+echo $this->formSubmit($form->get('submit'));
+?>
+</div>	
+<div style="Float:left;width:370px;">
+<?php
+echo $this->formLabel($form->get('oldSalaryGrade'));
+echo $this->formElement($form->get('oldSalaryGrade'));
+echo $this->formElementErrors($form->get('oldSalaryGrade'));
+echo $this->formLabel($form->get('oldInitial'));
+echo $this->formElement($form->get('oldInitial'));
+echo $this->formElementErrors($form->get('oldInitial'));
+echo $this->formLabel($form->get('tenPercentage'));
+echo $this->formElement($form->get('tenPercentage'));
+echo $this->formElementErrors($form->get('tenPercentage'));
+echo $this->formLabel($form->get('maxQuartileOne'));
+echo $this->formElement($form->get('maxQuartileOne'));
+echo $this->formElementErrors($form->get('maxQuartileOne'));
+echo $this->formLabel($form->get('difference'));
+echo $this->formElement($form->get('difference'));
+echo $this->formElementErrors($form->get('difference'));
+echo $this->form()->closeTag(); 
+?> 
+</div> </fieldset> </div>  
+<br/> 
+<div id="dialog">Are you sure remove this record?</div>
+<div id="promotionTableContainer"> </div> 
+<script>$("#promotionTableContainer").zfTable('/promotion/ajaxlist');</script> 
+<br/> <br/> 
+</div> 

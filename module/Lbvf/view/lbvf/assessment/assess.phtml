@@ -1,0 +1,211 @@
+<style>
+
+label {
+    display:inline;
+    vertical-align: middle;
+    margin:5px; 
+    padding:5px;
+    font-size:14px;
+    color:#934e35;
+} 
+
+</style>
+
+<h3>Assess Nominee</h3> 
+<p>Please  choose <u>one response per item</u> in the column provided. </p>
+<p>Please evaluate the extent to which the staff demonstrates the following  behaviours by <u>using the rating scales</u> below. </p>
+<p>It is recommended to read all the  behavioural descriptors for each   competency from &quot;Needs Development&quot; (4) to  &quot;Distinctive&quot; (1). When   evaluating the staff at &quot;Distinctive&quot; (1), the staff  should have   demonstrated the behaviours that are described at &quot;Effective&quot; (2)  and   &quot;Developing&quot; (3). </p>
+<p><strong><u>IMPORTANT</u></strong> :  Please provide justifications to support your ratings in the Summary of  Strengths and Development Areas column provided. </p>
+<p><u>Leadership Behaviours and Values Rating Definition:</u></p>
+<table width="572" cellspacing="5px" cellpadding="5px" border="1">
+  <tbody>
+    <tr>
+      <td width="150" align="center"><strong>Rating</strong></td>
+      <td width="416" align="center"><strong>Definition</strong></td>
+    </tr>
+    <tr>
+      <td align="center">1</td>
+      <td align="center">Consistently demonstrates exemplary behaviours associated with the competencies in all situations across   multiple contexts; is seen as a role model for this particular   competency. </td>
+    </tr>
+    <tr>
+      <td align="center">2</td>
+      <td align="center">Demonstrates most behaviours associated with the competency in all situations; demonstrates at least   75% of the Leadership Behaviours.</td>
+    </tr>
+    <tr>
+      <td align="center">3</td>
+      <td align="center">Usually demonstrates some of the behaviors in most situations; demonstrates at least 50% of the Leadership Behaviours.</td>
+    </tr>
+    <tr>
+      <td align="center">4</td>
+      <td align="center">Occasionally demonstrates behaviours in some situations; has not demonstrated sufficient evidence or   demonstrates negative evidence against the definition and behavioural   indicators.</td>
+    </tr>
+  </tbody>
+</table>
+<br/>
+<p><?php //echo $assesseeDetails; ?></p>
+<br/> 
+<?php  
+//echo $form; 
+echo $this->form ()->openTag ( $form );
+echo $this->formLabel($form->get('employeeNumber'));
+echo $this->formElement($form->get('employeeNumber'));
+echo $this->formElementErrors($form->get('employeeNumber'))."<br/><br/>";  
+echo $this->formLabel($form->get('Question01a'))."<br/>";
+echo $this->formElement($form->get('Question01a'));
+echo $this->formElementErrors($form->get('Question01a'))."<br/><br/>"; 
+echo $this->formLabel($form->get('Question02a'))."<br/>";
+echo $this->formElement($form->get('Question02a'));
+echo $this->formElementErrors($form->get('Question02a'))."<br/><br/>"; 
+// 
+echo $this->formLabel($form->get('Question03a'))."<br/>";
+echo $this->formElement($form->get('Question03a'));
+echo $this->formElementErrors($form->get('Question03a'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question03b'))."<br/>";
+echo $this->formElement($form->get('Question03b'));
+echo $this->formElementErrors($form->get('Question03b'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question04a'))."<br/>";
+echo $this->formElement($form->get('Question04a'));
+echo $this->formElementErrors($form->get('Question04a'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question04b'))."<br/>";
+echo $this->formElement($form->get('Question04b'));
+echo $this->formElementErrors($form->get('Question04b'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question05a'))."<br/>";
+echo $this->formElement($form->get('Question05a'));
+echo $this->formElementErrors($form->get('Question05a'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question05b'))."<br/>";
+echo $this->formElement($form->get('Question05b'));
+echo $this->formElementErrors($form->get('Question05b'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question06a'))."<br/>";
+echo $this->formElement($form->get('Question06a'));
+echo $this->formElementErrors($form->get('Question06a'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question06b'))."<br/>";
+echo $this->formElement($form->get('Question06b'));
+echo $this->formElementErrors($form->get('Question06b'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question07a'))."<br/>";
+echo $this->formElement($form->get('Question07a'));
+echo $this->formElementErrors($form->get('Question07a'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question07b'))."<br/>";
+echo $this->formElement($form->get('Question07b'));
+echo $this->formElementErrors($form->get('Question07b'))."<br/><br/>";
+// 
+echo $this->formLabel($form->get('Question08a'))."<br/>";
+echo $this->formElement($form->get('Question08a'));
+echo $this->formElementErrors($form->get('Question08a'))."<br/><br/>";
+// 
+//echo $this->formLabel($form->get('Question_08_b'))."<br/>";
+//echo $this->formElement($form->get('Question_08_b'));
+//echo $this->formElementErrors($form->get('Question_08_b'))."<br/><br/>";
+
+echo $this->formLabel($form->get('Question08c'))."<br/>";
+echo $this->formElement($form->get('Question08c'));
+echo $this->formElementErrors($form->get('Question08c'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question09a'))."<br/>";
+echo $this->formElement($form->get('Question09a'));
+echo $this->formElementErrors($form->get('Question09a'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question09b'))."<br/>";
+echo $this->formElement($form->get('Question09b'));
+echo $this->formElementErrors($form->get('Question09b'))."<br/><br/>";
+
+//
+echo $this->formLabel($form->get('Question17'))."<br/>";
+echo $this->formElement($form->get('Question17'));
+echo $this->formElementErrors($form->get('Question17'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question18'))."<br/>";
+echo $this->formElement($form->get('Question18'));
+echo $this->formElementErrors($form->get('Question18'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question19'))."<br/>";
+echo $this->formElement($form->get('Question19'));
+echo $this->formElementErrors($form->get('Question19'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question20'))."<br/>";
+echo $this->formElement($form->get('Question20'));
+echo $this->formElementErrors($form->get('Question20'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question21'))."<br/>";
+echo $this->formElement($form->get('Question21'));
+echo $this->formElementErrors($form->get('Question21'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question22'))."<br/>";
+echo $this->formElement($form->get('Question22'));
+echo $this->formElementErrors($form->get('Question22'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question23'))."<br/>";
+echo $this->formElement($form->get('Question23'));
+echo $this->formElementErrors($form->get('Question23'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question24'))."<br/>";
+echo $this->formElement($form->get('Question24'));
+echo $this->formElementErrors($form->get('Question24'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question25'))."<br/>";
+echo $this->formElement($form->get('Question25'));
+echo $this->formElementErrors($form->get('Question25'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question26'))."<br/>";
+echo $this->formElement($form->get('Question26'));
+echo $this->formElementErrors($form->get('Question26'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question27'))."<br/>";
+echo $this->formElement($form->get('Question27'));
+echo $this->formElementErrors($form->get('Question27'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question28'))."<br/>";
+echo $this->formElement($form->get('Question28'));
+echo $this->formElementErrors($form->get('Question28'))."<br/><br/>";
+// Question_29
+echo $this->formLabel($form->get('Question29'))."<br/>";
+echo $this->formElement($form->get('Question29'));
+echo $this->formElementErrors($form->get('Question29'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question30'))."<br/>";
+echo $this->formElement($form->get('Question30'));
+echo $this->formElementErrors($form->get('Question30'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question31'))."<br/>";
+echo $this->formElement($form->get('Question31'));
+echo $this->formElementErrors($form->get('Question31'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question32'))."<br/>";
+echo $this->formElement($form->get('Question32'));
+echo $this->formElementErrors($form->get('Question32'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question33'))."<br/>";
+echo $this->formElement($form->get('Question33'));
+echo $this->formElementErrors($form->get('Question33'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question34'))."<br/>";
+echo $this->formElement($form->get('Question34'));
+echo $this->formElementErrors($form->get('Question34'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question35'))."<br/>";
+echo $this->formElement($form->get('Question35'));
+echo $this->formElementErrors($form->get('Question35'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Question36'))."<br/>";
+echo $this->formElement($form->get('Question36'));
+echo $this->formElementErrors($form->get('Question36'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('Strength'))."<br/>";
+echo $this->formElement($form->get('Strength'));
+echo $this->formElementErrors($form->get('Strength'))."<br/><br/>";
+//
+echo $this->formLabel($form->get('DevelopmentAreas'))."<br/>";
+echo $this->formElement($form->get('DevelopmentAreas'));
+echo $this->formElementErrors($form->get('DevelopmentAreas'))."<br/><br/>";
+
+echo $this->formSubmit ( $form->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+?> 

@@ -1,0 +1,29 @@
+<h1>Company Index</h1>
+<a href="<?php echo $this->url('company',array('action' => 'add')); ?>">Add
+	Company </a>
+
+<table class="table">
+	<tr>
+		<th>Name</th>
+		<th>Employee Id Prefix</th>
+		<th>Value</th>
+		<th>Action</th>
+	</tr>
+<?php
+foreach ( $companies as $company ) :
+	?>
+    <tr>
+		<td><?php echo $company->getCompanyName(); ?></td>
+		<td><?php echo $company->getEmployeeIdPrefix(); ?></td>
+		<td><?php echo $company->getValue(); ?></td>
+		<td><a
+			href="<?php echo $this->url('company',array('action' => 'edit','id' => $company->getCompanyId())); ?>">Edit</a>
+			<a
+			href="<?php echo $this->url('company',array('action' => 'delete','id' => $company->getCompanyId())); ?>">Delete</a>
+		</td>
+	</tr>
+<?php
+endforeach
+;
+?>
+</table>

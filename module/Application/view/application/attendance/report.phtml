@@ -1,0 +1,94 @@
+<?php 
+	$title = 'Attendance Report';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form;
+
+$form->setAttribute('action', $this->url(
+	'attendance', array(
+		'action'     => 'viewreport',
+		'controller' => 'attendance'
+	)
+)); 
+$form->setAttribute('target','_blank');
+$form->prepare();
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Attendance Report</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul>
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <!--  <legend>Month Year</legend>--> 
+            <div style="float:left;width:300px;margin:-10px 0 0 0;">
+            <?php 
+	            echo $this->formLabel($form->get('fromDate'));
+	            echo $this->formElement($form->get('fromDate'));
+	            echo $this->formElementErrors($form->get('fromDate'));
+	            echo $this->formLabel($form->get('toDate'));
+	            echo $this->formElement($form->get('toDate'));
+	            echo $this->formElementErrors($form->get('toDate'));
+	            echo $this->formLabel($form->get('fromTime'));
+	            echo $this->formElement($form->get('fromTime'));
+	            echo $this->formElementErrors($form->get('fromTime'));
+	            echo $this->formLabel($form->get('toTime'));
+	            echo $this->formElement($form->get('toTime'));
+	            echo $this->formElementErrors($form->get('toTime'));
+			    echo $this->formSubmit($form->get('submit')); 
+            ?>
+            </div>				
+            <div style="float:left;width:300px;margin:-10px 0 0 0;">
+            <?php 
+			    echo $this->formLabel($form->get('empIdAttendance'));
+			    echo $this->formElement($form->get('empIdAttendance'));
+			    echo $this->formElementErrors($form->get('empIdAttendance'));
+			    echo $this->formLabel($form->get('departmentAttendance'));
+			    echo $this->formElement($form->get('departmentAttendance'));
+			    echo $this->formElementErrors($form->get('departmentAttendance'));
+			    echo $this->formLabel($form->get('locationAttendance'));
+			    echo $this->formElement($form->get('locationAttendance'));
+			    echo $this->formElementErrors($form->get('locationAttendance'));
+			    echo $this->formLabel($form->get('noAttendanceReason'));
+			    echo $this->formElement($form->get('noAttendanceReason'));
+			    echo $this->formElementErrors($form->get('noAttendanceReason'));
+			    echo $this->formLabel($form->get('reportType'));
+			    echo $this->formElement($form->get('reportType'));
+			    echo $this->formElementErrors($form->get('reportType'));  
+            ?>
+            </div>		
+    </fieldset>
+    <!--
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>				
+            	
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+
+</div>

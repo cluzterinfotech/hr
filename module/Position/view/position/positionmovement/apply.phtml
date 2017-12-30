@@ -1,0 +1,19 @@
+<?php 
+	$title = 'Apply Staff Movement';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form); 
+	echo $this->formLabel($form->get('effectiveDate'));
+	echo $this->formElement($form->get('effectiveDate'));
+	echo $this->formElementErrors($form->get('effectiveDate'));
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>  
+<br/>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="newEmployeePositionContainer"></div>
+<script>$("#newEmployeePositionContainer").zfTable('/positionmovement/ajaxlist');</script> 
+<br/>

@@ -1,0 +1,22 @@
+<?php 
+	$title = 'Add Public Holiday';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?> 
+<?php  
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('holidayReason'));
+	echo $this->formElement($form->get('holidayReason'));
+	echo $this->formElementErrors($form->get('holidayReason'));
+	echo $this->formLabel($form->get('fromDate'));
+	echo $this->formElement($form->get('fromDate'));
+	echo $this->formElementErrors($form->get('fromDate'));
+	echo $this->formLabel($form->get('toDate'));
+	echo $this->formElement($form->get('toDate'));
+	echo $this->formElementErrors($form->get('toDate'));
+	echo $this->formLabel($form->get('Notes'));
+	echo $this->formElement($form->get('Notes'));
+	echo $this->formElementErrors($form->get('Notes')); 
+	echo $this->formSubmit($form->get('submit'));  
+	echo $this->form()->closeTag();  
+?> 

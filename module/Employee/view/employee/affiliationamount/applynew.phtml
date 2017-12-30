@@ -1,0 +1,19 @@
+<?php 
+	$title = 'Apply New Salary Grade Allowance'; 
+	$this->headTitle($title); 
+	echo "<h3>".$title."</h3>"; 
+?>
+
+<?php 
+	echo $this->form()->openTag($form);  
+	echo $this->formLabel($form->get('applyeEfectiveDate'));
+    echo $this->formElement($form->get('applyeEfectiveDate'));
+    echo $this->formElementErrors($form->get('applyeEfectiveDate'));
+	echo $this->formSubmit($form->get('submit'));  
+	echo $this->form()->closeTag();    
+?>  
+<br/> 
+<div id="dialog">Are you sure remove this record?</div>
+<div id="sgAllowanceContainer"></div>
+<script>$("#sgAllowanceContainer").zfTable('/salarygradeallowance/ajaxlist');</script>  
+<br/>

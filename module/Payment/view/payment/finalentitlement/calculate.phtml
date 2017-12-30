@@ -1,0 +1,219 @@
+<?php 
+	$title = 'Calculate Final Entitlement';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>"; 
+?>  
+<div >
+<?php 
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */  
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+     
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    legend  { font-size:14px;font-weight:bold; }
+    li { color:red; }
+    #finalAmount { font-weight:bold;}
+</style> 
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Add Final Entitlement</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Entitlement</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeNumberFinalEntitlement'));
+	            echo $this->formElement($form->get('employeeNumberFinalEntitlement'));
+	            echo $this->formElementErrors($form->get('employeeNumberFinalEntitlement'));
+	            echo $this->formLabel($form->get('employmentDate'));
+	            echo $this->formElement($form->get('employmentDate'));
+	            echo $this->formElementErrors($form->get('employmentDate'));
+	            
+	            echo $this->formLabel($form->get('relievingDate'));
+	            echo $this->formElement($form->get('relievingDate'));
+	            echo $this->formElementErrors($form->get('relievingDate'));
+	            
+	            echo $this->formLabel($form->get('yearsOfService'));
+	            echo $this->formElement($form->get('yearsOfService'));
+	            echo $this->formElementErrors($form->get('yearsOfService'));
+	            
+	            echo $this->formLabel($form->get('nonPayDays'));
+	            echo $this->formElement($form->get('nonPayDays'));
+	            echo $this->formElementErrors($form->get('nonPayDays'));
+	            
+				//echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php 
+             
+                 echo $this->formLabel($form->get('zeroToTenAmount'));
+                 echo $this->formElement($form->get('zeroToTenAmount'));
+                 echo $this->formElementErrors($form->get('zeroToTenAmount'));
+                 
+                 echo $this->formLabel($form->get('tenToFifteenAmount'));
+                 echo $this->formElement($form->get('tenToFifteenAmount'));
+                 echo $this->formElementErrors($form->get('tenToFifteenAmount'));
+              
+                 echo $this->formLabel($form->get('fifteenToTwentyAmount'));
+                 echo $this->formElement($form->get('fifteenToTwentyAmount'));
+                 echo $this->formElementErrors($form->get('fifteenToTwentyAmount'));
+             
+                 echo $this->formLabel($form->get('twentyToTwentyFiveAmount'));
+                 echo $this->formElement($form->get('twentyToTwentyFiveAmount'));
+                 echo $this->formElementErrors($form->get('twentyToTwentyFiveAmount'));
+				
+	            echo $this->formLabel($form->get('twentyFiveandAboveAmount'));
+	            echo $this->formElement($form->get('twentyFiveandAboveAmount'));
+	            echo $this->formElementErrors($form->get('twentyFiveandAboveAmount'));
+	            
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    
+    <fieldset style="padding:5px;" >
+        <legend>Pending Payments (Company have to pay Employee)</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('leaveDaysAmount'));
+	            echo $this->formElement($form->get('leaveDaysAmount'));
+	            echo $this->formElementErrors($form->get('leaveDaysAmount'));
+	            
+	            echo $this->formLabel($form->get('leaveAllowanceToEmployee'));
+	            echo $this->formElement($form->get('leaveAllowanceToEmployee'));
+	            echo $this->formElementErrors($form->get('leaveAllowanceToEmployee')); 
+	            
+	            echo $this->formLabel($form->get('salaryDifference'));
+	            echo $this->formElement($form->get('salaryDifference'));
+	            echo $this->formElementErrors($form->get('salaryDifference')); 
+				?>
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php  
+	            echo $this->formLabel($form->get('lastMonthDueFormCompany'));
+	            echo $this->formElement($form->get('lastMonthDueFormCompany'));
+	            echo $this->formElementErrors($form->get('lastMonthDueFormCompany'));
+	            
+	            echo $this->formLabel($form->get('carRent'));
+	            echo $this->formElement($form->get('carRent'));
+	            echo $this->formElementErrors($form->get('carRent'));
+	            
+	            //echo $this->formLabel($form->get('specialCompensation'));
+	            //echo $this->formElement($form->get('specialCompensation'));
+	            //echo $this->formElementErrors($form->get('specialCompensation'));
+            ?> 
+            </div>				
+            	</div>	
+    </fieldset> 
+    <fieldset style="padding:5px;" >
+        <legend>Deductions(Employee Have to return back to the company)</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+	            echo $this->formLabel($form->get('leaveDaysToCompany'));
+	            echo $this->formElement($form->get('leaveDaysToCompany'));
+	            echo $this->formElementErrors($form->get('leaveDaysToCompany')); 
+	            
+	            echo $this->formLabel($form->get('leaveAllowanceFromEmployee'));
+	            echo $this->formElement($form->get('leaveAllowanceFromEmployee'));
+	            echo $this->formElementErrors($form->get('leaveAllowanceFromEmployee'));
+	            
+	            echo $this->formLabel($form->get('lastMonthDueToCompany'));
+	            echo $this->formElement($form->get('lastMonthDueToCompany'));
+	            echo $this->formElementErrors($form->get('lastMonthDueToCompany')); 
+	            
+	            echo $this->formLabel($form->get('salaryDifferenceToCompany'));
+	            echo $this->formElement($form->get('salaryDifferenceToCompany'));
+	            echo $this->formElementErrors($form->get('salaryDifferenceToCompany'));
+	            
+	            echo $this->formLabel($form->get('phoneToCompany'));
+	            echo $this->formElement($form->get('phoneToCompany'));
+	            echo $this->formElementErrors($form->get('phoneToCompany'));
+	            
+	            echo $this->formLabel($form->get('splLoanToCompany'));
+	            echo $this->formElement($form->get('splLoanToCompany'));
+	            echo $this->formElementErrors($form->get('splLoanToCompany'));
+	            //echo $this->formLabel($form->get('specialCompensationToCompany'));
+	            //echo $this->formElement($form->get('specialCompensationToCompany'));
+	            //echo $this->formElementErrors($form->get('specialCompensationToCompany'));
+                
+				// echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php 
+             
+                echo $this->formLabel($form->get('carRentToCompany'));
+                echo $this->formElement($form->get('carRentToCompany'));
+                echo $this->formElementErrors($form->get('carRentToCompany'));
+                
+				echo $this->formLabel($form->get('personalLoanPending'));
+	            echo $this->formElement($form->get('personalLoanPending'));
+	            echo $this->formElementErrors($form->get('personalLoanPending'));
+	            
+	            echo $this->formLabel($form->get('AdvanceSalaryPending'));
+	            echo $this->formElement($form->get('AdvanceSalaryPending'));
+	            echo $this->formElementErrors($form->get('AdvanceSalaryPending'));
+	            
+	            echo $this->formLabel($form->get('advanceHousingPending'));
+	            echo $this->formElement($form->get('advanceHousingPending'));
+	            echo $this->formElementErrors($form->get('advanceHousingPending')); 
+	            
+	            echo $this->formLabel($form->get('overPaymentToCompany'));
+	            echo $this->formElement($form->get('overPaymentToCompany'));
+	            echo $this->formElementErrors($form->get('overPaymentToCompany'));
+	            
+	            echo $this->formLabel($form->get('carLoanToCompany'));
+	            echo $this->formElement($form->get('carLoanToCompany'));
+	            echo $this->formElementErrors($form->get('carLoanToCompany'));
+            ?>
+            </div>	
+    </fieldset>
+    
+     <fieldset style="padding:5px;" >
+        <legend>Total</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+	            echo $this->formLabel($form->get('totalAllowance'));
+	            echo $this->formElement($form->get('totalAllowance'));
+	            echo $this->formElementErrors($form->get('totalAllowance')); 
+	            echo $this->formLabel($form->get('totalDeduction'));
+	            echo $this->formElement($form->get('totalDeduction'));
+	            echo $this->formElementErrors($form->get('totalDeduction'));
+	            
+				echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php 
+				echo $this->formLabel($form->get('finalAmount'));
+	            echo $this->formElement($form->get('finalAmount'));
+	            echo $this->formElementErrors($form->get('finalAmount')); 	            
+	            //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>	
+    </fieldset>
+    
+</div> 
+<?php echo $this->form()->closeTag();?>
+</div>
+<br/>
+<h4>Final Entitlement Details</h4> 
+<br/>
+<div id='feDtls'></div>
+<br/><br/><br/><br/> 
+</div> 

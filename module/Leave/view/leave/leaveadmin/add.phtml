@@ -1,0 +1,50 @@
+<?php 
+	$title = 'Add Leave';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('employeeId'));
+	echo $this->formElement($form->get('employeeId'));
+	echo $this->formElementErrors($form->get('employeeId'));
+	echo $this->formLabel($form->get('LkpLeaveTypeId'));
+	echo $this->formElement($form->get('LkpLeaveTypeId'));
+	echo $this->formElementErrors($form->get('LkpLeaveTypeId'));
+	echo $this->formLabel($form->get('leaveFromDate'));
+	echo $this->formElement($form->get('leaveFromDate'));
+	echo $this->formElementErrors($form->get('leaveFromDate')); 
+	
+	echo $this->formLabel($form->get('leaveToDate'));
+	echo $this->formElement($form->get('leaveToDate'));
+	echo $this->formElementErrors($form->get('leaveToDate'));
+	echo $this->formLabel($form->get('isLeaveAllowanceRequired'));
+	echo $this->formElement($form->get('isLeaveAllowanceRequired'));
+	echo $this->formElementErrors($form->get('isLeaveAllowanceRequired'));
+	echo $this->formLabel($form->get('isAdvanceSalaryRequired'));
+	echo $this->formElement($form->get('isAdvanceSalaryRequired'));
+	echo $this->formElementErrors($form->get('isAdvanceSalaryRequired'));
+	
+	echo $this->formLabel($form->get('address'));
+	echo $this->formElement($form->get('address'));
+	echo $this->formElementErrors($form->get('address'));
+	echo $this->formLabel($form->get('daysApproved'));
+	echo $this->formElement($form->get('daysApproved'));
+	echo $this->formElementErrors($form->get('daysApproved'));
+	echo $this->formLabel($form->get('holidayLieu'));
+	echo $this->formElement($form->get('holidayLieu'));
+	echo $this->formElementErrors($form->get('holidayLieu'));
+	
+	echo $this->formLabel($form->get('publicHoliday'));
+	echo $this->formElement($form->get('publicHoliday'));
+	echo $this->formElementErrors($form->get('publicHoliday'));
+	echo $this->formLabel($form->get('leaveYear'));
+	echo $this->formElement($form->get('leaveYear'));
+	echo $this->formElementErrors($form->get('leaveYear'));
+	echo $this->formLabel($form->get('leaveAddedDate'));
+	echo $this->formElement($form->get('leaveAddedDate'));
+	echo $this->formElementErrors($form->get('leaveAddedDate'));
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

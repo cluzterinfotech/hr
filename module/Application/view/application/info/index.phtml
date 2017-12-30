@@ -1,0 +1,17 @@
+<h4>Position Form</h4>
+<br />
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('application/default', array(
+		'action' => 'index',
+		'controller' => 'index' 
+)));
+
+$form->prepare ();
+echo $this->form ()->openTag( $form );
+echo $this->formRow($form->get('positionid'));
+echo $this->formRow($form->get('positionName'));
+echo $this->formRow($form->get('reportingPosition'));
+echo $this->formRow($form->get('section'));
+echo $this->formRow($form->get('submit'));
+echo $this->form ()->closeTag ();

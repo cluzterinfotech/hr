@@ -1,0 +1,16 @@
+<?php 
+	$title = 'Close Personal Loan';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>  
+<br/>
+<div id="dialog">Are you sure remove this record?</div>
+<div id="personalLoanContainer"></div>
+<script>$("#personalLoanContainer").zfTable('/personalloan/ajaxlist');</script> 
+<br/>

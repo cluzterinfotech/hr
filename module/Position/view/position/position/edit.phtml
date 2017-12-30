@@ -1,0 +1,33 @@
+<?php
+$title = 'Edit Position';
+$this->headTitle ( $title );
+echo "<h3>Edit position</h3>";
+
+echo $this->form()->openTag($form);
+echo $this->formElement($form->get('id'));
+echo $this->formLabel($form->get('organisationLevel'));
+echo $this->formElement($form->get('organisationLevel'));
+echo $this->formElementErrors($form->get('organisationLevel'));
+echo $this->formLabel($form->get('positionName'));
+echo $this->formElement($form->get('positionName'));
+echo $this->formElementErrors($form->get('positionName'));
+echo $this->formLabel($form->get('shortDescription')); 
+echo $this->formElement($form->get('shortDescription'));
+echo $this->formElementErrors($form->get('shortDescription'));
+echo $this->formLabel($form->get('reportingPosition'));
+echo $this->formElement($form->get('reportingPosition'));
+echo $this->formElementErrors($form->get('reportingPosition'));
+echo $this->formLabel($form->get('section'));
+echo $this->formElement($form->get('section'));
+echo $this->formElementErrors($form->get('section'));
+echo $this->formLabel($form->get('positionLocation'));
+echo $this->formElement($form->get('positionLocation'));
+echo $this->formElementErrors($form->get('positionLocation'));
+echo $this->formLabel($form->get('jobGradeId'));
+echo $this->formElement($form->get('jobGradeId'));
+echo $this->formElementErrors($form->get('jobGradeId'));
+echo $this->formLabel($form->get('status'));
+echo $this->formElement($form->get('status'));
+echo $this->formElementErrors($form->get('status'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form ()->closeTag ();

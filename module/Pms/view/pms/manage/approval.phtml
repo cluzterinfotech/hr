@@ -1,0 +1,43 @@
+<?php
+
+// $title = 'Approval Positions';
+// $this->headTitle($title);
+?>
+<div>
+	<form method="post"
+		action="<?php echo $this->url('position', array('action' => 'multiple'));?>">
+		<table class="table">
+			<thead>
+				<th>&nbsp;</th>
+				<th>code</th>
+				<th>Name</th>
+				<th>Level</th>
+				<th>section</th>
+				<th>Status</th>
+
+				<th>action</th>
+			</thead>
+        <?php foreach ($positions as $position) : ?>
+            <tr>
+				<td><input type="checkbox" name="multiSelect[]"
+					value="<?php echo $this->escapeHtml($position->getPositionId());?>" /></td>
+				<td><?php echo $this->escapeHtml($position->getPositionCode());?></td>
+				<td><?php echo $this->escapeHtml($position->getPositionName());?></td>
+				<td><?php echo $this->escapeHtml($levels[$position->getPositionLevelId()]);?></td>
+				<td><?php echo $this->escapeHtml($sections[$position->getSectionId()]);?></td>
+				<td><?php echo $this->escapeHtml($position->getPositionStatus());?></td>
+
+				<td><a
+					href="<?php echo $this->url('position',array('action'=>'approve', 'id' => $position->getPositionId()));?>">Approve</a>
+					<a
+					href="<?php echo $this->url('position',array('action'=>'reject', 'id' => $position->getPositionId()));?>">Reject</a>
+					<a
+					href="<?php echo $this->url('position',array('action' => 'edit','id'=> $position->getPositionId()));?>">edit</a>
+				</td>
+			</tr> 
+        <?php endforeach; ?>
+    </table>
+		<input type='submit' name='action' value='Approve' /> <input
+			type='submit' name='action' value='Reject' />
+	</form>
+</div>

@@ -1,0 +1,47 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+$title = 'Approval Departments';
+$this->headTitle ( $title );
+
+?>
+<form method="post"
+	action="<?php echo $this->url('department', array('action' => 'multiple'));?>">
+	<table class="table">
+		<thead>
+			<th>&nbsp;</th>
+			<th>Function Code</th>
+			<th>Name</th>
+			<th>noOfWorkDays</th>
+			<th>deptAssistantPosition</th>
+			<th>workHoursPerDay</th>
+			<!--<th>Added by</th>-->
+			<th>action</th>
+		</thead>
+        <?php foreach ($departments as $department) : ?>
+            <tr>
+			<td><input type="checkbox" name="multiSelect[]"
+				value="<?php echo $this->escapeHtml($department->getDepartmentId());?>" /></td>
+			<td><?php echo $this->escapeHtml($department->getDeptFunctionCode());?></td>
+			<td><?php echo $this->escapeHtml($department->getDepartmentName());?></td>
+			<td><?php echo $this->escapeHtml($department->getNoOfWorkDays());?></td>
+			<td><?php echo $this->escapeHtml($department->getDeptAssistantPositionId());?></td>
+			<td><?php echo $this->escapeHtml($department->getWorkHoursPerDay());?></td>
+			<!--<td><?php //echo $this->escapeHtml($department->getAddedUser())." on ".$this->escapeHtml($department->getAddedDate());?></td>-->
+			<td><a
+				href="<?php echo $this->url('department',array('action'=>'approve', 'id' => $department->getDepartmentId()));?>">Approve</a>
+				<a
+				href="<?php echo $this->url('department',array('action'=>'reject', 'id' => $department->getDepartmentId()));?>">Reject</a>
+				<a
+				href="<?php echo $this->url('department',array('action' => 'edit','id'=> $department->getDepartmentId()));?>">edit</a>
+			</td>
+		</tr> 
+        <?php endforeach; ?>
+    </table>
+	<input type='submit' name='action' value='Approve' /> <input
+		type='submit' name='action' value='Reject' />
+</form>

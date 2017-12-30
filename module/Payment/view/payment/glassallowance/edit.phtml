@@ -1,0 +1,24 @@
+<?php 
+	$title = 'Update Glass Allowance';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('familyMemberId'));
+	echo $this->formElement($form->get('familyMemberId'));
+	echo $this->formElementErrors($form->get('familyMemberId'));
+	echo $this->formLabel($form->get('amount'));
+	echo $this->formElement($form->get('amount'));
+	echo $this->formElementErrors($form->get('amount'));
+	echo $this->formLabel($form->get('paidDate'));
+	echo $this->formElement($form->get('paidDate'));
+	echo $this->formElementErrors($form->get('paidDate')); 
+	echo $this->formLabel($form->get('fromDate'));
+	echo $this->formElement($form->get('fromDate'));
+	echo $this->formElementErrors($form->get('fromDate'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

@@ -1,0 +1,13 @@
+<h1>Are you sure you want to delete this bank?</h1>
+
+<?php
+$url = $this->url ( 'bank', array (
+		'action' => 'delete',
+		'id' => $id 
+) );
+?>
+<form action="<?php echo $url; ?>" method="post">
+	<div>
+		<input type="submit" name="del" value="Yes" /> <input type="submit"
+			name="del" value="No" />
+	</div>

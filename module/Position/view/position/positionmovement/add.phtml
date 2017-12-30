@@ -1,0 +1,67 @@
+<script type="text/javascript">
+$(function() {
+    $("#employeeExistingPosition").combobox("option","disabled", true); 
+}); 
+</script>
+
+<?php 
+	$title = 'Add Staff Movement'; 
+	$this->headTitle($title); 
+	//echo "<h3>".$title."</h3>"; 
+?>
+<div >
+
+<?php 
+
+$form = $this->form; 
+
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Add New Employee Position</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Add New Employee Position</legend>
+            <div style="float:left;width:720px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeNumberPosition'));
+                echo $this->formElement($form->get('employeeNumberPosition'));
+                echo $this->formElementErrors($form->get('employeeNumberPosition'));
+                echo $this->formLabel($form->get('employeeExistingPosition'));
+                echo $this->formElement($form->get('employeeExistingPosition'));
+                echo $this->formElementErrors($form->get('employeeExistingPosition'));
+                echo $this->formLabel($form->get('employeeNewPosition'));
+                echo $this->formElement($form->get('employeeNewPosition'));
+                echo $this->formElementErrors($form->get('employeeNewPosition'));
+				echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>			
+            	</div>	
+    </fieldset>
+
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="newEmployeePositionContainer"></div>
+<script>$("#newEmployeePositionContainer").zfTable('/positionmovement/ajaxlist');</script> 
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+--> 
+</div> 

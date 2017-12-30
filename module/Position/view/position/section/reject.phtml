@@ -1,0 +1,33 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of Index
+ *
+ * @author AlkhatimVip
+ */
+if (isset ( $approve )) {
+	$title = 'Reject Section';
+	$this->headTitle ( $title );
+	$url = $this->url ( 'section', array (
+			'action' => 'reject',
+			'id' => $approve->getSectionId () 
+	) );
+	echo "<form action='$url' method='post'>";
+	echo "<h3>Are you sure you want to reject/cancel this section?</h3>";
+	echo "<label>ID</label>" . $approve->getsectionId () . "<br/>";
+	echo "<label>Code</label>" . $approve->getSectionCode () . "<br/>";
+	echo "<label>Name</label>" . $approve->getSectionName () . "<br/>";
+	echo "<label>Department</label>" . $approve->getDepartmentId () . "<br/>";
+	// echo "<label>added by </label> ".$approve->getAddedUser()." <label> on </label> ".$approve->getAddedDate()."<br/>";
+	echo "<div>
+            <input type='submit' name='cancelled' value='Yes' />
+            <input type='submit' name='cancelled' value='No' />
+          </div>
+    </form>";
+} else {
+}

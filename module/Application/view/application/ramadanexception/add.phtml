@@ -1,0 +1,23 @@
+<?php 
+	$title = 'Add Ramadan Attendance';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('Reason'));
+	echo $this->formElement($form->get('Reason'));
+	echo $this->formElementErrors($form->get('Reason'));
+	echo $this->formLabel($form->get('startingDate'));
+	echo $this->formElement($form->get('startingDate'));
+	echo $this->formElementErrors($form->get('startingDate'));
+	echo $this->formLabel($form->get('endingDate'));
+	echo $this->formElement($form->get('endingDate'));
+	echo $this->formElementErrors($form->get('endingDate')); 	
+	echo $this->formLabel($form->get('noOfMinutes'));
+	echo $this->formElement($form->get('noOfMinutes'));
+	echo $this->formElementErrors($form->get('noOfMinutes'));
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

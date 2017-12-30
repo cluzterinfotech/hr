@@ -1,0 +1,394 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="utf-8">
+        <title>TestHRM</title> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"><link href="/css/hr.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/css/bootstrap-3.0.0/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/css/jquery-ui-1.10.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/css/jquery-combobox.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/css/style.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/img/PetronasNewlogo.png" rel="shortcut icon" type="image/vnd.microsoft.icon"><script type="text/javascript" src="/js/jquery-2.1.1.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.10.js"></script>
+<script type="text/javascript" src="/js/jquery.ui.combobox.js"></script>
+<script type="text/javascript" src="/js/jquery.validate.js"></script>
+<script type="text/javascript" src="/js/hr.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/validationForms.js"></script>
+<script type="text/javascript" src="/js/zf-table.js"></script> 
+	<link rel="stylesheet" href="/js/jquery.treeview.css" />
+	<script src="/js/jquery.cookie.js" type="text/javascript"></script>
+	<script src="/js/jquery.treeview.min.js" type="text/javascript"></script>
+	<link type="text/css" href="/css/menu.css" rel="stylesheet" />
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			background: #fff url(../img/new_logo_01.jpg) right top fixed no-repeat;
+		}
+	</style>
+</head>
+
+<body >
+    <div id="container"> 
+	    <div id="wrapper">
+		    <div id="content">
+			    <div>
+					<!-- <br style="clear: both;">--> 
+					<div>
+<h4>Position Form</h4>
+<br />
+
+<form action="&#x2F;application&#x2F;index&#x2F;index" method="POST" name="position" class="testForm" id="position">
+	<label for="positionid">Position Id:</label>
+	<input type="text" name="positionid" required="required" id="positionid" value="">
+	<label for="positionName">Position Name:</label>
+	<input type="text" name="positionName" required="required" id="positionName" value="">
+	<label for="reportingPosition">Reporting Position</label>
+	<select name="reportingPosition" required="required" id="reportingPosition">
+	</select>
+	<label for="section">Section:</label>
+	<select name="section" required="required" id="section">
+	<option value=""></option>
+	<option value="1">A</option>
+	<option value="2">B</option>
+	<option value="3">Cfdfffffffffffff sddddddddddd</option>
+	</select>
+	<input type="submit" name="submit" id="submit" value="submit">
+</form>  
+                  
+</div>
+                    <hr><br /><br /> 
+				    <footer>
+						<p>&copy; 2014 ICT PMSL. All rights reserved</p>
+				    </footer> 
+				</div>
+			</div>
+		</div>
+        
+		<div id="navigation" style="">
+			<div>
+				<p style="font-size: 16px;" align="center">
+				<b>dhayal | <a href="/user/logout">Logout</a></b>  
+				</p> 
+				<div>
+				<ul class="navigation">
+    <li>
+        <a href="&#x2F;application">HOME</a>
+    </li>
+    <li>
+        <a href="&#x2F;location&#x2F;list">LOCATION</a>
+        <ul>
+            <li>
+                <a href="&#x2F;location&#x2F;list">Edit \ List Location</a>
+            </li>
+            <li>
+                <a href="&#x2F;location&#x2F;add">Add Location</a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="&#x2F;position&#x2F;list">POSITION</a>
+        <ul>
+            <li>
+                <a href="&#x2F;position&#x2F;add">Add Position</a>
+            </li>
+            <li>
+                <a href="&#x2F;position&#x2F;list">Edit Position</a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="&#x2F;leave&#x2F;add">ANNUAL LEAVE</a>
+    </li>
+</ul>					<!-- <ul> 
+						<li><a class='linkHead' href="#">ALLOWANCE</a>
+							<ul>
+								<li class='active'><a
+									href='/default/allowance/list/type/Airport'><span>Airport</span></a></li>
+
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Cashier'><span>Cashier</span></a></li>
+								<li class='has-sub'><a href='/default/allowance/list/type/Cola'><span>Cola</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Fitter'><span>Fitter</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Hardship'><span>Hardship</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Housing'><span>Housing</span></a></li>
+								<li class='has-sub'><a href='/default/meal/list/type/Meal'><span>Meal</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Nature'><span>Nature Of Work</span></a></li>
+								<li class='has-sub'><a
+									href='/default/overtime/list/type/Overtime'><span>Overtime</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Otherallowance'><span>Other
+											Allowance</span></a></li>
+								<li class='has-sub'><a href='/default/otmeal/list/type/Otmeal'><span>OT
+											Meal</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/President'><span>President</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Representative'><span>Representative</span></a></li>
+								<li class='has-sub'><a href='/default/allowance/list/type/Shift'><span>Shift</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Transportation'><span>Transportation</span></a></li>
+								<li class='has-sub'><a
+									href='/default/allowance/list/type/Special'><span>Special
+											Allowance</span></a></li>
+
+								<li><a href="#">SETUP</a>
+									<ul>
+										<li class='active'><a href='/default/allowancecompany/list'><span>Allowance
+													Company</span></a></li>
+										<li class='active'><a
+											href='/default/allowancesalarygrade/list'><span>Salary Grade
+													Allowance</span></a></li>
+
+										<li class='active'><a href='/default/allowancecondition/list'><span>Allowance
+													Condition</span></a></li>
+									</ul></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">CHECKLIST AND CUT-OFF DATE</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Checklist</span></a></li>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Cutoff-date</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">DEDUCTION</a>
+							<ul>
+								<li class='active'><a href='/default/position/list'><span>Cooperation</span></a></li>
+								<li class='has-sub'><a href='#'><span>Health Insurance</span></a></li>
+								<li class='has-sub'><a href='#'><span>Incometax</span></a></li>
+
+								<li class='active'><a href='/default/position/list'><span>Phone</span></a></li>
+
+								<li class='has-sub'><a href='#'><span>Provident Fund</span></a></li>
+								<li class='active'><a href='/default/position/list'><span>Social
+											Insurance</span></a></li>
+								<li class='has-sub'><a href='#'><span>Union</span></a></li>
+								<li class='has-sub'><a href='#'><span>Zakat</span></a></li>
+								<li class='active'><a href='/default/position/list'><span>Zamala</span></a></li>
+								<li class='has-sub'><a href='#'><span>Other Deductions</span></a></li>
+								<li class='has-sub'><a href='#'><span>Khartoum Union</span></a></li>
+								<li class='active'><a href='/default/position/list'><span>Loan
+											Paid Leave</span></a></li>
+								<li class='has-sub'><a href='#'><span>Ramadan Coupon</span></a></li>
+								<li><a href="#">SETUP</a>
+									<ul>
+										<li class='active'><a href='/default/deductioncompany/list'><span>Deduction
+													Company</span></a></li>
+									</ul></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">EMPLOYEE MANAGEMENT</a>
+							<ul>
+								<li class='active'><a href='/default/employee/elist/param/0'><span>Employee
+											Information</span></a></li>
+								<li class='active'><a href='/default/initialsalary/list'><span>Initial
+											Salary</span></a></li>
+								<li class='has-sub'><a href='/employee/add'><span>Employee
+											Confirmation</span></a>
+								
+								<li class='has-sub'><a href='#'><span>Employee Suspend</span></a></li>
+								<li><a href='#'><span>Employee Termination</span></a></li>
+								<li class='last'><a href='#'><span>Family Information</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">INCREMENT AND ADJUSTMENT</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Increment</span></a></li>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Salary
+											Adjustment</span></a></li>
+							</ul></li>
+
+
+						<li><a class='linkHead' href="#">LEAVE &amp; ATTENDANCE</a>
+							<ul>
+								<li class='active'><a class='linkHead' href='#'><span>Annual
+											Leave</span></a>
+									<ul>
+										<li class='active'><a href='/default/leaveform/add'><span>Form</span></a></li>
+										<li class='has-sub'><a href='/default/leaveform/adminform'><span>Admin
+													Form</span></a></li>
+										<li class='has-sub'><a href='/default/leaveform/list'><span>Revise
+													Form</span></a></li>
+										<li class='has-sub'><a href='#'><span>Admin Revise Form</span></a></li>
+
+										<li class='has-sub'><a href='#'><span>Leave Entitlement</span></a>
+										
+										<li><a href='#'><span>Outstanding Balance</span></a></li>
+										<li><a href='#'><span>Leave Alert E-Mail Ids</span></a></li>
+									</ul></li>
+
+								<li class='active'><a class='linkHead' href='#'><span>Emergency
+											Leave</span></a>
+									<ul>
+										<li class='active'><a href='/default/examleaveform/add'><span>Form</span></a></li>
+										<li class='has-sub'><a href='#'><span>Admin Form</span></a></li>
+										<li class='has-sub'><a href='#'><span>Revise Form</span></a></li>
+										<li class='has-sub'><a href='#'><span>Admin Revise Form</span></a></li>
+
+										<li class='has-sub'><a href='#'><span>Leave Entitlement</span></a>
+										
+										<li><a href='#'><span>Leave Alert E-Mail Ids</span></a></li>
+									</ul></li>
+
+								<li class='active'><a class='linkHead' href='#'><span>Exam Leave</span></a>
+									<ul>
+										<li class='active'><a href='/default/examleaveform/add'><span>Form</span></a></li>
+										<li class='has-sub'><a href='#'><span>Admin Form</span></a></li>
+										<li class='has-sub'><a href='#'><span>Revise Form</span></a></li>
+										<li class='has-sub'><a href='#'><span>Admin Revise Form</span></a></li>
+
+										<li class='has-sub'><a href='#'><span>Leave Entitlement</span></a>
+										
+										<li><a href='#'><span>Leave Alert E-Mail Ids</span></a></li>
+									</ul></li>
+
+								<li class='has-sub'><a href='#'><span>Public Holidays</span></a>
+								
+								<li><a href='#'><span>CLOSE LEAVE</span></a></li>
+
+								<li><a href="#">ATTENDANCE</a>
+									<ul>
+										<li class='active'><a href='/default/leave/list'><span>Upload
+													Attendance</span></a></li>
+										<li class='active'><a href='/default/leave/list'><span>Justification</span></a></li>
+										<li class='has-sub'><a href='#'><span>Employee ID Card</span></a></li>
+										<li class='last'><a href='#'><span>Reports</span></a></li>
+									</ul></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">SETUP/MASTER</a>
+							<ul>
+								<li><a class='linkHead' href="#">LOCATION</a>
+									<ul>
+										<li class='active'><a href='/default/paysheet/calculate'><span>Location
+													Setup</span></a></li>
+									</ul></li>
+								<li><span class='linkHead' href="#">POSITION</span>
+									<ul>
+										<li><a href="/position/">Positions List</a></li>
+										<li><a
+											href="/position/add">Add Position</a></li>
+										<li><a
+											href="/position/approval">Approve Position</a></li>
+									</ul></li>
+								<li><span class='linkHead' href="#">DEPARTMENT</span>
+									<ul>
+										<li><a href="/department/">Departments</a></li>
+										<li><a
+											href="/department/add">Add Department</a></li>
+										<li><a
+											href="/department/approval">Approve Department</a></li>
+									</ul></li>
+								<li class='active'><a href='/default/paysheet/calculate'><span>-</span></a></li>
+								<li class='active'><a href='/default/paysheet/calculate'><span>-</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">OPEN/CLOSE MONTH/YEAR</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Open/Close
+											Month</span></a></li>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Open/Close
+											Year</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">PAYMENT ADVANCE/LOAN</a>
+							<ul>
+								<li class='active'><a href='/default/advancesalary/list'><span>Advance
+											Salary</span></a></li>
+								<li class='has-sub'><a href='/default/advancehousing/list'><span>Advance
+											Housing</span></a></li>
+								<li class='has-sub'><a href='/default/personalloan/list'><span>Personal
+											Loan</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">PAYMENT DIFFERENCE/ARREAR</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Difference</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">PAYMENT FINAL ENTITLEMENT</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Final
+											Entitlement</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">PAYMENT OUTSIDE PAYSHEET</a>
+							<ul>
+								<li class='has-sub'><a href='#'><span>Eid</span></a></li>
+								<li class='has-sub'><a href='#'><span>Leave Allowance</span></a></li>
+								<li class='has-sub'><a href='#'><span>Car Rent</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">PAYMENT PAYSHEET</a>
+							<ul>
+								<li class='active'><a href='/paysheet/calculate'><span>Calculate</span></a></li>
+								<li class='active'><a href='/default/paysheet/close'><span>Close</span></a></li>
+							</ul></li>
+
+						<li><span class='linkHead' href="#">POSITIONS &amp; MOVEMENT</span>
+							<ul>
+
+								<li><a href="/section/">Sections</a></li>
+								<li><a
+									href="/section/add">Add Section</a></li>
+								<li><a
+									href="/section/approval">Approve Section</a></li>
+								<li><a href="/level/">Levels</a></li>
+								<li><a
+									href="/level/add">Add</a></li>
+								<li><a
+									href="/level/approval">App</a></li>
+								<li><a href="/delegation/">Delegation</a></li>
+								<li><a
+									href="/delegation/add">Add</a></li>
+								<li class='active'><a href='/default/position/list'><span>Position
+											Management</span></a></li>
+								<li class='has-sub'><a href='/default/positionemployee/list'><span>Staff
+											Movement</span></a></li>
+								<li class='has-sub'><a href='#'><span>Position Delegation</span></a>
+								
+								<li><a href='#'><span>Position &amp; SG Allowance</span></a></li>
+								<li><a href='#'><span>Position and Allowance</span></a></li>
+								<li><a href='#'><span>POSITION DESCRIPTION</span></a></li>
+								<li class='last'><a href='#'><span>Organisation Chart</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">PROMOTION</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Promotion</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">SALARY STRUCTURE &amp; RATING</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Final
+											Entitlement</span></a></li>
+							</ul></li>
+                        
+						<li><a class='linkHead' href="#">USER AND PERMISSION</a>
+							<ul>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Manage
+											User</span></a></li>
+								<li class='active'><a href='/default/paysheet/calculate'><span>Change
+											Password</span></a></li>
+							</ul></li>
+
+						<li><a class='linkHead' href="#">HELP</a></li>
+
+					</ul>-->
+
+				</div>
+
+			</div>
+
+		</div>
+        
+		</div>
+
+</body>
+
+</html>

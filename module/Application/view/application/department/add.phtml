@@ -1,0 +1,27 @@
+<?php 
+	$title = 'Add Department';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('departmentName'));
+	echo $this->formElement($form->get('departmentName'));
+	echo $this->formElementErrors($form->get('departmentName'));
+	echo $this->formLabel($form->get('deptFunctionCode'));
+	echo $this->formElement($form->get('deptFunctionCode'));
+	echo $this->formElementErrors($form->get('deptFunctionCode'));
+	echo $this->formLabel($form->get('noOfWorkDays'));
+	echo $this->formElement($form->get('noOfWorkDays'));
+	echo $this->formElementErrors($form->get('noOfWorkDays')); 
+	echo $this->formLabel($form->get('deptAssistantPositionId'));
+	echo $this->formElement($form->get('deptAssistantPositionId'));
+	echo $this->formElementErrors($form->get('deptAssistantPositionId'));
+	
+	echo $this->formLabel($form->get('workHoursPerDay'));
+	echo $this->formElement($form->get('workHoursPerDay'));
+	echo $this->formElementErrors($form->get('workHoursPerDay'));
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

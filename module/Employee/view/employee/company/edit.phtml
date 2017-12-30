@@ -1,0 +1,16 @@
+<h1>Edit Company</h1>
+
+
+<?php
+echo $this->form ()->openTag ( $form );
+echo $this->formRow ( $form->get ( 'company_id' ) );
+echo $this->formRow ( $form->get ( 'company_name' ) ) . "</br>";
+echo $this->formRow ( $form->get ( 'status' ) ) . "</br>";
+echo $this->formRow ( $form->get ( 'employee_id_prefix' ) ) . "</br>";
+echo $this->formRow ( $form->get ( 'value' ) ) . "</br>";
+echo $this->formSubmit ( $form->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+?>
+</br>
+</br>
+<a href="<?php echo $this->url('company'); ?>">Back</a>

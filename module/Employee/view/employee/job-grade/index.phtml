@@ -1,0 +1,25 @@
+<h1>Job Grade Index</h1>
+<a href="<?php echo $this->url('jobGrade',array('action' => 'add')); ?>">Add
+	Job Grade </a>
+
+<table class="table">
+	<tr>
+		<th>Grade</th>
+		<th>Action</th>
+	</tr>
+<?php
+foreach ( $grades as $grade ) :
+	?>
+    <tr>
+		<td><?php echo $grade->getJobGradeId(); ?></td>
+		<td><a
+			href="<?php echo $this->url('jobGrade',array('action' => 'edit','id' => $grade->getLkpJobGradeId())); ?>">Edit</a>
+			<a
+			href="<?php echo $this->url('jobGrade',array('action' => 'delete','id' => $grade->getLkpJobGradeId())); ?>">Delete</a>
+		</td>
+	</tr>
+<?php
+endforeach
+;
+?>
+</table>

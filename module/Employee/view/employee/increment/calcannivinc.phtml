@@ -1,0 +1,16 @@
+<?php 
+	$title = 'Calculate Employee Anniversary Increment'; 
+	$this->headTitle($title);  
+	echo "<h3>".$title."</h3>";   
+?>  
+<br/>  
+<br/>  
+<?php  
+	echo $this->form()->openTag($form);   
+	echo $this->formSubmit($form->get('submit'));   
+	echo $this->form()->closeTag();    
+?>  
+<br/>   
+<br/>   
+<div id="tableContainer"></div> 
+<script>$("#tableContainer").zfTable('/increment/ajaxlist');</script> 

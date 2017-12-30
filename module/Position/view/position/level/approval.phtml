@@ -1,0 +1,40 @@
+<?php
+/**
+ * Description of Index
+ *
+ * @author AlkhatimVip
+ */
+$title = 'Approval Levels';
+$this->headTitle ( $title );
+
+?>
+<form method="post"
+	action="<?php echo $this->url('level', array('action' => 'multiple'));?>">
+	<table class="table">
+		<thead>
+			<th>&nbsp;</th>
+			<th>Sequence</th>
+			<th>Name</th>
+			<!--<th>Added by</th>-->
+			<th>action</th>
+		</thead>
+        <?php foreach ($levels as $level) : ?>
+            <tr>
+			<td><input type="checkbox" name="multiSelect[]"
+				value="<?php echo $this->escapeHtml($level->getPositionLevelId());?>" /></td>
+			<td><?php echo $this->escapeHtml($level->getLevelSequence());?></td>
+			<td><?php echo $this->escapeHtml($level->getLevelName());?></td>
+			<!--<td><?php //echo $this->escapeHtml($level->getAddedUser())." on ".$this->escapeHtml($level->getAddedDate());?></td>-->
+			<td><a
+				href="<?php echo $this->url('level',array('action'=>'approve', 'id' => $level->getPositionLevelId()));?>">Approve</a>
+				<a
+				href="<?php echo $this->url('level',array('action'=>'reject', 'id' => $level->getPositionLevelId()));?>">Reject</a>
+				<a
+				href="<?php echo $this->url('level',array('action' => 'edit','id'=> $level->getPositionLevelId()));?>">edit</a>
+			</td>
+		</tr> 
+        <?php endforeach; ?>
+    </table>
+	<input type='submit' name='action' value='Approve' /> <input
+		type='submit' name='action' value='Reject' />
+</form>

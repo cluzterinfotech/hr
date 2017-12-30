@@ -1,0 +1,67 @@
+<?php
+$title = 'IPC FORM'; 
+$this->headTitle($title); 
+echo "<h4>".$title."</h4>"; 
+?>
+<style type="text/css">
+textarea {
+    width:360px !important;;
+    padding: 3px;
+    border-style: solid;
+    border-color: #ccc;
+    z-index:1200;
+    }
+#Obj_Weightage {
+    width:50px !important;;
+}
+</style>
+
+<?php 
+$isNonEx;
+echo $output; 
+echo "<br/>"; 
+echo "<br/>"; 
+?> 
+<div id="dialogIpc">
+<?php 
+
+echo $this->form()->openTag($form);
+?>
+<div style="float:left;width:380px;margin:-10px 0 0 0;">
+<?php 
+echo $this->formElement($form->get('ipcids'));
+echo $this->formLabel($form->get('Obj_Desc'));
+echo $this->formElement($form->get('Obj_Desc'));
+echo $this->formElementErrors($form->get('Obj_Desc')); 
+echo $this->formLabel($form->get('Obj_Weightage'));
+echo $this->formElement($form->get('Obj_Weightage'));
+echo $this->formElementErrors($form->get('Obj_Weightage'));
+echo $this->formLabel($form->get('Obj_PI'));
+echo $this->formElement($form->get('Obj_PI'));
+echo $this->formElementErrors($form->get('Obj_PI'));
+
+?>
+</div>	
+<div style="Float:left;width:380px;">
+<?php 
+if(!$isNonEx) {
+    echo $this->formLabel($form->get('Obj_Base'));
+} else {
+	echo "<b>Standard</b>"; 
+}
+echo $this->formElement($form->get('Obj_Base'));
+echo $this->formElementErrors($form->get('Obj_Base'));
+if(!$isNonEx) {
+	echo $this->formLabel($form->get('Obj_Stretch_02'));
+	echo $this->formElement($form->get('Obj_Stretch_02'));
+	echo $this->formElementErrors($form->get('Obj_Stretch_02'));
+	
+	echo $this->formLabel($form->get('Obj_Stretch_01'));
+	echo $this->formElement($form->get('Obj_Stretch_01'));
+	echo $this->formElementErrors($form->get('Obj_Stretch_01'));
+}
+//echo $this->formSubmit($form->get('submit'));
+echo $this->form ()->closeTag ();
+?>
+</div>	
+</div> 

@@ -1,0 +1,168 @@
+<div class="zf-table-wrap  form-inline">
+
+	<div class="table-header"></div>
+
+	<div class="row ">
+		<div class="col-sm-6 pull-left">
+			<header>
+				<h4>Name List</h4>
+			</header>
+		</div>
+	</div>
+
+	<table
+		class="table table-bordered table-condensed table-hover table-striped dataTable">
+		<thead>
+			<tr>
+				<td></td>
+				<td><input type="text" name="zff_name"
+					class="filter&#x20;form-control" value=""></td>
+				<td><input type="text" name="zff_surname"
+					class="filter&#x20;form-control" value=""></td>
+				<td><input type="text" name="zff_street"
+					class="filter&#x20;form-control" value=""></td>
+				<td></td>
+				<td><select name="zff_active" class="filter&#x20;form-control"><option
+							value="">All</option>
+						<option value="1">Active</option>
+						<option value="0">Inactive</option></select></td>
+			</tr>
+			<tr class="zf-title">
+				<th data-order="asc" data-column="idcustomer" width="50"
+					class="sorting sortable">Id</th>
+				<th data-order="asc" data-column="name" class="sorting sortable">Name</th>
+				<th data-order="asc" data-column="surname" class="sorting sortable">Surname</th>
+				<th data-order="asc" data-column="street" class="sorting sortable">Street</th>
+				<th data-order="asc" data-column="city" class="sorting sortable">City</th>
+				<th data-order="asc" data-column="active" width="100"
+					class="sorting sortable">Active</th>
+			</tr>
+		</thead>
+		<tr class="zf-data-row">
+			<td>1</td>
+			<td>Jan</td>
+			<td>Janowski</td>
+			<td>Obozowa</td>
+			<td>Warszawa</td>
+			<td>0</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>2</td>
+			<td>Krzysztof</td>
+			<td>Kowalski4</td>
+			<td>Andersa</td>
+			<td>Warszawa</td>
+			<td>1</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>3</td>
+			<td>Adam</td>
+			<td>Adamski</td>
+			<td>Bartoka</td>
+			<td>Sopot</td>
+			<td>1</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>4</td>
+			<td>Piotr</td>
+			<td>Piotrowski1</td>
+			<td>Belgijska</td>
+			<td>Warszawa</td>
+			<td>0</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>5</td>
+			<td>Wojciech</td>
+			<td>Wojciechowski</td>
+			<td>Dembiñskiego</td>
+			<td>Krakow</td>
+			<td>1</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>6</td>
+			<td>Grzesiek</td>
+			<td>Grzeskowski</td>
+			<td>Deotymy</td>
+			<td>Bialystok</td>
+			<td>1</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>7</td>
+			<td>Tomas</td>
+			<td>Tomasowski</td>
+			<td>Dereniowa</td>
+			<td>Gdansk</td>
+			<td>0</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>8</td>
+			<td>Zenek</td>
+			<td>Zenkowski</td>
+			<td>Grzesiuka</td>
+			<td>Wroclaw</td>
+			<td>1</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>9</td>
+			<td>Wojciech</td>
+			<td>Wojciechowski</td>
+			<td>Grzybowska</td>
+			<td>Gdynia</td>
+			<td>1</td>
+		</tr>
+		<tr class="zf-data-row">
+			<td>10</td>
+			<td>Adam</td>
+			<td>Janowski</td>
+			<td>Jagmina</td>
+			<td>Warszawa</td>
+			<td>0</td>
+		</tr>
+	</table>
+	<div class="row">
+
+
+
+		<div class="col-sm-6 text-left">
+			<div class="dataTables_paginate paging_bootstrap pagination">
+				<ul class="pagination">
+					<li class="disabled"><a data-page="1" href="">&laquo;</a></li>
+					<li class="disabled"><a data-page="" href="">&lsaquo;</a></li>
+
+					<!-- Numbered page links -->
+					<li class="active"><a data-page="1" href=""> 1 </a></li>
+					<li><a data-page="2" href=""> 2 </a></li>
+					<li><a data-page="3" href=""> 3 </a></li>
+					<li><a data-page="4" href=""> 4 </a></li>
+					<!-- Next page link -->
+					<li><a data-page="2" href="">&rsaquo;</a></li>
+					<!-- Last page link -->
+					<li><a data-page="4" href="">&raquo;</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="col-sm-6  text-right">
+			<label class="pull-right"> <select
+				class="itemPerPage form-control">
+					<option"">5</option>
+					<option selected="selected">10</option>
+					<option"">20</option>
+					<option"">50</option>
+					<option"">100</option>
+			</select>
+			</label>
+		</div>
+
+		<div class="processing"></div>
+	</div>
+
+	<div class="params-wrap">
+		<input type="hidden" name="zfTablePage" value="1" /> <input
+			type="hidden" name="zfTableColumn" value="" /> <input type="hidden"
+			name="zfTableOrder" value="asc" /> <input type="hidden"
+			name="zfTableQuickSearch" value="" /> <input type="hidden"
+			name="zfTableItemPerPage" value="10" />
+	</div>
+
+</div>

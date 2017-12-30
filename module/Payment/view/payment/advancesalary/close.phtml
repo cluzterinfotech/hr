@@ -1,0 +1,17 @@
+<?php 
+	$title = 'Close Advance Salary'; 
+	$this->headTitle($title); 
+	echo "<h3>".$title."</h3>"; 
+?>
+
+<?php 
+	echo $this->form()->openTag($form); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>  
+<br/>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="advanceSalaryContainer"></div>
+<script>$("#advanceSalaryContainer").zfTable('/advancesalary/ajaxlist');</script> 
+
+<br/>

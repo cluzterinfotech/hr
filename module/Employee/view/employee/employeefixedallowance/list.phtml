@@ -1,0 +1,15 @@
+<?php 
+$title = 'Allowance List';
+$this->headTitle($title); 
+?> 
+<br/> 
+<?php 
+    echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('allowanceName')); 
+	echo $this->formElement($form->get('allowanceName')); 
+	echo $this->formElementErrors($form->get('allowanceName')); 
+	echo $this->form()->closeTag(); 
+?> 
+<br/><br/> 
+<div id="allowanceListContainer"></div>
+<script>$("#allowanceListContainer").zfTable('/employeefixedallowance/ajaxlist');</script>  

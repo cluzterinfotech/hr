@@ -1,0 +1,18 @@
+<?php 
+	$title = 'Update Glass Amount Duration';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('amount'));
+	echo $this->formElement($form->get('amount'));
+	echo $this->formElementErrors($form->get('amount')); 
+	echo $this->formLabel($form->get('durationInYears'));
+	echo $this->formElement($form->get('durationInYears'));
+	echo $this->formElementErrors($form->get('durationInYears'));
+	
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

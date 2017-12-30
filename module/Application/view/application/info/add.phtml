@@ -1,0 +1,12 @@
+<?php
+$form = $this->form;
+$form->setAttribute ( 'action', $this->url ( 'SampleModule/default', array (
+		'action' => 'add',
+		'controller' => 'student' 
+) ) );
+$form->prepare ();
+
+echo $this->form ()->openTag ( $form );
+echo $this->formCollection ( $form );
+echo $this->form ()->closeTag ();
+?>

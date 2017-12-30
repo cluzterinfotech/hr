@@ -1,0 +1,72 @@
+<?php 
+	$title = 'Difference Report';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form;
+
+$form->setAttribute('action', $this->url(
+	'difference', array(
+		'action'     => 'viewreport',
+		'controller' => 'difference'
+	)
+)); 
+$form->setAttribute('target','_blank');
+$form->prepare();
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Difference Report</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul>
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>&nbsp;</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php  
+                echo $this->form()->openTag($form); 
+			    echo $this->formLabel($form->get('diffShortDescription'));
+			    echo $this->formElement($form->get('diffShortDescription'));
+			    echo $this->formElementErrors($form->get('diffShortDescription'));
+			    /*echo $this->formLabel($form->get('year'));
+			    echo $this->formElement($form->get('year'));
+			    echo $this->formElementErrors($form->get('year'));*/
+			    echo $this->formSubmit($form->get('submit'));
+			    echo $this->form()->closeTag();
+            ?>
+            </div>				
+            		
+    </fieldset>
+    <!--
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>				
+            	
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+
+</div>

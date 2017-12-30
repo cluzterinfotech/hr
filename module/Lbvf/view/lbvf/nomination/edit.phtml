@@ -1,0 +1,90 @@
+<style type="text/css">
+label  { font-weight:normal; }
+li { color:red; }
+</style>
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Edit Nomination</a></li>
+	</ul>
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Employee</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+<?php
+echo $this->formElement($form->get('id'));
+echo $this->formLabel($form->get('employeeNumber'));
+echo $this->formElement($form->get('employeeNumber'));
+echo $this->formElementErrors($form->get('employeeNumber'));
+echo $this->formLabel($form->get('SuperiorName'));
+echo $this->formElement($form->get('SuperiorName'));
+echo $this->formElementErrors($form->get('SuperiorName'));
+echo $this->formLabel($form->get('OthSuperiorName'));
+echo $this->formElement($form->get('OthSuperiorName'));
+echo $this->formElementErrors($form->get('OthSuperiorName'));
+?>
+    </div>				  		
+    </fieldset> 
+    <fieldset style="padding:5px;" >
+        <legend>Subordinates</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+echo $this->formLabel($form->get('Subordinate01'));
+echo $this->formElement($form->get('Subordinate01'));
+echo $this->formElementErrors($form->get('Subordinate01'));
+echo $this->formLabel($form->get('Subordinate02'));
+echo $this->formElement($form->get('Subordinate02'));
+echo $this->formElementErrors($form->get('Subordinate02'));
+echo $this->formLabel($form->get('Subordinate03'));
+echo $this->formElement($form->get('Subordinate03'));
+echo $this->formElementErrors($form->get('Subordinate03'));
+echo $this->formLabel($form->get('Subordinate04'));
+echo $this->formElement($form->get('Subordinate04'));
+echo $this->formElementErrors($form->get('Subordinate04'));
+echo $this->formLabel($form->get('Subordinate05'));
+echo $this->formElement($form->get('Subordinate05'));
+echo $this->formElementErrors($form->get('Subordinate05'));
+echo $this->formLabel($form->get('Subordinate06'));
+echo $this->formElement($form->get('Subordinate06'));
+echo $this->formElementErrors($form->get('Subordinate06'));
+echo $this->formLabel($form->get('Subordinate07'));
+echo $this->formElement($form->get('Subordinate07'));
+echo $this->formElementErrors($form->get('Subordinate07'));
+echo $this->formLabel($form->get('Subordinate08'));
+echo $this->formElement($form->get('Subordinate08'));
+echo $this->formElementErrors($form->get('Subordinate08'));
+echo $this->formLabel($form->get('Subordinate09'));
+echo $this->formElement($form->get('Subordinate09'));
+echo $this->formElementErrors($form->get('Subordinate09'));
+echo $this->formLabel($form->get('Subordinate10'));
+echo $this->formElement($form->get('Subordinate10'));
+echo $this->formElementErrors($form->get('Subordinate10'));
+?> 				
+            </div>		
+    </fieldset>	
+    
+    <fieldset style="padding:5px;" >
+        <legend>Peers</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+echo $this->formLabel($form->get('Peers01'));
+echo $this->formElement($form->get('Peers01'));
+echo $this->formElementErrors($form->get('Peers01'));
+echo $this->formLabel($form->get('Peers02'));
+echo $this->formElement($form->get('Peers02'));
+echo $this->formElementErrors($form->get('Peers02'));
+echo $this->formLabel($form->get('Peers03'));
+echo $this->formElement($form->get('Peers03'));
+echo $this->formElementErrors($form->get('Peers03'));
+echo $this->formSubmit ( $form->get ( 'submit' ) );
+// echo $this->form()->closeTag (); 
+?> 				
+            </div>		
+    </fieldset>	
+    </div>
+    </div>
+    <?php echo $this->form()->closeTag (); ?>
+    </div>
+</br>
+</br>

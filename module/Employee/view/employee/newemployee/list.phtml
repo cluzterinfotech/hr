@@ -1,0 +1,8 @@
+<?php 
+$title = 'New Employee List'; 
+$this->headTitle($title); 
+echo "<h4>".$title."</h4><br/>"; 
+?>  
+<div id="dialog">Are you sure remove this record?</div>
+<div id="tableContainer"></div>  
+<script>$("#tableContainer").zfTable('/newemployee/ajaxlistnew');</script>  

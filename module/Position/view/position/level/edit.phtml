@@ -1,0 +1,25 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+$title = 'Edit Level';
+$this->headTitle ( $title );
+echo "<h3>Edit Level</h3>";
+
+$editForm->setAttribute ( 'action', $this->url ( 'level', array (
+		'action' => 'edit',
+		'id' => $this->id 
+) ) );
+
+echo $this->form ()->openTag ( $editForm );
+echo $this->formHidden ( $editForm->get ( 'id' ) );
+echo "<label>ID</label>" . $this->formRow ( $editForm->get ( 'position_level_id' ) ) . "<br/>";
+echo "<label>Sequence</label>" . $this->formRow ( $editForm->get ( 'level_sequence' ) ) . "<br/>";
+echo "<label>Name</label>" . $this->formRow ( $editForm->get ( 'level_name' ) ) . "<br/>";
+echo "<label></label>" . $this->formSubmit ( $editForm->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+
+echo $result;

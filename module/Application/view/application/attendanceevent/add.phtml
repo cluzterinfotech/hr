@@ -1,0 +1,14 @@
+<?php 
+	$title = 'Add Event';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('eventName'));
+	echo $this->formElement($form->get('eventName'));
+	echo $this->formElementErrors($form->get('eventName')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

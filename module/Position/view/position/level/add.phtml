@@ -1,0 +1,17 @@
+<?php
+$title = 'Add New Level';
+$this->headTitle ( $title );
+echo "<h3>create new level </h3>";
+
+$addForm->setAttribute ( 'action', $this->url ( 'level', array (
+		'action' => 'add' 
+) ) );
+echo $this->form ()->openTag ( $addForm );
+echo $this->formHidden ( $addForm->get ( 'id' ) );
+echo "<label>ID</label>" . $this->formRow ( $addForm->get ( 'position_level_id' ) ) . "<br/>";
+echo "<label>Sequence</label>" . $this->formRow ( $addForm->get ( 'level_sequence' ) ) . "<br/>";
+echo "<label>Name</label>" . $this->formRow ( $addForm->get ( 'level_name' ) ) . "<br/>";
+echo "<label></label>" . $this->formSubmit ( $addForm->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+
+echo $result;

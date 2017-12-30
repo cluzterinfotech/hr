@@ -1,0 +1,48 @@
+
+<?php 
+	$title = 'Add Employee Suspend'; 
+	$this->headTitle($title); 
+	//echo "<h3>".$title."</h3>";
+?> 
+
+<?php 
+    echo $this->form()->openTag($form);	
+?>
+<div style="width:100%;>
+<div id="my" style="width:750px;float:left;clear:both;">
+<fieldset style="padding:5px;" >
+<legend>Add Suspend Info</legend>
+<div style="float:left;width:370px;margin:-10px 0 0 0;">
+<?php 
+echo $this->formLabel($form->get('employeeNumberSuspend'));
+echo $this->formElement($form->get('employeeNumberSuspend'));
+echo $this->formElementErrors($form->get('employeeNumberSuspend'));
+
+echo $this->formLabel($form->get('suspendFromDate'));
+echo $this->formElement($form->get('suspendFromDate'));
+echo $this->formElementErrors($form->get('suspendFromDate'));
+
+echo $this->formLabel($form->get('suspendToDate'));
+echo $this->formElement($form->get('suspendToDate'));
+echo $this->formElementErrors($form->get('suspendToDate'));
+
+echo $this->formSubmit($form->get('submit')); 
+?> 
+ </div>	
+ <div style="Float:left;width:370px;">
+ <?php 
+ echo $this->formLabel($form->get('suspendReason'));
+ echo $this->formElement($form->get('suspendReason'));
+ echo $this->formElementErrors($form->get('suspendReason'));
+ 
+ echo $this->form()->closeTag(); 
+?>
+</div>	
+</fieldset>				
+</div>  
+<br/> 
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="tableContainer"></div>
+<script>$("#tableContainer").zfTable('/employeesuspend/ajaxlist');</script> 
+<br/><br/>
+</div>

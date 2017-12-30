@@ -1,0 +1,31 @@
+<h1>Pending Employee Info</h1>
+
+<table class="table">
+	<tr>
+		<th>Employee Id</th>
+		<th>Join Date</th>
+		<th>Initial Salary</th>
+		<th>Action</th>
+	</tr>
+<?php
+foreach ( $pending as $row ) :
+	?>
+    <tr>
+		<td><?php echo $row->getEmployeeId(); ?></td>
+		<td><?php echo $row->getJoinDate(); ?></td>
+		<td><?php echo $row->getInitialSalary(); ?></td>
+		<td><a
+			href="<?php echo $this->url('employee',array('action' => 'approveEmployeeInfo','id' => $row->getEmployeeId())); ?>">Approve</a>
+			<a
+			href="<?php echo $this->url('employee',array('action' => 'rejectEmployeeInfo','id' => $row->getEmployeeId())); ?>">Reject</a>
+		</td>
+	</tr>
+<?php
+endforeach
+;
+?>
+    
+</table>
+</br>
+</br>
+<a href="<?php echo $this->url('employee'); ?>">Back</a>

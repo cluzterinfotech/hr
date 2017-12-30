@@ -1,0 +1,114 @@
+<head>
+<meta charset="utf-8">
+        <?php 
+            echo $this->headTitle('Test' . $this->translate('HRM'))->setSeparator(' - ')->setAutoEscape(false)?>
+
+        <?php
+			echo $this->headMeta ()->appendName ( 'viewport', 'width=device-width, initial-scale=1.0' )->appendHttpEquiv ( 'X-UA-Compatible', 'IE=edge' )?>
+
+        <!-- Le styles -->
+        <?php
+			echo $this->headLink ( array (
+					'rel' => 'shortcut icon',
+					'type' => 'image/vnd.microsoft.icon',
+					'href' => $this->basePath () . '/img/PetronasNewlogo.png' 
+			) )->prependStylesheet ( $this->basePath () . '/css/style.css' )
+			->prependStylesheet ( $this->basePath () . '/css/hr.css' )
+			->prependStylesheet ( $this->basePath () . '/css/jquery-combobox.css' )
+			->prependStylesheet ( $this->basePath () . '/css/jquery-ui-1.10.css' )
+			->prependStylesheet ( $this->basePath () . '/css/bootstrap-3.0.0/bootstrap.min.css' );
+			?>
+        
+        <!-- Scripts -->
+        <?php
+			echo $this->headScript ()
+			//->prependFile ( $this->basePath () . '/js/jquery.validate.js' )
+			->prependFile ( $this->basePath () . '/js/jquery.ui.combobox.js' )
+			->prependFile ( $this->basePath () . '/js/jquery-ui-1.10.js' )
+			->prependFile ( $this->basePath () . '/js/jquery-2.1.1.js' )
+			//->prependFile ( $this->basePath () . '/js/hr.js' )
+			->appendFile ( $this->basePath () . '/js/common.js' )
+			//->appendFile ( $this->basePath () . '/js/validationForms.js' )
+			//->appendFile ( $this->basePath () . '/js/zf-table.js' );
+		?>
+</head>
+
+<script type="text/javascript">
+$(function() {
+    $("#LoginForm").validate({
+    	rules: {
+    		company: { required: true },
+        	overtimeHour: { required: true,minlength:3,maxlength:3 }
+        	//locationStatus_combobox: {required: true}
+        } /*,
+        messages: {
+        	locationName: "please enter location name",
+        	locationStatus_combobox: "please select location status"
+
+        } */
+    });
+});
+</script> 
+<?php
+/*
+echo $this->headLink ()->
+// ->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css')
+// ->prependStylesheet($this->basePath() . '/css/style.css')
+appendStylesheet ( $this->basePath () . '/css/bootstrap.min.css' )->appendStylesheet ( $this->basePath () . '/js/jqueryUI/css/smoothness/jquery-ui-1.9.0.custom.css' )->appendStylesheet ( $this->basePath () . '/css/myStyle.css' );
+?>
+
+<!-- Scripts -->
+<?php
+/*
+echo $this->headScript ()->prependFile ( $this->basePath () . '/js/html5.js', 'text/javascript', array (
+		'conditional' => 'lt IE 9' 
+) )->appendFile ( $this->basePath () . '/js/jquery-1.7.2.min.js' )->
+// ->appendFile($this->basePath() . '/js/custom.js')
+appendFile ( $this->basePath () . '/js/JqueryUI/js/jquery-ui-1.9.0.custom.js' );
+?>
+<script type="text/javascript">
+                                     $(function() {
+                                         $("input:text").addClass("ui-corner-all");
+                                         $("#submitbutton").button();
+                                         $("#login").button();
+                                         
+                                     });
+                                         </script>
+<style type="text/css">
+#username, #password {
+	width: 190px;
+	height: 28px;
+}
+</style>
+*/
+?>
+<?php
+//$authStatus = $this->authStatus;
+?>
+<br />
+<p style="color: red;">
+	<b><?php echo $this->info; ?></b>
+</p>
+<div class="ui-widget" style="width: 400px;">
+	<fieldset style="padding: 20px; background-color: #f1f1f1;">
+		<legend>
+			<b>User Login</b>
+		</legend>
+        
+        <?php
+			echo "<b>$authStatus</b>";
+			$form = $this->loginForm;
+			$form->setAttribute ( 'action', $this->url ( 'user', array (
+					'action' => 'login' 
+			)));
+			$form->prepare ();
+			
+			echo $this->form ()->openTag ( $form );
+			echo "<p>" . $this->formRow ( $form->get ( 'username' ) ) . "</p>";
+			echo "<p>" . $this->formRow ( $form->get ( 'password' ) ) . "</p>";
+			echo "<b>Employment Type:*</b><br /><p>" . $this->formRow ( $form->get ( 'company' ) ) . "</p>";
+			echo "<p style='margin: 0 0 0 82px;'>" . $this->formSubmit ( $form->get ( 'login' ) ) . "</p>";
+			echo $this->form ()->closeTag ();
+	    ?>
+    </fieldset>
+</div>

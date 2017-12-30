@@ -1,0 +1,26 @@
+<?php 
+	$title = 'Update Salary Structure';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	
+	echo $this->formLabel($form->get('salaryGradeId'));
+	echo $this->formElement($form->get('salaryGradeId'));
+	echo $this->formElementErrors($form->get('salaryGradeId'));
+	echo $this->formLabel($form->get('minValue'));
+	echo $this->formElement($form->get('minValue'));
+	echo $this->formElementErrors($form->get('minValue'));
+	echo $this->formLabel($form->get('midValue'));
+	echo $this->formElement($form->get('midValue'));
+	echo $this->formElementErrors($form->get('midValue'));
+	echo $this->formLabel($form->get('maxValue'));
+	echo $this->formElement($form->get('maxValue'));
+	echo $this->formElementErrors($form->get('maxValue'));
+	
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

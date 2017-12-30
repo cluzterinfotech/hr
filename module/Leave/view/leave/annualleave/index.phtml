@@ -1,0 +1,118 @@
+<style type="text/css">
+label  {
+    font-weight:normal; 
+}
+</style>
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Leave Form</a></li>
+		<li><a href="#tabs-2">Search Leave</a></li>
+	</ul>
+<div id="tabs-1"> 
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Employee Info</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                echo $this->form()->openTag($form);
+                echo $this->formLabel($form->get('employeeId'));
+                echo $this->formElement($form->get('employeeId'));
+                echo $this->formElementErrors($form->get('employeeId'));
+                echo $this->formLabel($form->get('position'));
+                echo $this->formElement($form->get('position'));
+                echo $this->formElementErrors($form->get('position'));
+                echo $this->formLabel($form->get('department'));
+                echo $this->formElement($form->get('department'));
+                echo $this->formElementErrors($form->get('department'));
+            ?>
+            </div>				
+            <div style="Float:left;width:320px;">			    
+            <?php
+                echo $this->formLabel($form->get('joinDate'));
+                echo $this->formElement($form->get('joinDate'));
+                echo $this->formElementErrors($form->get('joinDate'));
+                echo $this->formLabel($form->get('location'));
+                echo $this->formElement($form->get('location'));
+                echo $this->formElementErrors($form->get('location'));
+                
+            ?>				
+            </div>	
+            <div style="Float:left;width:320px;">			    
+            <?php
+                
+                
+            ?>				
+            </div>			
+    </fieldset>
+    <fieldset style="padding:5px;" >
+        <legend>This Leave</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                echo $this->formLabel($form->get('leaveFrom'));
+				echo $this->formElement($form->get('leaveFrom'));
+				echo $this->formElementErrors($form->get('leaveFrom'));
+				echo $this->formLabel($form->get('leaveTo'));
+				echo $this->formElement($form->get('leaveTo'));
+				echo $this->formElementErrors($form->get('leaveTo'));
+				echo $this->formLabel($form->get('delegatedEmployee'));
+				echo $this->formElement($form->get('delegatedEmployee'));
+				echo $this->formElementErrors($form->get('delegatedEmployee'));
+            ?>
+            </div>				
+            <div style="Float:left;width:320px;">			    
+            <?php
+                echo $this->formLabel($form->get('advanceRequired'));
+				echo $this->formElement($form->get('advanceRequired'));
+				echo $this->formElementErrors($form->get('advanceRequired'));
+				echo $this->formLabel($form->get('address'));
+				echo $this->formElement($form->get('address'));
+				echo $this->formElementErrors($form->get('address'));
+            ?>				
+            </div>		
+    </fieldset>	
+    <fieldset style="padding:5px;" >
+        <legend>HR Review</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                echo $this->formLabel($form->get('daysEntitled'));
+				echo $this->formElement($form->get('daysEntitled'));
+				echo $this->formElementErrors($form->get('daysEntitled'));
+				echo $this->formLabel($form->get('outstandingBalance'));
+				echo $this->formElement($form->get('outstandingBalance'));
+				echo $this->formElementErrors($form->get('outstandingBalance'));
+				echo $this->formLabel($form->get('daysTaken'));
+				echo $this->formElement($form->get('daysTaken'));
+				echo $this->formElementErrors($form->get('daysTaken'));
+            ?>
+            </div>				
+            <div style="Float:left;width:320px;">			    
+            <?php
+                echo $this->formLabel($form->get('thisLeaveDays'));
+				echo $this->formElement($form->get('thisLeaveDays'));
+				echo $this->formElementErrors($form->get('thisLeaveDays'));
+				echo $this->formLabel($form->get('revisedDays'));
+				echo $this->formElement($form->get('revisedDays'));
+				echo $this->formElementErrors($form->get('revisedDays'));
+				echo $this->formLabel($form->get('remainingDays'));
+				echo $this->formElement($form->get('remainingDays'));
+				echo $this->formElementErrors($form->get('remainingDays'));
+            ?>				
+            </div>		
+    </fieldset>
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>				
+            	
+    </fieldset>
+</div>
+
+</div>
+<div id="tabs-2">
+<p>search form</p>
+</div>
+
+</div>

@@ -1,0 +1,26 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+$title = 'Edit Section';
+$this->headTitle ( $title );
+echo "<h3>Edit Section</h3>";
+
+$editForm->setAttribute ( 'action', $this->url ( 'section', array (
+		'action' => 'edit',
+		'id' => $this->id 
+) ) );
+
+echo $this->form ()->openTag ( $editForm );
+echo $this->formHidden ( $editForm->get ( 'id' ) );
+echo "<label>ID</label>" . $this->formRow ( $editForm->get ( 'section_id' ) ) . "<br/>";
+echo "<label>Code</label>" . $this->formRow ( $editForm->get ( 'section_code' ) ) . "<br/>";
+echo "<label>Name</label>" . $this->formRow ( $editForm->get ( 'section_name' ) ) . "<br/>";
+echo "<label>Department</label>" . $this->formSelect ( $editForm->get ( 'department_id' ) ) . "<br/>";
+echo "<label></label>" . $this->formSubmit ( $editForm->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+
+echo $result;

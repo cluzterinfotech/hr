@@ -1,0 +1,66 @@
+<?php 
+
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */ 
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<?php echo $this->form()->openTag($form); ?>
+<div> 
+    <fieldset style="padding:5px;" > 
+        <legend>Remove Position Allowance</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formElement($form->get('id'));
+                echo $this->formLabel($form->get('positionName'));
+                echo $this->formElement($form->get('positionName'));
+                echo $this->formElementErrors($form->get('positionName'));
+                echo $this->formLabel($form->get('positionAllowanceName'));
+				echo $this->formElement($form->get('positionAllowanceName'));
+				echo $this->formElementErrors($form->get('positionAllowanceName'));
+				
+				echo $this->formSubmit($form->get('submit')); 
+				?> 
+				 </div>	
+               <div style="Float:left;width:370px;">
+             <?php 
+             //echo $this->formLabel($form->get('sgAmount'));
+             //echo $this->formElement($form->get('sgAmount'));
+             //echo $this->formElementErrors($form->get('sgAmount'));
+             //echo $this->formLabel($form->get('isApplicableToAll'));
+             //echo $this->formElement($form->get('isApplicableToAll'));
+             //echo $this->formElementErrors($form->get('isApplicableToAll'));
+				
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    <!-- 
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag(); ?>
+<br/> 
+<div id="dialog">Are you sure remove this record?</div>
+<div id="positionAllowanceContainer"></div> 
+<script>$("#positionAllowanceContainer").zfTable('/positionallowance/ajaxlistnew');</script>  
+<br/> 

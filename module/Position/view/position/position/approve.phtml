@@ -1,0 +1,35 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of Index
+ *
+ * @author AlkhatimVip
+ */
+if (isset ( $approve )) {
+	$title = 'Approve Delegation';
+	$this->headTitle ( $title );
+	$url = $this->url ( 'position', array (
+			'action' => 'approve',
+			'id' => $approve->getPositionId () 
+	) );
+	echo "<form action='$url' method='post'>";
+	echo "<h3>Are you sure you want to approve this position?</h3>";
+	echo "<label>ID</label>" . $approve->getPositionId () . "<br/>";
+	echo "<label>Code</label>" . $approve->getPositionCode () . "<br/>";
+	echo "<label>Name</label>" . $approve->getPositionName () . "<br/>";
+	echo "<label>Section</label>" . $approve->getSectionId () . "<br/>";
+	echo "<label>Level</label>" . $approve->getPositionLevelId () . "<br/>";
+	echo "<label>Reporting to</label>" . $approve->getReportingPositionId () . "<br/>";
+	echo "<label>Status</label>" . $approve->getPositionStatus () . "<br/>";
+	// echo "<label>added by </label> ".$approve->getAddedUser()." <label> on </label> ".$approve->getAddedDate()."<br/>";
+	echo "<div>
+            <input type='submit' name='approved' value='Yes' />
+            <input type='submit' name='approved' value='No' />
+          </div>";
+} else {
+}

@@ -1,0 +1,120 @@
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">People Management/Staff Involvement</a></li>
+		<!--  <li><a href="#tabs-2">Search Form</a></li>--> 
+	</ul>
+<div id="tabs-1"> 
+<?php
+echo $this->form ()->openTag ( $form );
+?>
+<div style="width:100%;>
+<div  id="my"
+	style="width:750px;float:left;clear:both;">
+	<fieldset style="padding: 5px;">
+		<!-- <legend>Add Form</legend>--> 
+		<div style="float: left; width: 370px; margin: -10px 0 0 0;">
+<?php 
+echo $this->formElement($form->get('id'));
+echo $this->formLabel($form->get('employeeNumber'));
+echo $this->formElement($form->get('employeeNumber'));
+echo $this->formElementErrors($form->get('employeeNumber')); 
+echo $this->formLabel($form->get('Role01'));
+echo $this->formElement($form->get('Role01'));
+echo $this->formElementErrors($form->get('Role01'));
+echo $this->formLabel($form->get('duration01'));
+echo $this->formElement($form->get('duration01'));
+echo $this->formElementErrors($form->get('duration01'));
+echo $this->formLabel($form->get('lOI01'));
+echo $this->formElement($form->get('lOI01'));
+echo $this->formElementErrors($form->get('lOI01'));
+echo $this->formLabel($form->get('content01'));
+echo $this->formElement($form->get('content01'));
+echo $this->formElementErrors($form->get('content01'));
+
+//echo $this->formSubmit ( $form->get ( 'submit' ) );
+?>
+</div>
+<div style="Float:left;width:320px;">	
+
+<?php
+echo $this->formLabel($form->get('Role02'));
+echo $this->formElement($form->get('Role02'));
+echo $this->formElementErrors($form->get('Role02'));
+echo $this->formLabel($form->get('duration02'));
+echo $this->formElement($form->get('duration02'));
+echo $this->formElementErrors($form->get('duration02'));
+echo $this->formLabel($form->get('lOI02'));
+echo $this->formElement($form->get('lOI02'));
+echo $this->formElementErrors($form->get('lOI02'));
+echo $this->formLabel($form->get('content02'));
+echo $this->formElement($form->get('content02'));
+echo $this->formElementErrors($form->get('content02'));
+
+?>  
+</div> 
+</fieldset>
+<fieldset style="padding:5px;" >
+     <legend>&nbsp;</legend>
+<div style="float: left; width: 370px; margin: -10px 0 0 0;">
+<?php 
+echo $this->formLabel($form->get('Role03'));
+echo $this->formElement($form->get('Role03'));
+echo $this->formElementErrors($form->get('Role03'));
+echo $this->formLabel($form->get('duration03'));
+echo $this->formElement($form->get('duration03'));
+echo $this->formElementErrors($form->get('duration03'));
+echo $this->formLabel($form->get('lOI03'));
+echo $this->formElement($form->get('lOI03'));
+echo $this->formElementErrors($form->get('lOI03'));
+echo $this->formLabel($form->get('content03'));
+echo $this->formElement($form->get('content03'));
+echo $this->formElementErrors($form->get('content03'));
+//echo $this->formSubmit ( $form->get ( 'submit' ) );
+?>
+</div>
+<div style="Float:left;width:320px;">	
+<?php
+echo $this->formLabel($form->get('Role04'));
+echo $this->formElement($form->get('Role04'));
+echo $this->formElementErrors($form->get('Role04'));
+echo $this->formLabel($form->get('duration04'));
+echo $this->formElement($form->get('duration04'));
+echo $this->formElementErrors($form->get('duration04'));
+echo $this->formLabel($form->get('lOI04'));
+echo $this->formElement($form->get('lOI04'));
+echo $this->formElementErrors($form->get('lOI04'));
+echo $this->formLabel($form->get('content04'));
+echo $this->formElement($form->get('content04'));
+echo $this->formElementErrors($form->get('content04'));
+?> 
+</div>    	
+</fieldset>
+<fieldset style="padding:5px;" >
+     <legend>&nbsp;</legend>
+<div style="float: left; width: 370px; margin: -10px 0 0 0;">
+<?php 
+echo $this->formLabel($form->get('Role05'));
+echo $this->formElement($form->get('Role05'));
+echo $this->formElementErrors($form->get('Role05'));
+echo $this->formLabel($form->get('duration05'));
+echo $this->formElement($form->get('duration05'));
+echo $this->formElementErrors($form->get('duration05'));
+echo $this->formLabel($form->get('lOI05'));
+echo $this->formElement($form->get('lOI05'));
+echo $this->formElementErrors($form->get('lOI05'));
+echo $this->formLabel($form->get('content05'));
+echo $this->formElement($form->get('content05'));
+echo $this->formElementErrors($form->get('content05'));
+echo $this->formSubmit ( $form->get ( 'submit' ) );
+?>
+</div>
+<div style="Float:left;width:320px;">	
+
+</div>    	
+</fieldset>
+<?php
+echo $this->form ()->closeTag ();
+?>
+</div>
+</div>
+</div>

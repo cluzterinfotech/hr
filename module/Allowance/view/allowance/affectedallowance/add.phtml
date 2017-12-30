@@ -1,0 +1,17 @@
+<?php 
+	$title = 'Add Social Insurance Allowance'; 
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?> 
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('allowanceId'));
+	echo $this->formElement($form->get('allowanceId'));
+	echo $this->formElementErrors($form->get('allowanceId'));
+	echo $this->formLabel($form->get('companyId'));
+	echo $this->formElement($form->get('companyId'));
+	echo $this->formElementErrors($form->get('companyId'));
+    
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

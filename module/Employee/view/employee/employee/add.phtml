@@ -1,0 +1,94 @@
+
+<script>
+$(function() {
+    $("#tabs" ).tabs({ disabled:[1,2] });
+    $("button").button();
+});
+</script>
+
+
+
+<?php
+if (! $pending) {
+	$form->prepare ();
+	echo $this->form ()->openTag ( $form );
+	?>
+<div id="tabs">
+	<ul>
+		<li><a href="#personalInfo">Personal Information</a></li>
+		<li><a href="#employeeInfo">Employee Information</a></li>
+		<li><a href="#bankInfo">Bank Information</a></li>
+	</ul>
+	<div id="personalInfo">
+        <?php
+	
+	$personal = $form->get ( 'personal_info' );
+	echo $this->formRow ( $personal->get ( 'emp_personal_info_id' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'employee_name' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'date_of_birth' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'place_of_birth' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'gender' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'lkp_marital_status_id' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'lkp_religion_id' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'lkp_nationality_id' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'lkp_state_id' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'no_of_children' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'address' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'phone' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'mobile' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'passport_number' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'driving_licence' ) ) . "</br>";
+	echo $this->formRow ( $personal->get ( 'lkp_national_service' ) ) . "</br>";
+	?>
+        <hr></hr>
+		<a href="#" id="toEmployeeInfo">Next</a>
+
+	</div>
+	<div id="employeeInfo">
+        <?php
+	
+	$employee = $form->get ( 'employee_info' );
+	echo $this->formRow ( $employee->get ( 'employee_id' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'emp_personal_info_id' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'lkp_salary_grade_id' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'lkp_job_grade_id' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'position_id' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'join_date' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'confirmation_date' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'is_confirmed' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'location_id' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'company_id' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'is_active' ) ) . "</br>";
+	echo $this->formRow ( $employee->get ( 'initial_salary' ) ) . "</br>";
+	
+	?>
+        <hr></hr>
+		<a href="#" onclick="$('#tabs').tabs('option','active',0);">Back</a> -
+		<a href="#" id="toBankInfo">Next</a>
+	</div>
+	<div id="bankInfo">
+        <?php
+	$bank = $form->get ( 'bank_info' );
+	echo $this->formRow ( $bank->get ( 'id' ) ) . "</br>";
+	echo $this->formRow ( $bank->get ( 'emp_personal_info_id' ) ) . "</br>";
+	echo $this->formRow ( $bank->get ( 'lkp_bank_id' ) ) . "</br>";
+	echo $this->formRow ( $bank->get ( 'account_number' ) ) . "</br>";
+	echo $this->formSubmit ( $form->get ( 'submit' ) ) . "</br>";
+	echo "<hr></hr>";
+	?>
+        <a href="#" onclick="$('#tabs').tabs('option','active',1);">Back</a>
+        <?php
+	
+	echo $this->form ()->closeTag ();
+	?>
+    </div>
+</div>
+<?php
+} else {
+	?>
+<a href="#">You have an unfinished form, click here to finish it</a>
+<?php
+}
+?>
+</br>
+<a href="<?php echo $this->url('employee'); ?>">Back</a>

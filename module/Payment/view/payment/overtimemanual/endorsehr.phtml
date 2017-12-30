@@ -1,0 +1,24 @@
+<?php 
+	$title = 'Endorse Overtime';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	//echo $this->form()->openTag($form); 
+	//echo $this->formSubmit($form->get('submit'));
+	//echo $this->form()->closeTag();  
+?>  
+<style type="text/css"> 
+    #dialogAll { display:none; } 
+    #dialogRej { display:none; } 
+</style> 
+<br/>
+<div id="dialogAll">Are you sure Approve all list?</div>  
+<div id="dialogRej">Are you sure Reject this record?</div>  
+<div id="dialog">Are you sure Approve this record?</div>  
+<br/> 
+<input type='button' id='endorseOt' value="Endorse All" >
+<div id="overtimeContainer"></div>
+<script>$("#overtimeContainer").zfTable('/overtimenew/endorselist');</script> 
+<br/>

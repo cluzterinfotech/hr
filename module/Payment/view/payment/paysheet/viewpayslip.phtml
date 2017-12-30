@@ -1,0 +1,33 @@
+<html>
+<head>
+<?php
+echo $this->headScript()
+          ->prependFile($this->basePath() . '/js/sorttable.js');
+?> 
+<script type="text/javascript">  
+</script>
+<style> 
+table.sortable thead {
+    background-color:#eee;
+    color:#666666;
+    font-weight: bold;
+    cursor: default;
+}
+table, td, th { border: 1px solid #ccc;border-collapse: collapse; }
+thead { background-color: #ccc;color:#000;font-weight:bold; }
+th { background-color: '#ccc';color: #000; }
+td { padding: 1px; } 
+td { height: 40px;vertical-align: bottom;border-collapse: collapse; }
+</style>
+</head>
+<body>
+<?php 
+$title = 'Report Payslip'; 
+$this->headTitle($title);  
+ 
+echo $this->payslipHelper($this->name,$this->allowance,
+		$this->deduction,$this->companyDeduction,$this->report); 
+?> 
+
+</body>
+</html> 

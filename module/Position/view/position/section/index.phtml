@@ -1,0 +1,32 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of Index
+ *
+ * @author AlkhatimVip
+ */
+$title = 'Main Sections';
+$this->headTitle ( $title );
+?>
+<table class="table">
+	<thead>
+		<th>Code</th>
+		<th>Name</th>
+		<th>Deparment</th>
+		<th>&nbsp;</th>
+	</thead>
+        <?php foreach ($sections as $section) : ?>
+            <tr>
+		<td><?php echo $this->escapeHtml($section->getSectionCode());?></td>
+		<td><?php echo $this->escapeHtml($section->getSectionName());?></td>
+		<td><?php echo $this->escapeHtml($section->getDepartmentId());?></td>
+		<td><a
+			href="<?php echo $this->url('section',array('action' => 'edit','id'=> $section->getSectionId()));?>">edit</a></td>
+	</tr> 
+        <?php endforeach; ?>
+    </table>

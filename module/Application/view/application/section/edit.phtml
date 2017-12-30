@@ -1,0 +1,21 @@
+<?php 
+	$title = 'Update Section';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('sectionName'));
+	echo $this->formElement($form->get('sectionName'));
+	echo $this->formElementErrors($form->get('sectionName'));
+	echo $this->formLabel($form->get('sectionCode'));
+	echo $this->formElement($form->get('sectionCode'));
+	echo $this->formElementErrors($form->get('sectionCode'));
+	echo $this->formLabel($form->get('department'));
+	echo $this->formElement($form->get('department'));
+	echo $this->formElementErrors($form->get('department')); 
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

@@ -1,0 +1,32 @@
+<?php 
+	$title = 'Update Overtime';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('empIdOvertime'));
+    echo $this->formElement($form->get('empIdOvertime'));
+    echo $this->formElementErrors($form->get('empIdOvertime'));
+	echo $this->formLabel($form->get('employeeNoNOHours'));
+    echo $this->formElement($form->get('employeeNoNOHours'));
+    echo $this->formElementErrors($form->get('employeeNoNOHours'));
+                
+    echo $this->formLabel($form->get('employeeNoHOHours'));
+    echo $this->formElement($form->get('employeeNoHOHours'));
+    echo $this->formElementErrors($form->get('employeeNoHOHours'));
+    echo $this->formLabel($form->get('numberOfMeals'));
+    echo $this->formElement($form->get('numberOfMeals'));
+    echo $this->formElementErrors($form->get('numberOfMeals'));
+    echo $this->formLabel($form->get('month'));
+    echo $this->formElement($form->get('month'));
+    echo $this->formElementErrors($form->get('month'));
+                
+    echo $this->formLabel($form->get('year'));
+    echo $this->formElement($form->get('year'));
+    echo $this->formElementErrors($form->get('year')); 
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

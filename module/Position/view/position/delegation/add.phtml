@@ -1,0 +1,68 @@
+<?php 
+	$title = 'Add Employee Delegation'; 
+	$this->headTitle($title); 
+	//echo "<h3>".$title."</h3>"; 
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Add New Employee Delegation</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Add New Employee Delegation</legend>
+            <div style="float:left;width:300px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeId'));
+                echo $this->formElement($form->get('employeeId'));
+                echo $this->formElementErrors($form->get('employeeId'));
+                echo $this->formLabel($form->get('delegatedEmployeeId'));
+                echo $this->formElement($form->get('delegatedEmployeeId'));
+                echo $this->formElementErrors($form->get('delegatedEmployeeId'));
+				echo $this->formSubmit($form->get('submit')); 
+				?>
+				 </div>	
+				 <div style="float:left;width:280px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('delegatedFrom'));
+                echo $this->formElement($form->get('delegatedFrom'));
+                echo $this->formElementErrors($form->get('delegatedFrom'));
+                echo $this->formLabel($form->get('delegatedTo'));
+                echo $this->formElement($form->get('delegatedTo'));
+                echo $this->formElementErrors($form->get('delegatedTo'));
+				// echo $this->formSubmit($form->get('submit')); 
+				?>
+				 </div>			
+            	</div>	
+    </fieldset>
+    
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="employeeDelegationContainer"></div>
+<script>$("#employeeDelegationContainer").zfTable('/delegation/ajaxlist');</script> 
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+--> 
+</div> 

@@ -1,0 +1,12 @@
+<?php 
+	$title = 'Open/Close Month(Closes the current month and opens new month)';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+<br/>
+<br/>
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?> 

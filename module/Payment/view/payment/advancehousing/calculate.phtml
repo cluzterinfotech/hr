@@ -1,0 +1,89 @@
+<?php 
+	$title = 'Add Advance housing';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */ 
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Advance Housing</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Add/Edit Advance Housing</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeNumberHousing'));
+                echo $this->formElement($form->get('employeeNumberHousing'));
+                echo $this->formElementErrors($form->get('employeeNumberHousing'));
+                echo $this->formLabel($form->get('advanceHousingFromDate'));
+				echo $this->formElement($form->get('advanceHousingFromDate'));
+				echo $this->formElementErrors($form->get('advanceHousingFromDate'));
+				echo $this->formLabel($form->get('numberOfMonthsHousing'));
+				echo $this->formElement($form->get('numberOfMonthsHousing'));
+				echo $this->formElementErrors($form->get('numberOfMonthsHousing'));
+				echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php 
+				echo $this->formLabel($form->get('housingAmount'));
+				echo $this->formElement($form->get('housingAmount'));
+				echo $this->formElementErrors($form->get('housingAmount'));
+				echo $this->formLabel($form->get('housingTax'));
+				echo $this->formElement($form->get('housingTax'));
+				echo $this->formElementErrors($form->get('housingTax'));
+				echo $this->formLabel($form->get('housingNetAmount'));
+				echo $this->formElement($form->get('housingNetAmount'));
+				echo $this->formElementErrors($form->get('housingNetAmount'));
+			    
+			    //echo $this->form()->closeTag(); 
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    <!--
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>
+    </fieldset>
+    --> 
+</div> 
+<?php echo $this->form()->closeTag();?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="advanceHousingContainer"></div>
+<script>$("#advanceHousingContainer").zfTable('/advancehousing/ajaxlist');</script> 
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div> 

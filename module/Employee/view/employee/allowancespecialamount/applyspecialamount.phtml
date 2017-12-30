@@ -1,0 +1,15 @@
+<?php 
+	$title = 'Apply New Special Amount'; 
+	$this->headTitle($title); 
+	echo "<h3>".$title."</h3>"; 
+?>
+<?php 
+	echo $this->form()->openTag($form);  
+	echo $this->formSubmit($form->get('submit'));  
+	echo $this->form()->closeTag();   
+?>  
+<br/> 
+<div id="dialog">Are you sure remove this record?</div>
+<div id="employeeSpecialAmountContainer"></div>
+<script>$("#employeeSpecialAmountContainer").zfTable('/allowancespecialamount/ajaxlist');</script>  
+<br/>

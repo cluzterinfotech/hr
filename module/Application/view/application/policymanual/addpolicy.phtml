@@ -1,0 +1,24 @@
+<script>
+    $(document).ready(function() {
+        $('.content').richText();
+    });
+</script>
+<?php
+$title = 'Add Policy';
+$this->headTitle($title);
+echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+    //$form->setAttribute('action', $this->url('/', array('action' => 'add')));
+    $form->prepare();
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('title'));
+	echo $this->formElement($form->get('title'));
+	echo '<div class="page-wrapper box-content">';
+	echo $this->formLabel($form->get('content'));
+	echo $this->formElement($form->get('content'));
+	echo '</div> ';
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

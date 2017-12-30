@@ -1,0 +1,20 @@
+<?php 
+	$title = 'Add Family Member';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('employeeId'));
+	echo $this->formElement($form->get('employeeId'));
+	echo $this->formElementErrors($form->get('employeeId'));
+	echo $this->formLabel($form->get('memberTypeId'));
+	echo $this->formElement($form->get('memberTypeId'));
+	echo $this->formElementErrors($form->get('memberTypeId')); 
+	echo $this->formLabel($form->get('memberName'));
+	echo $this->formElement($form->get('memberName'));
+	echo $this->formElementErrors($form->get('memberName')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

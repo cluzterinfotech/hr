@@ -1,0 +1,18 @@
+<?php 
+	$title = 'Update Position Level';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('levelName'));
+	echo $this->formElement($form->get('levelName'));
+	echo $this->formElementErrors($form->get('levelName'));
+	echo $this->formLabel($form->get('levelSequence'));
+	echo $this->formElement($form->get('levelSequence'));
+	echo $this->formElementErrors($form->get('levelSequence'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

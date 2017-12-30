@@ -1,0 +1,25 @@
+<?php 
+	$title = 'Add Annual Leave Entitlement';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?> 
+<?php  
+	echo $this->form()->openTag($form);
+	//echo $this->formLabel($form->get('hidden'));
+	//echo $this->formElement($form->get('hidden'));
+	//echo $this->formElementErrors($form->get('hidden'));
+	echo $this->formLabel($form->get('yearsOfService'));
+	echo $this->formElement($form->get('yearsOfService'));
+	echo $this->formElementErrors($form->get('yearsOfService'));
+	echo $this->formLabel($form->get('numberOfDays'));
+	echo $this->formElement($form->get('numberOfDays'));
+	echo $this->formElementErrors($form->get('numberOfDays'));
+	echo $this->formLabel($form->get('companyId'));
+	echo $this->formElement($form->get('companyId'));
+	echo $this->formElementErrors($form->get('companyId'));
+	echo $this->formLabel($form->get('LkpLeaveType'));
+	echo $this->formElement($form->get('LkpLeaveType'));
+	echo $this->formElementErrors($form->get('LkpLeaveType')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?> 

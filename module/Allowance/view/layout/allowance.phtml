@@ -1,0 +1,102 @@
+<?php echo $this->doctype(); ?> 
+<html lang="en">
+<head>
+<meta charset="utf-8">
+        <?php 
+            echo $this->headTitle('Test ' . $this->translate('Allowance'))
+                      ->setSeparator('-')
+                      ->setAutoEscape(false); ?> 
+        <?php 
+			echo $this->headMeta()
+			          ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+			          ->appendHttpEquiv('X-UA-Compatible', 'IE=edge'); 
+			
+			echo $this->headLink(array(
+					    'rel'  => 'shortcut icon',
+					    'type' => 'image/vnd.microsoft.icon',
+					    'href' => $this->basePath() . '/img/PetronasNewlogo.png'))
+					  ->prependStylesheet($this->basePath() . '/css/style.css')
+					  ->prependStylesheet($this->basePath() . '/css/jquery-combobox.css')
+			          ->prependStylesheet($this->basePath() . '/css/jquery-ui-1.10.css')
+			          ->prependStylesheet($this->basePath() . '/css/bootstrap-3.0.0/bootstrap.min.css')
+			          ->prependStylesheet($this->basePath() . '/css/hr.css')
+			; 
+            
+			echo $this->headScript()
+			          ->prependFile($this->basePath() . '/js/jquery.validate.js')
+			          ->prependFile($this->basePath() . '/js/jquery.ui.combobox.js')
+			          ->prependFile($this->basePath() . '/js/jquery-ui-1.10.js')
+			          ->prependFile($this->basePath() . '/js/jquery-2.1.1.js')
+			          ->appendFile($this->basePath() . '/js/hr.js')
+			          ->appendFile($this->basePath() . '/js/blockUi.js')
+			          ->appendFile($this->basePath() . '/js/zf-table.js')
+			          ->appendFile($this->basePath() . '/employee/js/employeeAllowanceForm.js')
+			          ->appendFile($this->basePath() . '/employee/js/employeeCommonForm.js')
+			          ->appendFile($this->basePath() . '/js/common.js')
+			          ->appendFile($this->basePath() . '/js/validationForms.js')
+			          ->appendFile($this->basePath() . '/allowance/js/siAllowanceForm.js')
+			          ->appendFile($this->basePath() . '/allowance/js/incrementCriteriaForm.js')
+			          ->appendFile($this->basePath() . '/position/js/validationForms.js')
+			          ->appendFile($this->basePath() . '/employee/js/promotionForm.js')
+			; 
+		?> 
+		
+	<link rel="stylesheet" href="/js/jquery.treeview.css" />
+	<script src="/js/jquery.cookie.js" type="text/javascript"></script>
+	<script src="/js/jquery.treeview.min.js" type="text/javascript"></script>
+	<link type="text/css" href="/css/menu.css" rel="stylesheet" />
+	
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			background: #fff url(../img/new_logo_01.jpg) right top fixed no-repeat;
+		} 
+	</style>
+    
+</head>
+
+<body >
+    <div id="container"> 
+	    <div id="wrapper">
+		    <div id="content">
+			    <div>
+					<!-- <br style="clear: both;">--> 
+					<div>
+						<?php 
+							$flash = $this->flashMessenger(); 					
+							echo $flash->render('error', array('errorMsg'));
+							echo $flash->render('info', array('noticeMsg'));
+							echo $flash->render('default', array('noticeMsg'));
+							echo $flash->render('success', array('successMsg'));
+						?>
+                        <?= $this->layout()->content; ?>
+                    </div>
+                    <hr><br /><br /> 
+				    <footer>
+						<p>&copy; 2017 ICT OECL. All rights reserved</p>
+				    </footer> 
+				</div>
+			</div>
+		</div>
+        
+		<div id="navigation" style="">
+			<div>
+				<p style="font-size: 16px;" align="center">
+				<?php 
+				     if ($user = $this->identity()) {
+				         echo '<b>'.$user['username'].' | <a href="/logout">Logout</a></b> ';
+				     } else {
+				         echo 'Not logged in';
+				     }  
+				 ?> 
+				</p>
+				<div>
+				<?= $this->navigation()->menu('navigation'); ?>
+				</div>
+			</div>
+		</div>
+		
+		</div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<?php 
+	$title = 'Update Employee';
+	$this->headTitle($title);
+	// echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+    echo $this->form()->openTag($form);	
+?>
+<div style="width:100%;>
+<div id="my" style="width:750px;float:left;clear:both;">
+<fieldset style="padding:5px;" >
+<legend>Update Employee Info</legend>
+<div style="float:left;width:370px;margin:-10px 0 0 0;">
+<?php 
+	
+	echo $this->formLabel($form->get('employeeNumber'));
+	echo $this->formElement($form->get('employeeNumber'));
+	echo $this->formElementErrors($form->get('employeeNumber'));
+	echo $this->formLabel($form->get('employeeName'));
+	echo $this->formElement($form->get('employeeName'));
+	echo $this->formElementErrors($form->get('employeeName')); 
+	echo $this->formLabel($form->get('gender')); 
+	echo $this->formElement($form->get('gender')); 
+	echo $this->formElementErrors($form->get('gender')); 
+	echo $this->formLabel($form->get('maritalStatus')); 
+	echo $this->formElement($form->get('maritalStatus')); 
+	echo $this->formElementErrors($form->get('maritalStatus')); 
+	echo $this->formLabel($form->get('religion')); 
+	echo $this->formElement($form->get('religion')); 
+	echo $this->formElementErrors($form->get('religion')); 
+	echo $this->formLabel($form->get('nationality')); 
+	echo $this->formElement($form->get('nationality')); 
+	echo $this->formElementErrors($form->get('nationality'));
+	echo $this->formLabel($form->get('currency'));
+	echo $this->formElement($form->get('currency'));
+	echo $this->formElementErrors($form->get('currency'));
+	echo $this->formLabel($form->get('numberOfDependents'));
+	echo $this->formElement($form->get('numberOfDependents'));
+	echo $this->formElementErrors($form->get('numberOfDependents'));
+	echo $this->formLabel($form->get('state'));
+	echo $this->formElement($form->get('state'));
+	echo $this->formElementErrors($form->get('state'));
+	echo $this->formLabel($form->get('empDateOfBirth'));
+	echo $this->formElement($form->get('empDateOfBirth'));
+	echo $this->formElementErrors($form->get('empDateOfBirth'));
+	echo $this->formLabel($form->get('placeOfBirth'));
+	echo $this->formElement($form->get('placeOfBirth'));
+	echo $this->formElementErrors($form->get('placeOfBirth'));
+	echo $this->formLabel($form->get('empAddress'));
+	echo $this->formElement($form->get('empAddress'));
+	echo $this->formElementErrors($form->get('empAddress'));
+	echo $this->formLabel($form->get('officeExtention'));
+	echo $this->formElement($form->get('officeExtention'));
+	echo $this->formElementErrors($form->get('officeExtention'));
+	echo $this->formLabel($form->get('empMobile'));
+	echo $this->formElement($form->get('empMobile'));
+	echo $this->formElementErrors($form->get('empMobile'));
+	
+	?>
+	 </div>	
+	 <div style="Float:left;width:370px;">
+	 <?php
+	 echo $this->formLabel($form->get('empTelephone'));
+	 echo $this->formElement($form->get('empTelephone'));
+	 echo $this->formElementErrors($form->get('empTelephone'));
+	 echo $this->formLabel($form->get('empEmail'));
+	 echo $this->formElement($form->get('empEmail'));
+	 echo $this->formElementErrors($form->get('empEmail'));
+	echo $this->formLabel($form->get('empPassport'));
+	echo $this->formElement($form->get('empPassport'));
+	echo $this->formElementErrors($form->get('empPassport'));
+	echo $this->formLabel($form->get('license'));
+	echo $this->formElement($form->get('license'));
+	echo $this->formElementErrors($form->get('license'));
+	//echo $this->formLabel($form->get('empType'));
+	//echo $this->formElement($form->get('empType'));
+	//echo $this->formElementErrors($form->get('empType'));
+	echo $this->formLabel($form->get('empJoinDate'));
+	echo $this->formElement($form->get('empJoinDate'));
+	echo $this->formElementErrors($form->get('empJoinDate'));
+	echo $this->formLabel($form->get('companyId'));
+	echo $this->formElement($form->get('companyId'));
+	echo $this->formElementErrors($form->get('companyId'));
+	echo $this->formLabel($form->get('empSalaryGrade'));
+	echo $this->formElement($form->get('empSalaryGrade'));
+	echo $this->formElementErrors($form->get('empSalaryGrade'));
+	echo $this->formLabel($form->get('empJobGrade'));
+	echo $this->formElement($form->get('empJobGrade'));
+	echo $this->formElementErrors($form->get('empJobGrade'));
+	echo $this->formLabel($form->get('empBank'));
+	echo $this->formElement($form->get('empBank'));
+	echo $this->formElementErrors($form->get('empBank'));
+	echo $this->formLabel($form->get('accountNumber'));
+	echo $this->formElement($form->get('accountNumber'));
+	echo $this->formElementErrors($form->get('accountNumber'));
+	echo $this->formLabel($form->get('referenceNumber'));
+	echo $this->formElement($form->get('referenceNumber'));
+	echo $this->formElementErrors($form->get('referenceNumber'));
+	echo $this->formLabel($form->get('empPosition'));
+	echo $this->formElement($form->get('empPosition'));
+	echo $this->formElementErrors($form->get('empPosition'));
+	echo $this->formLabel($form->get('isPreviousContractor'));
+	echo $this->formElement($form->get('isPreviousContractor'));
+	echo $this->formElementErrors($form->get('isPreviousContractor'));
+	//echo $this->formLabel($form->get('empLocation'));
+	//echo $this->formElement($form->get('empLocation'));
+	//echo $this->formElementErrors($form->get('empLocation'));
+	echo $this->formLabel($form->get('skillGroup'));
+	echo $this->formElement($form->get('skillGroup'));
+	echo $this->formElementErrors($form->get('skillGroup'));
+	echo $this->formLabel($form->get('empInitialSalary')); 
+	echo $this->formElement($form->get('empInitialSalary')); 
+	echo $this->formElementErrors($form->get('empInitialSalary')); 
+	echo $this->formSubmit($form->get('submit'));   
+	echo $this->form()->closeTag();   
+	?>  
+</div>  
+</fieldset>  
+</div> 
+<br/>  

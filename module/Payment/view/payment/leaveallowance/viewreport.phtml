@@ -1,0 +1,18 @@
+<?php 
+$title = 'Report Leave Allowance';
+$this->headTitle($title); 
+?>
+<style>
+table, td, th { border: 1px solid #ccc;border-collapse: collapse; }
+thead { background-color: #ccc;color:#000;font-weight:bold; }
+th { background-color: green;color: white; }
+td { padding: 5px; }
+td { height: 40px;vertical-align: bottom;border-collapse: collapse; }
+</style>
+<div id="tabs">
+<?php 
+echo $this->report;
+// echo $this->leaveAllowanceReportHelper($this->report); 
+
+?> 
+</div>  
