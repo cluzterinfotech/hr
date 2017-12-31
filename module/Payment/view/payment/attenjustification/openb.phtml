@@ -1,0 +1,85 @@
+<?php 
+	$title = 'Open New Overtime Batch'; 
+	$this->headTitle($title); 
+	//echo "<h3>".$title."</h3>"; 
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+
+$form->setAttribute('target','_self');  //_blank
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Open New Overtime Batch</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Add OverTime Hours for Employee </legend>
+            <div style="float:left;width:720px;margin:-10px 0 0 0;">
+            <?php 
+//                echo $this->formLabel($form->get('overtimeMstId'));
+//                echo $this->formElement($form->get('overtimeMstId'));
+//                echo $this->formElementErrors($form->get('overtimeMstId'));
+                
+                 echo $this->formLabel($form->get('month'));
+                echo $this->formElement($form->get('month'));
+                echo $this->formElementErrors($form->get('month'));
+                
+             /*    echo $this->formLabel($form->get('overtimeDate'));
+                echo $this->formElement($form->get('overtimeDate'));
+                echo $this->formElementErrors($form->get('overtimeDate'));*/
+                
+                echo $this->formLabel($form->get('preparedBy'));
+                echo $this->formElement($form->get('preparedBy'));
+                echo $this->formElementErrors($form->get('preparedBy'));
+                
+                echo $this->formLabel($form->get('approvedBy'));
+                echo $this->formElement($form->get('approvedBy'));
+                echo $this->formElementErrors($form->get('approvedBy'));
+                
+                
+                echo $this->formLabel($form->get('companyId'));
+                echo $this->formElement($form->get('companyId'));
+                echo $this->formElementErrors($form->get('companyId'));
+                
+//                 echo $this->formLabel($form->get('isClosed'));
+//                echo $this->formElement($form->get('isClosed'));
+//                echo $this->formElementErrors($form->get('isClosed'));
+                
+               /*  echo $this->formLabel($form->get('effectiveDate'));
+                echo $this->formElement($form->get('effectiveDate'));
+                echo $this->formElementErrors($form->get('effectiveDate'));*/
+				echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>			
+            	</div>	
+    </fieldset>
+
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="overtimeContainer"></div>
+<script>$("#overtimeContainer").zfTable('/overtime/ajaxbatch');</script> 
+<!--<script>$("#overtimeContainer").zfTable('/overtime/ajaxlist');</script>  ================Overtime Ajax-->
+<!--<script>$("#newEmployeePositionContainer").zfTable('/overtimemst/ajaxlist');</script> -->
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+--> 
+</div> 

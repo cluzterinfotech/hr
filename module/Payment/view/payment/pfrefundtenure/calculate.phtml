@@ -1,0 +1,97 @@
+<?php 
+	$title = 'Calculate PF REFUND'; 
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>"; 
+?>  
+<div >
+<?php 
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */  
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+     
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    legend  { font-size:14px;font-weight:bold; }
+    li { color:red; }
+    #finalAmount { font-weight:bold;}
+</style> 
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Add PF REFUND TENURE</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <!-- <legend>PF REFUND</legend>-->
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeIdPfTen'));
+	            echo $this->formElement($form->get('employeeIdPfTen'));
+	            echo $this->formElementErrors($form->get('employeeIdPfTen'));
+	            echo $this->formLabel($form->get('refundDate'));
+	            echo $this->formElement($form->get('refundDate'));
+	            echo $this->formElementErrors($form->get('refundDate'));
+	            
+	            echo $this->formLabel($form->get('refundAmount'));
+	            echo $this->formElement($form->get('refundAmount'));
+	            echo $this->formElementErrors($form->get('refundAmount'));
+	            
+	            echo $this->formLabel($form->get('chequeNo'));
+	            echo $this->formElement($form->get('chequeNo'));
+	            echo $this->formElementErrors($form->get('chequeNo')); 
+	            
+	            echo $this->formLabel($form->get('refundFrom'));
+	            echo $this->formElement($form->get('refundFrom'));
+	            echo $this->formElementErrors($form->get('refundFrom'));
+	            
+	            echo $this->formLabel($form->get('refundTo'));
+	            echo $this->formElement($form->get('refundTo'));
+	            echo $this->formElementErrors($form->get('refundTo'));
+	            
+				echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>	
+				 <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                          
+	            echo $this->formLabel($form->get('companyShare'));
+	            echo $this->formElement($form->get('companyShare'));
+	            echo $this->formElementErrors($form->get('companyShare'));
+	            
+	            echo $this->formLabel($form->get('employeeShare'));
+	            echo $this->formElement($form->get('employeeShare'));
+	            echo $this->formElementErrors($form->get('employeeShare')); 
+	            
+	            echo $this->formLabel($form->get('fivePer'));
+	            echo $this->formElement($form->get('fivePer'));
+	            echo $this->formElementErrors($form->get('fivePer'));
+	            
+	            echo $this->formLabel($form->get('optionalAmount'));
+	            echo $this->formElement($form->get('optionalAmount'));
+	            echo $this->formElementErrors($form->get('optionalAmount'));
+	            
+				//echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>	
+    </fieldset>
+  
+</div> 
+<?php echo $this->form()->closeTag();?>
+</div>
+<br/>
+<h4>PF Refund Tenure Details</h4> 
+<br/>
+<div id='pfTenDtls'></div>
+<br/><br/><br/><br/> 
+</div> 

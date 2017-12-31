@@ -1,0 +1,93 @@
+<?php 
+	$title = 'Add Special Loan';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */  
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Special Loan</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Add/Edit Special Loan</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+            echo $this->formLabel($form->get('employeeNumberSpecialLoan'));
+            echo $this->formElement($form->get('employeeNumberSpecialLoan'));
+            echo $this->formElementErrors($form->get('employeeNumberSpecialLoan'));
+            echo $this->formLabel($form->get('splLoanAmount'));
+            echo $this->formElement($form->get('splLoanAmount'));
+            echo $this->formElementErrors($form->get('splLoanAmount'));
+            echo $this->formLabel($form->get('numberOfMonthsSplLoanDue'));
+            echo $this->formElement($form->get('numberOfMonthsSplLoanDue'));
+            echo $this->formElementErrors($form->get('numberOfMonthsSplLoanDue'));
+            echo $this->formSubmit($form->get('submit')); 
+            ?>
+            </div>	
+            <div style="Float:left;width:370px;">
+            <?php 
+                echo $this->formLabel($form->get('monthlyDue'));
+            	echo $this->formElement($form->get('monthlyDue'));
+            	echo $this->formElementErrors($form->get('monthlyDue')); 
+            	echo $this->formLabel($form->get('loanDate'));
+            	echo $this->formElement($form->get('loanDate'));
+            	echo $this->formElementErrors($form->get('loanDate')); 
+             	//echo $this->formLabel($form->get('numberOfMonthsLoanAmt'));
+             	//echo $this->formElement($form->get('numberOfMonthsLoanAmt'));
+             	//echo $this->formElementErrors($form->get('numberOfMonthsLoanAmt'));
+             	//echo $this->formLabel($form->get('basic'));
+             	//echo $this->formElement($form->get('basic'));
+             	//echo $this->formElementErrors($form->get('basic'));
+             	
+                //echo $this->form()->closeTag(); 
+			    //echo $this->form()->closeTag(); 
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    <!-- 
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div> 
+    </fieldset> 
+    --> 
+</div>  
+<?php echo $this->form()->closeTag(); ?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="specialLoanContainer"></div>
+<script>$("#specialLoanContainer").zfTable('/specialloan/ajaxlist');</script> 
+<br/><br/> 
+<!--  
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div> 

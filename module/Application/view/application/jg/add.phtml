@@ -1,0 +1,14 @@
+<?php 
+	$title = 'Add Job Grade';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('jobGrade'));
+	echo $this->formElement($form->get('jobGrade'));
+	echo $this->formElementErrors($form->get('jobGrade')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

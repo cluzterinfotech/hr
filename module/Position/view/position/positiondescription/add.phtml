@@ -1,0 +1,326 @@
+<?php  
+	$title = 'Add Position Description'; 
+	$this->headTitle($title);
+	// echo "<h3>".$title."</h3>";   
+?> 
+<style type="text/css">  
+#JobPurpose {
+	width:560px !important;padding: 3px;border-style: solid;
+	border-color: #ccc;z-index:1200; 
+}
+
+#MajorChallenges,#QualificationExperience,#DevOthCoach,#OpBusFocus,
+#OpDriExec,#OpNetLeading,#BehOwnOrgnEnter,#InsFolInsTrust,
+#InsFolShapeStrategy,#FunctionalCompetencies,
+#OtherCompetencies,#BehaviouralImplication,
+#BdAnnualRevenue,#BdCapex,#BdOpex,#BdManningLevel,
+#BdOtherFeatures,#JobAcct1,#JobAcct2,#JobAcct3,#JobAcct4,#JobAcct5
+,#JobAcct6,#JobAcct7,#JobAcct8,#JobAcct9,#JobAcct10 {
+	width:450px !important;padding: 3px;border-style: solid;
+	border-color: #ccc;z-index:1200;
+}
+#Kpi1,#Kpi2,#Kpi3,#Kpi4,#Kpi5,#Kpi6,#Kpi7
+,#Kpi8,#Kpi9,#Kpi10 {
+	width:250px !important;padding: 3px;border-style: solid; 
+	border-color: #ccc;z-index:1200;
+}
+#positionId { width:360px !important; } 
+</style> 
+<div id="tabs"> 
+	<ul>
+		<li><a href="#tabs-1">Position Description</a></li>
+		<!--  <li><a href="#tabs-2">Search Leave</a></li>-->
+	</ul>
+<div id="tabs-1"> 
+<?php 
+echo $this->form()->openTag($form); ?>
+<div>
+<fieldset style="padding:5px;" >
+<!--  <legend>Employee Info</legend>--> 
+<div style="float:left;width:320px;margin:-10px 0 0 0;">
+<?php  
+echo $this->formLabel($form->get('positionId'));
+echo $this->formElement($form->get('positionId'));
+echo $this->formElementErrors($form->get('positionId'));
+echo $this->formLabel($form->get('JobPurpose'));
+echo $this->formElement($form->get('JobPurpose'));
+echo $this->formElementErrors($form->get('JobPurpose'));
+?>
+</div>					
+</fieldset>
+
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct1'));
+echo $this->formElement($form->get('JobAcct1'));
+echo $this->formElementErrors($form->get('JobAcct1'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi1'));
+echo $this->formElement($form->get('Kpi1'));
+echo $this->formElementErrors($form->get('Kpi1'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct2'));
+echo $this->formElement($form->get('JobAcct2'));
+echo $this->formElementErrors($form->get('JobAcct2'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi2'));
+echo $this->formElement($form->get('Kpi2'));
+echo $this->formElementErrors($form->get('Kpi2'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct3'));
+echo $this->formElement($form->get('JobAcct3'));
+echo $this->formElementErrors($form->get('JobAcct3'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi3'));
+echo $this->formElement($form->get('Kpi3'));
+echo $this->formElementErrors($form->get('Kpi3'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct4'));
+echo $this->formElement($form->get('JobAcct4'));
+echo $this->formElementErrors($form->get('JobAcct4'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi4'));
+echo $this->formElement($form->get('Kpi4'));
+echo $this->formElementErrors($form->get('Kpi4'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct5'));
+echo $this->formElement($form->get('JobAcct5'));
+echo $this->formElementErrors($form->get('JobAcct5'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi5'));
+echo $this->formElement($form->get('Kpi5'));
+echo $this->formElementErrors($form->get('Kpi5'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct6'));
+echo $this->formElement($form->get('JobAcct6'));
+echo $this->formElementErrors($form->get('JobAcct6'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi6'));
+echo $this->formElement($form->get('Kpi6'));
+echo $this->formElementErrors($form->get('Kpi6'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct7'));
+echo $this->formElement($form->get('JobAcct7'));
+echo $this->formElementErrors($form->get('JobAcct7'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi7'));
+echo $this->formElement($form->get('Kpi7'));
+echo $this->formElementErrors($form->get('Kpi7'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct8'));
+echo $this->formElement($form->get('JobAcct8'));
+echo $this->formElementErrors($form->get('JobAcct8'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi8'));
+echo $this->formElement($form->get('Kpi8'));
+echo $this->formElementErrors($form->get('Kpi8'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct9'));
+echo $this->formElement($form->get('JobAcct9'));
+echo $this->formElementErrors($form->get('JobAcct9'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi9'));
+echo $this->formElement($form->get('Kpi9'));
+echo $this->formElementErrors($form->get('Kpi9'));
+?>  
+</div>
+</fieldset>
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:460px;"> 
+<?php
+echo $this->formLabel($form->get('JobAcct10'));
+echo $this->formElement($form->get('JobAcct10'));
+echo $this->formElementErrors($form->get('JobAcct10'));
+?>
+</div>
+<div style="Float:left;width:270px;">
+<?php
+echo $this->formLabel($form->get('Kpi10'));
+echo $this->formElement($form->get('Kpi10'));
+echo $this->formElementErrors($form->get('Kpi10'));
+?>  
+</div>
+</fieldset> 
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:760px;"> 
+<?php
+echo $this->formLabel($form->get('MajorChallenges'));
+echo $this->formElement($form->get('MajorChallenges'));
+echo $this->formElementErrors($form->get('MajorChallenges')); 
+?>
+</div> 
+</fieldset> 
+
+<fieldset style="padding:5px;" >
+<div style="Float:left;width:760px;"> 
+<?php
+echo $this->formLabel($form->get('QualificationExperience'));
+echo $this->formElement($form->get('QualificationExperience'));
+echo $this->formElementErrors($form->get('QualificationExperience')); 
+?>
+</div> 
+</fieldset> 
+
+<fieldset style="padding:5px;" >
+<legend>LEADERSHIP COMPETENCIES</legend> 
+<div style="Float:left;width:760px;"> 
+<?php
+echo $this->formLabel($form->get('QualificationExperience'));
+echo $this->formElement($form->get('QualificationExperience'));
+echo $this->formElementErrors($form->get('QualificationExperience')); 
+
+echo $this->formLabel($form->get('DevOthCoach'));
+echo $this->formElement($form->get('DevOthCoach'));
+echo $this->formElementErrors($form->get('DevOthCoach'));
+
+echo $this->formLabel($form->get('OpBusFocus'));
+echo $this->formElement($form->get('OpBusFocus'));
+echo $this->formElementErrors($form->get('OpBusFocus'));
+
+echo $this->formLabel($form->get('OpDriExec'));
+echo $this->formElement($form->get('OpDriExec'));
+echo $this->formElementErrors($form->get('OpDriExec'));
+
+echo $this->formLabel($form->get('OpNetLeading'));
+echo $this->formElement($form->get('OpNetLeading'));
+echo $this->formElementErrors($form->get('OpNetLeading'));
+
+echo $this->formLabel($form->get('BehOwnOrgnEnter'));
+echo $this->formElement($form->get('BehOwnOrgnEnter'));
+echo $this->formElementErrors($form->get('BehOwnOrgnEnter'));
+
+echo $this->formLabel($form->get('InsFolInsTrust'));
+echo $this->formElement($form->get('InsFolInsTrust'));
+echo $this->formElementErrors($form->get('InsFolInsTrust'));
+
+echo $this->formLabel($form->get('InsFolShapeStrategy'));
+echo $this->formElement($form->get('InsFolShapeStrategy'));
+echo $this->formElementErrors($form->get('InsFolShapeStrategy'));
+
+echo $this->formLabel($form->get('FunctionalCompetencies'));
+echo $this->formElement($form->get('FunctionalCompetencies'));
+echo $this->formElementErrors($form->get('FunctionalCompetencies'));
+
+echo $this->formLabel($form->get('OtherCompetencies'));
+echo $this->formElement($form->get('OtherCompetencies'));
+echo $this->formElementErrors($form->get('OtherCompetencies'));
+
+echo $this->formLabel($form->get('BehaviouralImplication'));
+echo $this->formElement($form->get('BehaviouralImplication'));
+echo $this->formElementErrors($form->get('BehaviouralImplication'));
+?>
+</div> 
+</fieldset> 
+
+<fieldset style="padding:5px;" >
+<legend>BUSINESS DIMENSION</legend> 
+<div style="Float:left;width:760px;"> 
+<?php
+echo $this->formLabel($form->get('BdAnnualRevenue'));
+echo $this->formElement($form->get('BdAnnualRevenue'));
+echo $this->formElementErrors($form->get('BdAnnualRevenue')); 
+echo $this->formLabel($form->get('BdCapex'));
+echo $this->formElement($form->get('BdCapex'));
+echo $this->formElementErrors($form->get('BdCapex'));
+echo $this->formLabel($form->get('BdOpex'));
+echo $this->formElement($form->get('BdOpex'));
+echo $this->formElementErrors($form->get('BdOpex'));
+echo $this->formLabel($form->get('BdManningLevel'));
+echo $this->formElement($form->get('BdManningLevel'));
+echo $this->formElementErrors($form->get('BdManningLevel'));
+echo $this->formLabel($form->get('BdOtherFeatures'));
+echo $this->formElement($form->get('BdOtherFeatures'));
+echo $this->formElementErrors($form->get('BdOtherFeatures'));
+?>
+</div> 
+</fieldset> 
+
+
+<fieldset style="padding:5px;" >
+<!-- <legend>Submit Form</legend>-->
+<div style="float:left;width:460px;margin:-10px 0 0 0;">
+<?php echo $this->formSubmit($form->get('submit')); ?>
+</div> 				   	
+</fieldset>
+</div>
+<?php echo $this->form()->closeTag (); ?>
+</div> 

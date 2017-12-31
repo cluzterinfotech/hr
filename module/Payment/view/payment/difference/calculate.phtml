@@ -1,0 +1,34 @@
+<?php 
+	$title = 'Calculate Difference/Arrears'; 
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>"; 
+?> 
+<br/> 
+<p><b>Note :</b> Description is used to distinguish the purpose 
+for difference calculation( Example increment difference 2016)
+<br/>Employee selection is optional, incase any individual changes for employee
+difference can be calculated just for that employee
+</p> 
+<br/> 
+<?php 
+	echo $this->form()->openTag($form); 
+	
+	echo $this->formLabel($form->get('differenceFromDate'));
+	echo $this->formElement($form->get('differenceFromDate'));
+	echo $this->formElementErrors($form->get('differenceFromDate'));
+	
+	echo $this->formLabel($form->get('differenceToDate'));
+	echo $this->formElement($form->get('differenceToDate'));
+	echo $this->formElementErrors($form->get('differenceToDate'));
+	
+	//echo $this->formLabel($form->get('employeeNumberDifference'));
+	//echo $this->formElement($form->get('employeeNumberDifference'));
+	//echo $this->formElementErrors($form->get('employeeNumberDifference'));
+	
+	echo $this->formLabel($form->get('diffShortDescription'));
+	echo $this->formElement($form->get('diffShortDescription'));
+	echo $this->formElementErrors($form->get('diffShortDescription'));
+	
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?> 

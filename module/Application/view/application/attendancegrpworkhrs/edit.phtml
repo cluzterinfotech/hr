@@ -1,0 +1,33 @@
+<?php 
+	$title = 'Update Group Work Hours';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('locationGroup'));
+	echo $this->formElement($form->get('locationGroup'));
+	echo $this->formElementErrors($form->get('locationGroup'));
+	echo $this->formLabel($form->get('eventId'));
+	echo $this->formElement($form->get('eventId'));
+	echo $this->formElementErrors($form->get('eventId'));
+	echo $this->formLabel($form->get('DayName'));
+	echo $this->formElement($form->get('DayName'));
+	echo $this->formElementErrors($form->get('DayName'));
+	echo $this->formLabel($form->get('Status'));
+	echo $this->formElement($form->get('Status'));
+	echo $this->formElementErrors($form->get('Status'));
+	echo $this->formLabel($form->get('WorkingHours'));
+	echo $this->formElement($form->get('WorkingHours'));
+	echo $this->formElementErrors($form->get('WorkingHours'));
+	echo $this->formLabel($form->get('startTime'));
+	echo $this->formElement($form->get('startTime'));
+	echo $this->formElementErrors($form->get('startTime'));
+	echo $this->formLabel($form->get('endTime'));
+	echo $this->formElement($form->get('endTime'));
+	echo $this->formElementErrors($form->get('endTime'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

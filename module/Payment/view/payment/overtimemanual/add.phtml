@@ -1,0 +1,85 @@
+<?php 
+	$title = 'Add Overtime';  
+	$this->headTitle($title);  
+	//echo "<h3>".$title."</h3>";  
+?> 
+<div > 
+<?php  
+
+$form = $this->form; 
+$form->setAttribute('target','_self');  //_blank
+$form->prepare(); 
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+    #subToSupDialog { display:none; } 
+    /*input[type="text"],input[type="number"] { width: 60px; }*/
+    #employeeNoNOHours,#employeeNoHOHours,#numberOfMeals{ width: 60px; } 
+    #otFromDate,#otToDate { width: 230px; } 
+   
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Add OverTime Hours for Employee</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <!--  <legend>Add OverTime Hours for Employee </legend>--> 
+            <div style="float:left;width:50%;margin:-10px 0 0 0;">
+            <?php 
+                
+                
+                echo $this->formLabel($form->get('empIdOvertimeManual'));
+                echo $this->formElement($form->get('empIdOvertimeManual'));
+                echo $this->formElementErrors($form->get('empIdOvertimeManual'));
+                echo $this->formLabel($form->get('employeeNoNOHours'));
+                echo $this->formElement($form->get('employeeNoNOHours'));
+                echo $this->formElementErrors($form->get('employeeNoNOHours'));
+                
+                echo $this->formLabel($form->get('employeeNoHOHours'));
+                echo $this->formElement($form->get('employeeNoHOHours'));
+                echo $this->formElementErrors($form->get('employeeNoHOHours'));
+                
+                echo $this->formLabel($form->get('numberOfMeals'));
+                echo $this->formElement($form->get('numberOfMeals'));
+                echo $this->formElementErrors($form->get('numberOfMeals'));
+                echo $this->formSubmit($form->get('submit'));
+                ?>
+                </div>
+                 <div style="float:left;width:50%;margin:-10px 0 0 0;">
+                 <?php 
+                 echo $this->formLabel($form->get('month'));
+                 echo $this->formElement($form->get('month'));
+                 echo $this->formElementErrors($form->get('month'));
+                 
+                 echo $this->formLabel($form->get('year'));
+                 echo $this->formElement($form->get('year'));
+                 echo $this->formElementErrors($form->get('year'));
+				?>
+				 </div>			
+            	</div>	
+    </fieldset> 
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div> 
+<div id="overtimeMContainer"></div>
+<script>
+$("#overtimeMContainer").zfTable('/overtimemanual/ajaxlist');
+</script> 
+<br/>
+<!-- <input type='button' id = 'submitOtToSup' value = "Submit Overtime To Supervisor" >--> 
+<br/>
+<div id="subToSupDialog">Submit Overtime to Supervisor?</div> 
+<div id="dialog">Are you sure remove this record?</div>  
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->  
+</div> 

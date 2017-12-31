@@ -1,0 +1,13 @@
+<h1>Add Salary Grade</h1>
+
+
+<?php
+echo $this->form ()->openTag ( $form );
+echo $this->formRow ( $form->get ( 'lkp_salary_grade_id' ) );
+echo $this->formRow ( $form->get ( 'salary_grade' ) ) . "</br>";
+echo $this->formSubmit ( $form->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+?>
+</br>
+</br>
+<a href="<?php echo $this->url('salaryGrade'); ?>">Back</a>

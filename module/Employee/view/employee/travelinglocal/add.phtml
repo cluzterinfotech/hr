@@ -1,0 +1,110 @@
+<?php
+$title = 'Add Traveling Form';
+$this->headTitle ( $title );
+// echo "<h3>".$title."</h3>";
+?>
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Traveling Form Local</a></li>
+		<!--  <li><a href="#tabs-2">Search Form</a></li>--> 
+	</ul>
+<div id="tabs-1"> 
+<?php
+echo $this->form ()->openTag ( $form );
+?>
+<div style="width:100%;>
+<div  id="my"
+	style="width:750px;float:left;clear:both;">
+	<fieldset style="padding: 5px;">
+		<legend>Add Traveling Form Info</legend>
+		<div style="float: left; width: 370px; margin: -10px 0 0 0;">
+<?php
+echo $this->formLabel ( $form->get ( 'employeeNumberTravelingLocal' ) );
+echo $this->formElement ( $form->get ( 'employeeNumberTravelingLocal' ) );
+echo $this->formElementErrors ( $form->get ( 'employeeNumberTravelingLocal' ) );
+echo $this->formLabel ( $form->get ( 'travelingFormEmpPosition' ) );
+echo $this->formElement ( $form->get ( 'travelingFormEmpPosition' ) );
+echo $this->formElementErrors ( $form->get ( 'travelingFormEmpPosition' ) );
+echo $this->formLabel ( $form->get ( 'travelingTo' ) );
+echo $this->formElement ( $form->get ( 'travelingTo' ) );
+echo $this->formElementErrors ( $form->get ( 'travelingTo' ) );
+echo $this->formLabel ( $form->get ( 'purposeOfTrip' ) );
+echo $this->formElement ( $form->get ( 'purposeOfTrip' ) );
+echo $this->formElementErrors ( $form->get ( 'purposeOfTrip' ) );
+echo $this->formLabel ( $form->get ( 'effectiveFrom' ) );
+echo $this->formElement ( $form->get ( 'effectiveFrom' ) );
+echo $this->formElementErrors ( $form->get ( 'effectiveFrom' ) );
+echo $this->formLabel ( $form->get ( 'effectiveTo' ) );
+echo $this->formElement ( $form->get ( 'effectiveTo' ) );
+echo $this->formElementErrors ( $form->get ( 'effectiveTo' ) );
+echo $this->formLabel ( $form->get ( 'travelingComments' ) );
+echo $this->formElement ( $form->get ( 'travelingComments' ) );
+echo $this->formElementErrors ( $form->get ( 'travelingComments' ) );
+
+echo $this->formSubmit ( $form->get ( 'submit' ) );
+?>
+</div>
+<div style="Float:left;width:320px;">	
+<?php
+
+echo $this->formLabel ( $form->get ( 'expensesRequired' ) );
+echo $this->formElement ( $form->get ( 'expensesRequired' ) );
+echo $this->formElementErrors ( $form->get ( 'expensesRequired' ) );
+echo $this->formLabel ( $form->get ( 'delegatedEmployee' ) );
+echo $this->formElement ( $form->get ( 'delegatedEmployee' ) );
+echo $this->formElementErrors ( $form->get ( 'delegatedEmployee' ) );
+echo $this->formLabel ( $form->get ( 'meansOfTransport' ) );
+echo $this->formElement ( $form->get ( 'meansOfTransport' ) );
+echo $this->formElementErrors ( $form->get ( 'meansOfTransport' ) );
+
+echo $this->formLabel ( $form->get ( 'fuelLiters' ) );
+echo $this->formElement ( $form->get ( 'fuelLiters' ) );
+echo $this->formElementErrors ( $form->get ( 'fuelLiters' ) );
+echo $this->formLabel ( $form->get ( 'classOfAirTicket' ) );
+echo $this->formElement ( $form->get ( 'classOfAirTicket' ) );
+echo $this->formElementErrors ( $form->get ( 'classOfAirTicket' ) );
+echo $this->formLabel ( $form->get ( 'classOfHotel' ) );
+echo $this->formElement ( $form->get ( 'classOfHotel' ) );
+echo $this->formElementErrors ( $form->get ( 'classOfHotel' ) );
+//echo $this->formLabel ( $form->get ( 'expenseApproved' ) );
+//echo $this->formElement ( $form->get ( 'expenseApproved' ) );
+//echo $this->formElementErrors ( $form->get ( 'expenseApproved' ) );
+echo $this->formLabel ( $form->get ( 'amount' ) );
+echo $this->formElement ( $form->get ( 'amount' ) );
+echo $this->formElementErrors ( $form->get ( 'amount' ) ); 
+
+?> 
+
+ </div>
+		<div style="Float: left; width: 370px;">
+ <?php
+	/*
+	 * echo $this->formLabel($form->get('oldSalaryGrade'));
+	 * echo $this->formElement($form->get('oldSalaryGrade'));
+	 * echo $this->formElementErrors($form->get('oldSalaryGrade'));
+	 * echo $this->formLabel($form->get('oldInitial'));
+	 * echo $this->formElement($form->get('oldInitial'));
+	 * echo $this->formElementErrors($form->get('oldInitial'));
+	 * echo $this->formLabel($form->get('tenPercentage'));
+	 * echo $this->formElement($form->get('tenPercentage'));
+	 * echo $this->formElementErrors($form->get('tenPercentage'));
+	 * echo $this->formLabel($form->get('maxQuartileOne'));
+	 * echo $this->formElement($form->get('maxQuartileOne'));
+	 * echo $this->formElementErrors($form->get('maxQuartileOne'));
+	 * echo $this->formLabel($form->get('difference'));
+	 * echo $this->formElement($form->get('difference'));
+	 * echo $this->formElementErrors($form->get('difference'));
+	 */
+	echo $this->form ()->closeTag ();
+	?>
+</div>
+	</fieldset>
+</div>
+<br />
+<!-- 
+<div id="promotionTableContainer"></div>
+<script>$("#promotionTableContainer").zfTable('/promotion/ajaxlist');</script> 
+-->
+<br />
+<br />
+</div>

@@ -1,0 +1,97 @@
+<?php 
+	$title = 'Apply New Position Allowance'; 
+	$this->headTitle($title); 
+	echo "<h3>".$title."</h3>"; 
+?>
+
+<?php 
+	echo $this->form()->openTag($form);  
+	echo $this->formSubmit($form->get('submit'));  
+	echo $this->form()->closeTag();   
+?>  
+<br/> 
+<div id="positionAllowanceContainerHist"></div>
+<script>$("#positionAllowanceContainerHist").zfTable('/positionallowance/ajaxlisthist');</script>  
+<br/>
+<?php 
+/*
+	$title = 'Add New Position Allowance'; 
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Position Allowance</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div> 
+    <fieldset style="padding:5px;" > 
+        <legend>Add/Edit Position Allowance</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('positionName'));
+                echo $this->formElement($form->get('positionName'));
+                echo $this->formElementErrors($form->get('positionName'));
+                echo $this->formLabel($form->get('positionAllowanceName'));
+				echo $this->formElement($form->get('positionAllowanceName'));
+				echo $this->formElementErrors($form->get('positionAllowanceName'));
+				
+				echo $this->formSubmit($form->get('submit')); 
+				?> 
+				 </div>	
+               <div style="Float:left;width:370px;">
+             <?php 
+             //echo $this->formLabel($form->get('sgAmount'));
+             //echo $this->formElement($form->get('sgAmount'));
+             //echo $this->formElementErrors($form->get('sgAmount'));
+             //echo $this->formLabel($form->get('isApplicableToAll'));
+             //echo $this->formElement($form->get('isApplicableToAll'));
+             //echo $this->formElementErrors($form->get('isApplicableToAll'));
+				
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    <!-- 
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag(); ?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="positionAllowanceContainer"></div>
+<script>$("#positionAllowanceContainer").zfTable('/positionallowance/ajaxlist');</script>  
+
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div> 
+*/
+?>

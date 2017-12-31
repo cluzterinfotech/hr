@@ -1,0 +1,21 @@
+<?php
+$title = 'Edit PMS';
+$this->headTitle ( $title );
+echo "<h3>".$title."</h3>";
+
+echo $this->form()->openTag($form);
+echo $this->formElement($form->get('id'));
+echo $this->formLabel($form->get('Year'));
+echo $this->formElement($form->get('Year'));
+echo $this->formElementErrors($form->get('Year'));
+echo $this->formLabel($form->get('Curr_Activity'));
+echo $this->formElement($form->get('Curr_Activity'));
+echo $this->formElementErrors($form->get('Curr_Activity'));
+echo $this->formLabel($form->get('IPC_Notes'));
+echo $this->formElement($form->get('IPC_Notes'));
+echo $this->formElementErrors($form->get('IPC_Notes')); 
+echo $this->formLabel($form->get('Reports_Status')); 
+echo $this->formElement($form->get('Reports_Status'));
+echo $this->formElementErrors($form->get('Reports_Status'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form ()->closeTag ();

@@ -1,0 +1,94 @@
+<!DOCTYPE HTML> 
+<html>
+<head>
+<title>Organisation Chart (Chairman)</title>
+<style>
+body {font-family: "Times New Roman", Times, serif;
+	font-size: 1.0em;color: #666;
+}
+h2 {margin-top: 0px;margin-bottom: 8px;}
+p {margin: 0px;padding: 0px;line-height: 1.5em;}
+div#text {padding: 10px;}
+div.orgChart h2 {margin: 0px;font-size: 0.75em;
+	width: 70px;padding: 5px;}
+div.orgChart ul {
+	list-style: none;
+	margin: 4px;
+	padding: 0px;
+	font-size: 0.8em;
+	text-align: left;
+}
+
+div.orgChart table {
+	width: 100%;
+}
+
+div.orgChart tr.lines td.line {
+	width: 1px;
+	height: 20px;
+}
+
+div.orgChart tr.lines td.top {
+	border-top: 2px solid #3388dd;
+}
+
+div.orgChart tr.lines td.left {
+	border-right: 1px solid #3388dd;
+}
+
+div.orgChart tr.lines td.right {
+	border-left: 1px solid #3388dd;
+}
+
+div.orgChart td {
+	text-align: center;
+	vertical-align: top;
+	padding: 0px 2px;
+}
+
+div.orgChart div.node {
+	cursor: pointer;
+	border: 2px solid #b5d9ea;
+	display: inline-block;
+	width: 100px;
+	height: 125px;
+	background-color: #edf7ff;
+	border-radius: 8px;
+	box-shadow: 4px 4px 6px #888888;
+	-moz-border-radius: 8px;
+	-moz-box-shadow: 4px 4px 6px #888888;
+	-webkit-border-radius: 8px;
+	-webkit-box-shadow: 4px 4px 6px #888888;
+}
+
+div.orgChart div.node.hover {
+	background-color: #ffe8e8;
+}
+</style>
+<script type="text/javascript" src="/js/org_chart/j1.js"></script>
+<script type="text/javascript" src="/js/org_chart/j1.js"></script>
+<script type="text/javascript" src="/js/org_chart/j2.js"></script>
+<script type="text/javascript" src="/js/org_chart/j1.js"></script>
+<script type="text/javascript" src="/js/org_chart/j2.js"></script>
+<script type="text/javascript" src="/js/org_chart/j3.js"></script>
+<script>
+    $(function() {
+      $("#showList").click(function() {
+        $("#org").toggle();
+        return false;
+      });
+ 
+      $("#org").orgChart({
+        levels : -1, 
+        stack  : false,
+        nodeText : function($node) {return $node.textChildren();}}, 
+      $("#main"));
+    });
+    </script>
+</head>
+<body>
+	<h1>OECL - Chairman Organisation Chart</h1>
+	<div id="main"></div>
+	<?php echo $chart; ?>
+</body>
+</html> 

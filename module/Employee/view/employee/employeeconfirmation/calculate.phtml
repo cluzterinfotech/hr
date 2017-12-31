@@ -1,0 +1,94 @@
+<?php 
+	$title = 'Add Employee Confirmation';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */ 
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Employee Confirmation</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Add/Edit Employee Confirmation</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeNumberConfirmation'));
+                echo $this->formElement($form->get('employeeNumberConfirmation'));
+                echo $this->formElementErrors($form->get('employeeNumberConfirmation'));
+                echo $this->formLabel($form->get('effectiveDate'));
+				echo $this->formElement($form->get('effectiveDate'));
+				echo $this->formElementErrors($form->get('effectiveDate'));
+				echo $this->formLabel($form->get('appliedDate'));
+				echo $this->formElement($form->get('appliedDate'));
+				echo $this->formElementErrors($form->get('appliedDate'));
+				echo $this->formLabel($form->get('confirmationNotes'));
+				echo $this->formElement($form->get('confirmationNotes'));
+				echo $this->formElementErrors($form->get('confirmationNotes'));
+				echo $this->formSubmit($form->get('submit'));
+				?> 
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php 
+				echo $this->formLabel($form->get('oldSalary'));
+				echo $this->formElement($form->get('oldSalary'));
+				echo $this->formElementErrors($form->get('oldSalary'));
+				echo $this->formLabel($form->get('oldCola'));
+				echo $this->formElement($form->get('oldCola'));
+				echo $this->formElementErrors($form->get('oldCola'));
+				echo $this->formLabel($form->get('adjustedAmount'));
+				echo $this->formElement($form->get('adjustedAmount'));
+				echo $this->formElementErrors($form->get('adjustedAmount'));
+				echo $this->formLabel($form->get('percentage'));
+				echo $this->formElement($form->get('percentage'));
+				echo $this->formElementErrors($form->get('percentage'));
+			    //echo $this->form()->closeTag(); 
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    <!-- 
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag(); ?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="employeeConfirmationContainer"></div>
+<script>$("#employeeConfirmationContainer").zfTable('/employeeconfirmation/ajaxlist');</script>  
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div> 

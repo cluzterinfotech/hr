@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+phpunit_config_file=/hrnew/module/Payment/tests/phpunit.xml.dist
+preload_script=/hrnew/vendor/autoload.php
+test_file_pattern=
+test_folders=/hrnew/module/Payment/tests\u0005/hrnew/module/Allowance/tests
+testing_framework=PHPUnit

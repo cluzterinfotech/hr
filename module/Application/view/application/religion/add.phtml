@@ -1,0 +1,14 @@
+<?php 
+	$title = 'Add Religion';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('religionName'));
+	echo $this->formElement($form->get('religionName'));
+	echo $this->formElementErrors($form->get('religionName')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

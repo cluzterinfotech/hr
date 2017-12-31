@@ -1,0 +1,60 @@
+<?php
+$title = 'Open New Overtime Meal Batch';
+$this->headTitle($title);
+?>
+<div >
+    <?php
+    $form = $this->form;
+
+    $form->setAttribute('target', '_self');  //_blank
+    $form->prepare();
+    ?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Open New Overtime Meal Batch</a></li>
+    </ul> 
+    <div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+        <div>
+            <fieldset style="padding:5px;" >
+                <legend>Open new  OverTime meal batch for  current month </legend>
+                <div style="float:left;width:720px;margin:-10px 0 0 0;">
+<?php
+echo $this->formLabel($form->get('month'));
+echo $this->formElement($form->get('month'));
+echo $this->formElementErrors($form->get('month'));
+
+echo $this->formLabel($form->get('preparedBy'));
+echo $this->formElement($form->get('preparedBy'));
+echo $this->formElementErrors($form->get('preparedBy'));
+
+echo $this->formLabel($form->get('approvedBy'));
+echo $this->formElement($form->get('approvedBy'));
+echo $this->formElementErrors($form->get('approvedBy'));
+
+
+echo $this->formLabel($form->get('companyId'));
+echo $this->formElement($form->get('companyId'));
+echo $this->formElementErrors($form->get('companyId'));
+
+echo $this->formSubmit($form->get('submit'));
+?>
+                </div>			
+        </div>	
+        </fieldset>
+
+    </div>
+<?php echo $this->form()->closeTag(); ?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="overtimemealContainer"></div>
+<script>$("#overtimemealContainer").zfTable('/otmeal/ajaxbatch');</script> 
+<br/><br/>
+
+</div> 

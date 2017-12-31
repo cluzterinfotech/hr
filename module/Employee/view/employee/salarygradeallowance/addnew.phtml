@@ -1,0 +1,101 @@
+<?php 
+	$title = 'Add New Salary Grade Allowance'; 
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */ 
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Salary Grade Allowance</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div> 
+    <fieldset style="padding:5px;" > 
+        <legend>Update Salary Grade Allowance</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php  
+                //echo $this->formLabel($form->get('id'));
+                echo $this->formElement($form->get('id'));
+               // echo $this->formElementErrors($form->get('id'));
+                echo $this->formLabel($form->get('lkpSalaryGradeId'));
+                echo $this->formElement($form->get('lkpSalaryGradeId'));
+                echo $this->formElementErrors($form->get('lkpSalaryGradeId'));
+                echo $this->formLabel($form->get('allowanceId'));
+				echo $this->formElement($form->get('allowanceId'));
+				echo $this->formElementErrors($form->get('allowanceId'));
+				
+				echo $this->formSubmit($form->get('submit')); 
+				
+				?> 
+				 </div>	
+               <div style="Float:left;width:370px;"> 
+             <?php 
+             echo $this->formLabel($form->get('amount')); 
+             echo $this->formElement($form->get('amount'));
+             echo $this->formElementErrors($form->get('amount'));
+             echo $this->formLabel($form->get('isApplicableToAll'));
+             echo $this->formElement($form->get('isApplicableToAll'));
+             echo $this->formElementErrors($form->get('isApplicableToAll'));
+				/*echo $this->formLabel($form->get('oldSalary'));
+				echo $this->formElement($form->get('oldSalary'));
+				echo $this->formElementErrors($form->get('oldSalary'));
+				echo $this->formLabel($form->get('oldCola'));
+				echo $this->formElement($form->get('oldCola'));
+				echo $this->formElementErrors($form->get('oldCola'));
+				echo $this->formLabel($form->get('adjustedAmount'));
+				echo $this->formElement($form->get('adjustedAmount'));
+				echo $this->formElementErrors($form->get('adjustedAmount'));
+				echo $this->formLabel($form->get('percentage'));
+				echo $this->formElement($form->get('percentage'));
+				echo $this->formElementErrors($form->get('percentage'));
+			    //echo $this->form()->closeTag();
+			     */ 
+            ?>
+            </div>				
+</div>	
+    </fieldset> 
+    <!-- 
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag(); ?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="sgAllowanceContainer"></div>
+<script>$("#sgAllowanceContainer").zfTable('/salarygradeallowance/ajaxlist');</script>  
+
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div> 

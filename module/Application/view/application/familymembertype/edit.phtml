@@ -1,0 +1,15 @@
+<?php 
+	$title = 'Update Family Member Type';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('memberTypeName'));
+	echo $this->formElement($form->get('memberTypeName'));
+	echo $this->formElementErrors($form->get('memberTypeName')); 
+	
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

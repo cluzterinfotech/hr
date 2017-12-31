@@ -1,0 +1,31 @@
+<h1>Employee Bank Info - Index</h1>
+
+<table class="table">
+	<tr>
+		<th>Personal Info Id</th>
+		<th>Bank Id</th>
+		<th>Account Number</th>
+		<th>Action</th>
+	</tr>
+<?php
+foreach ( $info as $row ) :
+	?>
+    <tr>
+		<td><?php echo $row->getEmpPersonalInfoId(); ?></td>
+		<td><?php echo $row->getLkpBankId(); ?></td>
+		<td><?php echo $row->getAccountNumber(); ?></td>
+		<td><a
+			href="<?php echo $this->url('employee',array('action' => 'editBankInfo','id' => $row->getId())); ?>">Edit</a>
+			<a
+			href="<?php echo $this->url('employee',array('action' => 'deleteBankInfo','id' => $row->getId())); ?>">Delete</a>
+		</td>
+	</tr>
+<?php
+endforeach
+;
+?>
+    
+</table>
+</br>
+</br>
+<a href="<?php echo $this->url('employee'); ?>">Back</a>

@@ -1,0 +1,26 @@
+<?php 
+	$title = 'Update Employee Location';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>"; 
+?>
+<!--  Note : If employee name not displaying, please check his -->
+<script type="text/javascript"> 
+$(function() {
+    $("#employeeNumber").combobox("option", "disabled", true); 
+});    
+</script> 
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('employeeNumber')); 
+	echo $this->formElement($form->get('employeeNumber')); 
+	echo $this->formElementErrors($form->get('employeeNumber')); 
+	echo $this->formLabel($form->get('empLocation')); 
+	echo $this->formElement($form->get('empLocation')); 
+	echo $this->formElementErrors($form->get('empLocation')); 
+	echo $this->formLabel($form->get('effectiveDate'));
+	echo $this->formElement($form->get('effectiveDate'));
+	echo $this->formElementErrors($form->get('effectiveDate'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag (); 
+?>

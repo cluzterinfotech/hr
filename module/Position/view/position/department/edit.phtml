@@ -1,0 +1,28 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+$title = 'Edit Department';
+$this->headTitle ( $title );
+echo "<h3>Edit department</h3>";
+
+$editForm->setAttribute ( 'action', $this->url ( 'department', array (
+		'action' => 'edit',
+		'id' => $this->id 
+) ) );
+
+echo $this->form ()->openTag ( $editForm );
+echo $this->formHidden ( $editForm->get ( 'id' ) );
+echo "<label>ID</label>" . $this->formRow ( $editForm->get ( 'department_id' ) ) . "<br/>";
+echo "<label>Code</label>" . $this->formRow ( $editForm->get ( 'dept_function_code' ) ) . "<br/>";
+echo "<label>Name</label>" . $this->formRow ( $editForm->get ( 'department_name' ) ) . "<br/>";
+echo "<label>no_of_work_days</label>" . $this->formRow ( $editForm->get ( 'no_of_work_days' ) ) . "<br/>";
+echo "<label>dept_assistant_position</label>" . $this->formSelect ( $editForm->get ( 'dept_assistant_position_id' ) ) . "<br/>";
+echo "<label>work_hours_per_day</label>" . $this->formRow ( $editForm->get ( 'work_hours_per_day' ) ) . "<br/>";
+echo "<label></label>" . $this->formSubmit ( $editForm->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+
+echo $result;

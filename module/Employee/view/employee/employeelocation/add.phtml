@@ -1,0 +1,23 @@
+<?php 
+	$title = 'Add Location';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('employeeNumber')); 
+	echo $this->formElement($form->get('employeeNumber')); 
+	echo $this->formElementErrors($form->get('employeeNumber')); 
+	//echo $this->formLabel($form->get('overtimeHour'));
+	//echo $this->formElement($form->get('overtimeHour'));
+	//echo $this->formElementErrors($form->get('overtimeHour'));
+	echo $this->formLabel($form->get('location')); 
+	echo $this->formElement($form->get('location')); 
+	echo $this->formElementErrors($form->get('location')); 
+	echo $this->formLabel($form->get('effectiveDate'));
+	echo $this->formElement($form->get('effectiveDate'));
+	echo $this->formElementErrors($form->get('effectiveDate'));
+	echo $this->formSubmit($form->get('submit'));  
+	echo $this->form()->closeTag();  
+?>

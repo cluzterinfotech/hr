@@ -1,0 +1,11 @@
+<?php 
+	$title = 'Update Existing Affiliation Amount'; 
+	$this->headTitle($title); 
+	echo "<h3>".$title."</h3>"; 
+?>
+ 
+<br/> 
+<div id="dialog">Are you sure remove this record?</div>
+<div id="affiliationAmtContainer"></div>
+<script>$("#affiliationAmtContainer").zfTable('/affiliationamount/ajaxlistexisting');</script>  
+<br/> 

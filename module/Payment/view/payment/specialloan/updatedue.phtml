@@ -1,0 +1,23 @@
+<?php 
+	$title = 'Update Special Loan Due';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div > 
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style> 
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="specialLoanContainer"></div>
+<script>$("#specialLoanContainer").zfTable('/specialloan/updatedueajaxlist');</script> 
+<br/><br/><br/>
+<div id="specialLoanContainerPaid"></div>
+<script>$("#specialLoanContainerPaid").zfTable('/specialloan/paiddueajaxlist');</script> 
+<!--  
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div> 

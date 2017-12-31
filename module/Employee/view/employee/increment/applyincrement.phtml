@@ -1,0 +1,28 @@
+<?php 
+	$title = 'Apply Increment(For Current year)';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>"; 
+?>
+<br/>
+<br/>
+
+<?php 
+	echo $this->form()->openTag($form); 
+	//echo $this->formLabel($form->get('applyeEfectiveDate'));
+	//echo $this->formElement($form->get('applyeEfectiveDate'));
+	//echo $this->formElementErrors($form->get('applyeEfectiveDate')); 
+	//echo $this->formLabel($form->get('incColaPercentage'));
+    //echo $this->formElement($form->get('incColaPercentage'));
+    //echo $this->formElementErrors($form->get('incColaPercentage'));
+	echo $this->formSubmit($form->get('submit'));  
+	echo $this->form()->closeTag();  
+?> 
+<br/><br/>
+<!-- <div id='promotionList' >
+    <?php //echo $promotionList;?>
+</div> -->
+<!-- 
+<div id="tableContainer"></div>
+<script>$("#tableContainer").zfTable('/promotion/ajaxlist');</script> 
+--> 
+<br/><br/>

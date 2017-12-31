@@ -1,0 +1,95 @@
+<?php 
+	$title = 'Add Repayment';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */ 
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Repayment</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Add/Edit Repayment</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeIdRepayment'));
+                echo $this->formElement($form->get('employeeIdRepayment'));
+                echo $this->formElementErrors($form->get('employeeIdRepayment'));
+                echo $this->formLabel($form->get('advanceType'));
+				echo $this->formElement($form->get('advanceType'));
+				echo $this->formElementErrors($form->get('advanceType'));
+				echo $this->formLabel($form->get('monthsPending'));
+				echo $this->formElement($form->get('monthsPending'));
+				echo $this->formElementErrors($form->get('monthsPending'));
+				echo $this->formLabel($form->get('monthlyDue'));
+				echo $this->formElement($form->get('monthlyDue'));
+				echo $this->formElementErrors($form->get('monthlyDue'));
+				echo $this->formSubmit($form->get('submit'));
+				?>
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php 
+				echo $this->formLabel($form->get('monthsPaying'));
+				echo $this->formElement($form->get('monthsPaying'));
+				echo $this->formElementErrors($form->get('monthsPaying'));
+				echo $this->formLabel($form->get('amountPending'));
+				echo $this->formElement($form->get('amountPending'));
+				echo $this->formElementErrors($form->get('amountPending'));
+				echo $this->formLabel($form->get('amountPaying'));
+				echo $this->formElement($form->get('amountPaying'));
+				echo $this->formElementErrors($form->get('amountPaying'));
+				echo $this->formLabel($form->get('notes'));
+				echo $this->formElement($form->get('notes'));
+				echo $this->formElementErrors($form->get('notes'));
+			    
+			    //echo $this->form()->closeTag(); 
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    <!--
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit')); 
+            ?>
+            </div>
+    </fieldset>
+    --> 
+</div> 
+<?php echo $this->form()->closeTag();?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="advanceRepaymentContainer"></div>
+<script>$("#advanceRepaymentContainer").zfTable('/repaymentadvance/ajaxlist');</script> 
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div> 

@@ -1,0 +1,24 @@
+<?php
+/*
+ * Description of Index
+ *
+ * @author AlkhatimVip
+ */
+$title = 'Main Levels';
+$this->headTitle ( $title );
+?>
+<table class="table">
+	<thead>
+		<th>Sequence</th>
+		<th>Name</th>
+		<th>&nbsp;</th>
+	</thead>
+        <?php foreach ($levels as $level) : ?>
+            <tr>
+		<td><?php echo $this->escapeHtml($level->getLevelSequence());?></td>
+		<td><?php echo $this->escapeHtml($level->getLevelName());?></td>
+		<td><a
+			href="<?php echo $this->url('level',array('action' => 'edit','id'=> $level->getPositionLevelId()));?>">edit</a></td>
+	</tr> 
+        <?php endforeach; ?>
+    </table>

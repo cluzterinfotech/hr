@@ -1,0 +1,61 @@
+<?php 
+	$title = 'Add Employee Termination';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+    echo $this->form()->openTag($form);	
+?>
+<div style="width:100%;>
+<div id="my" style="width:750px;float:left;clear:both;">
+<fieldset style="padding:5px;" >
+<legend>Add Termination Info</legend>
+<div style="float:left;width:370px;margin:-10px 0 0 0;">
+<?php 
+echo $this->formLabel($form->get('employeeNumberTermination'));
+echo $this->formElement($form->get('employeeNumberTermination'));
+echo $this->formElementErrors($form->get('employeeNumberTermination'));
+
+echo $this->formLabel($form->get('terminationDate'));
+echo $this->formElement($form->get('terminationDate'));
+echo $this->formElementErrors($form->get('terminationDate'));
+
+echo $this->formSubmit($form->get('submit'));
+?> 
+ </div>	
+ <div style="Float:left;width:370px;">
+ <?php
+ echo $this->formLabel($form->get('terminationType'));
+ echo $this->formElement($form->get('terminationType'));
+ echo $this->formElementErrors($form->get('terminationType'));
+ echo $this->formLabel($form->get('terminationNotes'));
+ echo $this->formElement($form->get('terminationNotes'));
+ echo $this->formElementErrors($form->get('terminationNotes'));
+/*echo $this->formLabel($form->get('oldSalaryGrade'));
+echo $this->formElement($form->get('oldSalaryGrade'));
+echo $this->formElementErrors($form->get('oldSalaryGrade'));
+echo $this->formLabel($form->get('oldInitial'));
+echo $this->formElement($form->get('oldInitial'));
+echo $this->formElementErrors($form->get('oldInitial'));
+echo $this->formLabel($form->get('tenPercentage'));
+echo $this->formElement($form->get('tenPercentage'));
+echo $this->formElementErrors($form->get('tenPercentage'));
+echo $this->formLabel($form->get('maxQuartileOne'));
+echo $this->formElement($form->get('maxQuartileOne'));
+echo $this->formElementErrors($form->get('maxQuartileOne'));
+echo $this->formLabel($form->get('difference'));
+echo $this->formElement($form->get('difference'));
+echo $this->formElementErrors($form->get('difference'));
+*/
+echo $this->form()->closeTag(); 
+?>
+</div>	
+</fieldset>				
+</div>  
+<div id="dialog">Are you sure remove this record?</div>
+<br/> 
+<div id="tableContainerT"></div>
+<script>$("#tableContainerT").zfTable('/employeetermination/ajaxlist');</script> 
+<br/><br/>
+</div>

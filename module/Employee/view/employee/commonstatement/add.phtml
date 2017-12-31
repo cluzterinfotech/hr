@@ -1,0 +1,29 @@
+<?php 
+	$title = 'Add Common Statement';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('employeeId'));
+	echo $this->formElement($form->get('employeeId'));
+	echo $this->formElementErrors($form->get('employeeId'));
+	echo $this->formLabel($form->get('bankId'));
+	echo $this->formElement($form->get('bankId'));
+	echo $this->formElementErrors($form->get('bankId'));
+	echo $this->formLabel($form->get('stmtDate'));
+	echo $this->formElement($form->get('stmtDate'));
+	echo $this->formElementErrors($form->get('stmtDate')); 
+	echo $this->formLabel($form->get('Amount'));
+	echo $this->formElement($form->get('Amount'));
+	echo $this->formElementErrors($form->get('Amount'));
+	echo $this->formLabel($form->get('Notes'));
+	echo $this->formElement($form->get('Notes'));
+	echo $this->formElementErrors($form->get('Notes'));
+	echo $this->formLabel($form->get('headerSerial'));
+	echo $this->formElement($form->get('headerSerial'));
+	echo $this->formElementErrors($form->get('headerSerial'));
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

@@ -1,0 +1,75 @@
+<?php 
+	$title = 'Mismatch Report';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+$form->setAttribute('action', $this->url(
+	'promotion', array(
+		'action'     => 'viewmismatchreport', 
+		'controller' => 'promotion'
+	)
+));   
+$form->setAttribute('target','_blank');
+$form->prepare();
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Mismatch Report</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul>
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <!--  <legend>Month Year</legend>--> 
+            <div style="float:left;width:300px;margin:-10px 0 0 0;">
+            <?php 
+	            echo $this->formLabel($form->get('empIdMismatch'));
+	            echo $this->formElement($form->get('empIdMismatch'));
+	            echo $this->formElementErrors($form->get('empIdMismatch'));
+	            echo $this->formLabel($form->get('departmentMismatch'));
+			    echo $this->formElement($form->get('departmentMismatch'));
+			    echo $this->formElementErrors($form->get('departmentMismatch'));
+			    echo $this->formLabel($form->get('mismatchJobGrade'));
+			    echo $this->formElement($form->get('mismatchJobGrade'));
+			    echo $this->formElementErrors($form->get('mismatchJobGrade'));
+			    echo $this->formSubmit($form->get('submit'));
+            ?>  
+            </div>				
+            <div style="float:left;width:100px;margin:-10px 0 0 0;">
+            <?php 
+			    
+            ?>
+            </div>		
+    </fieldset> 
+    <!--
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>				
+            	
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+</div>

@@ -1,0 +1,35 @@
+<?php 
+	$title = 'Add LBVF Instruction';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('LbvfName'));
+	echo $this->formElement($form->get('LbvfName'));
+	echo $this->formElementErrors($form->get('LbvfName'));
+	echo $this->formLabel($form->get('DeadLine'));
+	echo $this->formElement($form->get('DeadLine'));
+	echo $this->formElementErrors($form->get('DeadLine'));
+	echo $this->formLabel($form->get('DeadLineAssessment'));
+	echo $this->formElement($form->get('DeadLineAssessment'));
+	echo $this->formElementErrors($form->get('DeadLineAssessment'));
+	echo $this->formLabel($form->get('NominationEndorsement'));
+	echo $this->formElement($form->get('NominationEndorsement'));
+	echo $this->formElementErrors($form->get('NominationEndorsement'));
+	echo $this->formLabel($form->get('AllowAssess'));
+	echo $this->formElement($form->get('AllowAssess'));
+	echo $this->formElementErrors($form->get('AllowAssess'));
+	echo $this->formLabel($form->get('AllowReport'));
+	echo $this->formElement($form->get('AllowReport'));
+	echo $this->formElementErrors($form->get('AllowReport'));
+	echo $this->formLabel($form->get('Status'));
+	echo $this->formElement($form->get('Status'));
+	echo $this->formElementErrors($form->get('Status'));
+	echo $this->formLabel($form->get('Notes'));
+	echo $this->formElement($form->get('Notes'));
+	echo $this->formElementErrors($form->get('Notes')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

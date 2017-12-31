@@ -1,0 +1,20 @@
+<?php 
+	$title = 'Add Position (Car Rent Group)';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('positionId'));
+	echo $this->formElement($form->get('positionId'));
+	echo $this->formElementErrors($form->get('positionId'));
+	echo $this->formLabel($form->get('lkpCarRentGroupId'));
+	echo $this->formElement($form->get('lkpCarRentGroupId'));
+	echo $this->formElementErrors($form->get('lkpCarRentGroupId')); 
+	//echo $this->formLabel($form->get('locationStatus'));
+	//echo $this->formElement($form->get('locationStatus'));
+	//echo $this->formElementErrors($form->get('locationStatus')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

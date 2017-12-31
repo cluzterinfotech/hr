@@ -1,0 +1,18 @@
+<?php 
+	$title = 'Update Employee Id Card';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('employeeIdIdCard'));
+	echo $this->formElement($form->get('employeeIdIdCard'));
+	echo $this->formElementErrors($form->get('employeeIdIdCard'));
+	echo $this->formLabel($form->get('idCard'));
+	echo $this->formElement($form->get('idCard'));
+	echo $this->formElementErrors($form->get('idCard')); 
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

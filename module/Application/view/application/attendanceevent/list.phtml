@@ -1,0 +1,6 @@
+<?php 
+$title = 'Attendance Event List'; 
+$this->headTitle($title); 
+?>
+<div id="tableContainer"></div>
+<script>$("#tableContainer").zfTable('/attendanceevent/ajaxlist');</script>  

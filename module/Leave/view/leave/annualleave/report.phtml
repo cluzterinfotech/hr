@@ -1,0 +1,102 @@
+<?php 
+	$title = 'Leave Report';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form;
+
+$form->setAttribute('action', $this->url(
+	'annualleave', array(
+		'action'     => 'viewreport',
+		'controller' => 'annualleave'
+	)
+)); 
+$form->setAttribute('target','_blank');
+$form->prepare();
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Leave Report</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul>
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <legend>Month Year</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                //echo $this->form()->openTag($form); 
+			    echo $this->formLabel($form->get('month'));
+			    echo $this->formElement($form->get('month'));
+			    echo $this->formElementErrors($form->get('month'));
+			    echo $this->formLabel($form->get('year'));
+			    echo $this->formElement($form->get('year'));
+			    echo $this->formElementErrors($form->get('year'));
+			    echo $this->formLabel($form->get('employeeLeaveReport'));
+			    echo $this->formElement($form->get('employeeLeaveReport'));
+			    echo $this->formElementErrors($form->get('employeeLeaveReport'));
+			    echo $this->formSubmit($form->get('submit'));
+			    //echo $this->form()->closeTag();
+            ?>
+            </div> 	
+            <div style="float:left;width:370px;margin:-10px 0 0 0;">
+                <?php
+                    //echo "<p>" . $this->formHidden($form->get('id')) . "</p>";
+                    //echo "<p id='customerId'>" . $this->formRow($form->get('Lkp_Customers_Id')) . "</p>";
+                    //echo "<p>" . $this->formRow($form->get('Customer_No')) . "</p>";
+                    
+                    echo $this->formLabel($form->get('leaveDepartment'));
+                    echo $this->formElement($form->get('leaveDepartment'));
+                    echo $this->formElementErrors($form->get('leaveDepartment'));
+                    echo $this->formLabel($form->get('leaveLocation'));
+                    echo $this->formElement($form->get('leaveLocation'));
+                    echo $this->formElementErrors($form->get('leaveLocation'));
+                    echo $this->formLabel($form->get('leaveTypeReport'));
+                    echo $this->formElement($form->get('leaveTypeReport'));
+                    echo $this->formElementErrors($form->get('leaveTypeReport'));
+                    //echo "<p>".$this->formRow($form->get('Package'))."</p>";
+                        ?>
+                    </div>				
+                    <!--<div style="Float:left;width:370px;">			    
+                        <?php
+                        //echo $this->formRow($form->get('Order_Date')) . "</p>";
+                        //echo "<p>" . $this->formRow($form->get('OBR_No')) . "</p>";
+                        //echo "<p>" . $this->formRow($form->get('Credit_Note_No')) . "</p>";
+                        //echo "<p>".$this->formRow($form->get('Recipient_Mobile'))."</p>";
+                        //echo "<p>" . $this->formRow($form->get('Id_Card')) . "</p>";
+                        //echo "<p>" . $this->formHidden($form->get('remAmtDiff')) . "</p>";
+                        ?>				
+                    </div>--> 	
+    </fieldset>
+    <!--
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php
+                //echo $this->formSubmit($form->get('submit'));
+            ?>
+            </div>				
+            	
+    </fieldset>
+    --> 
+</div>
+<?php echo $this->form()->closeTag ();?>
+</div>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->
+
+</div>

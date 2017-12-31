@@ -1,0 +1,18 @@
+<?php 
+	$title = 'Update Location Group';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('locationId'));
+	echo $this->formElement($form->get('locationId'));
+	echo $this->formElementErrors($form->get('locationId'));
+	echo $this->formLabel($form->get('attendanceGroupId'));
+	echo $this->formElement($form->get('attendanceGroupId'));
+	echo $this->formElementErrors($form->get('attendanceGroupId'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

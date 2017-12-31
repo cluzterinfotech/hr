@@ -1,0 +1,21 @@
+<?php 
+	$title = 'Update Over Payment Amount';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('employeeNumber'));
+	echo $this->formElement($form->get('employeeNumber'));
+	echo $this->formElementErrors($form->get('employeeNumber'));
+	echo $this->formLabel($form->get('amount'));
+	echo $this->formElement($form->get('amount'));
+	echo $this->formElementErrors($form->get('amount')); 
+	echo $this->formLabel($form->get('numberOfMonthsDed'));
+	echo $this->formElement($form->get('numberOfMonthsDed'));
+	echo $this->formElementErrors($form->get('numberOfMonthsDed'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

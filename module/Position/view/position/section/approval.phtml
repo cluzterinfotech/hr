@@ -1,0 +1,48 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of Index
+ *
+ * @author AlkhatimVip
+ */
+$title = 'Approval Sections';
+$this->headTitle ( $title );
+
+?>
+<form method="post"
+	action="<?php echo $this->url('section', array('action' => 'multiple'));?>">
+	<table class="table">
+		<thead>
+			<th>&nbsp;</th>
+			<th>Code</th>
+			<th>Name</th>
+			<th>Department</th>
+			<!--<th>Added by</th>-->
+			<th>action</th>
+		</thead>
+        <?php foreach ($sections as $section) : ?>
+            <tr>
+			<td><input type="checkbox" name="multiSelect[]"
+				value="<?php echo $this->escapeHtml($section->getSectionId());?>" /></td>
+			<td><?php echo $this->escapeHtml($section->getSectionCode());?></td>
+			<td><?php echo $this->escapeHtml($section->getSectionName());?></td>
+			<td><?php echo $this->escapeHtml($section->getDepartmentId());?></td>
+			<!--<td><?php //echo $this->escapeHtml($section->getAddedUser())." on ".$this->escapeHtml($section->getAddedDate());?></td>-->
+			<td><a
+				href="<?php echo $this->url('section',array('action'=>'approve', 'id' => $section->getSectionId()));?>">Approve</a>
+				<a
+				href="<?php echo $this->url('section',array('action'=>'reject', 'id' => $section->getSectionId()));?>">Reject</a>
+				<a
+				href="<?php echo $this->url('section',array('action' => 'edit','id'=> $section->getSectionId()));?>">edit</a>
+			</td>
+		</tr> 
+        <?php endforeach; ?>
+    </table>
+	<input type='submit' name='action' value='Approve' /> <input
+		type='submit' name='action' value='Reject' />
+</form>

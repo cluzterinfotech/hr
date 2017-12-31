@@ -1,0 +1,19 @@
+<?php
+$title = 'approve leave Entitlemnt';
+$this->headTitle ( $title );
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<P>Are you sure you want to approve</P>
+<?php
+$url = $this->url ( 'entitlementadmin', array (
+		'action' => 'approve',
+		'id' => $id 
+) );
+?>
+<form action="<?php echo $url; ?>" method="post">
+	<div>
+		<!--  < <input type="hidden" name="id" value="//<?//php echo (int) $project->getProjectId; ?>" />-->
+		<input type="submit" name="approve" value="Yes" /> <input
+			type="submit" name="approve" value="No" />
+	</div>
+</form>

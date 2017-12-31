@@ -1,0 +1,33 @@
+<?php 
+	$title = 'Update Quartile Rating';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	
+	echo $this->formLabel($form->get('Rating'));
+	echo $this->formElement($form->get('Rating'));
+	echo $this->formElementErrors($form->get('Rating'));
+	
+	echo $this->formLabel($form->get('quartileOne'));
+	echo $this->formElement($form->get('quartileOne'));
+	echo $this->formElementErrors($form->get('quartileOne'));
+	
+	echo $this->formLabel($form->get('quartileTwo'));
+	echo $this->formElement($form->get('quartileTwo'));
+	echo $this->formElementErrors($form->get('quartileTwo'));
+	
+	echo $this->formLabel($form->get('quartileThree'));
+	echo $this->formElement($form->get('quartileThree'));
+	echo $this->formElementErrors($form->get('quartileThree'));
+	
+	echo $this->formLabel($form->get('quartileFour'));
+	echo $this->formElement($form->get('quartileFour'));
+	echo $this->formElementErrors($form->get('quartileFour'));
+	
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

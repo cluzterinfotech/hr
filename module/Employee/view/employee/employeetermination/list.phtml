@@ -1,0 +1,13 @@
+<?php 
+$title = 'Termination List';
+$this->headTitle($title); 
+?> 
+<br/> 
+<?php 
+   echo $this->form()->openTag($form);  
+	echo $this->formSubmit($form->get('submit'));  
+	echo $this->form()->closeTag(); 
+?>  
+<br/><br/> 
+<div id="tableContainer"></div>
+<script>$("#tableContainer").zfTable('/employeetermination/ajaxlist');</script>  

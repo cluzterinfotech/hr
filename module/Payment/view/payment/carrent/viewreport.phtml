@@ -1,0 +1,35 @@
+<?php 
+$title = 'Report Car Rent'; 
+$this->headTitle($title); 
+?>
+<style>
+table, td, th { border: 1px solid #ccc;border-collapse: collapse; }
+thead { background-color: #ccc;color:#000;font-weight:bold; }
+th { background-color: #ccc;color: #000; }
+td { padding: 5px; }
+td { height: 40px;vertical-align: bottom;border-collapse: collapse; }
+</style>
+<div id="tabs">
+<!-- <center><b>Oil Energy Company</b></center> -->
+<center><h4>Car Rent Report</h4> </center>
+<?php 
+ 
+if($type == 1) {
+	echo $this->empBankReportHelper($this->name,$this->allowance,
+			$this->deduction,$this->companyDeduction,$this->report,$param);
+	//echo $this->reportHelper($this->name,$this->allowance,
+			//$this->deduction,$this->companyDeduction,$this->report);
+}  
+elseif($type == 2) {
+	echo $this->empBankReportHelper($this->name,$this->allowance,
+			$this->deduction,$this->companyDeduction,$this->report,$param);
+} elseif($type == 3) {
+	echo $this->empBankReportHelper($this->name,$this->allowance,
+			$this->deduction,$this->companyDeduction,$this->report,$param);
+} else {
+	//echo $this->reportHelper($this->name,$this->allowance,
+			//$this->deduction,$this->companyDeduction,$this->report);
+	echo $this->carRentReportHelper($this->report);
+}
+?> 
+</div>   

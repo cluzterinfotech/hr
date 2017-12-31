@@ -1,0 +1,82 @@
+<?php 
+	$title = 'Add Employee Rating';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>";
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+/* $form->setAttribute('action', $this->url(
+	'paysheet', array(
+		'action'     => 'viewreport',
+		'controller' => 'paysheet'
+	)
+)); */ 
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Employee Rating</a></li>
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div>
+    <fieldset style="padding:5px;" >
+        <!-- <legend>Add/Edit Employee Rating</legend>--> 
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeNumberRating'));
+                echo $this->formElement($form->get('employeeNumberRating'));
+                echo $this->formElementErrors($form->get('employeeNumberRating')); 
+                echo $this->formLabel($form->get('rating'));
+				echo $this->formElement($form->get('rating'));
+				echo $this->formElementErrors($form->get('rating'));
+				
+				echo $this->formSubmit($form->get('submit')); 
+				?> 
+				 </div>	
+                <div style="Float:left;width:370px;">
+             <?php 
+                    echo $this->formLabel($form->get('ratingYear'));
+                    echo $this->formElement($form->get('ratingYear'));
+                    echo $this->formElementErrors($form->get('ratingYear'));
+				/* echo $this->formLabel($form->get('oldSalary'));
+				echo $this->formElement($form->get('oldSalary'));
+				echo $this->formElementErrors($form->get('oldSalary'));
+				echo $this->formLabel($form->get('oldCola'));
+				echo $this->formElement($form->get('oldCola'));
+				echo $this->formElementErrors($form->get('oldCola'));
+				echo $this->formLabel($form->get('adjustedAmount'));
+				echo $this->formElement($form->get('adjustedAmount'));
+				echo $this->formElementErrors($form->get('adjustedAmount'));
+				echo $this->formLabel($form->get('percentage'));
+				echo $this->formElement($form->get('percentage'));
+				echo $this->formElementErrors($form->get('percentage')); */ 
+			    //echo $this->form()->closeTag(); 
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    
+</div>
+<?php echo $this->form()->closeTag(); ?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="employeeRatingContainer"></div>
+<script>$("#employeeRatingContainer").zfTable('/employeerating/ajaxlist');</script>  
+<br/><br/>
+<!-- 
+    <div id="tabs-2">
+        <p>search form</p>
+    </div>
+-->

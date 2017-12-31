@@ -1,0 +1,55 @@
+<?php 
+	$title = 'Add Bonus Criteria';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('year'));
+	echo $this->formElement($form->get('year'));
+	echo $this->formElementErrors($form->get('year'));
+	echo $this->formLabel($form->get('ratingOne'));
+	echo $this->formElement($form->get('ratingOne'));
+	echo $this->formElementErrors($form->get('ratingOne'));
+	echo $this->formLabel($form->get('ratingTwo'));
+	echo $this->formElement($form->get('ratingTwo'));
+	echo $this->formElementErrors($form->get('ratingTwo'));
+
+	echo $this->formLabel($form->get('ratingH3'));
+	echo $this->formElement($form->get('ratingH3'));
+	echo $this->formElementErrors($form->get('ratingH3'));
+	echo $this->formLabel($form->get('ratingS3'));
+	echo $this->formElement($form->get('ratingS3'));
+	echo $this->formElementErrors($form->get('ratingS3'));
+	echo $this->formLabel($form->get('ratingM3'));
+	echo $this->formElement($form->get('ratingM3'));
+	echo $this->formElementErrors($form->get('ratingM3'));
+	
+	
+	echo $this->formLabel($form->get('ratingFour'));
+	echo $this->formElement($form->get('ratingFour'));
+	echo $this->formElementErrors($form->get('ratingFour'));
+	echo $this->formLabel($form->get('joinDate'));
+	echo $this->formElement($form->get('joinDate'));
+	echo $this->formElementErrors($form->get('joinDate'));
+	echo $this->formLabel($form->get('confirmationDate'));
+	echo $this->formElement($form->get('confirmationDate'));
+	echo $this->formElementErrors($form->get('confirmationDate'));
+	
+	echo $this->formLabel($form->get('declarationDate'));
+	echo $this->formElement($form->get('declarationDate'));
+	echo $this->formElementErrors($form->get('declarationDate'));
+	echo $this->formLabel($form->get('bonusFrom'));
+	echo $this->formElement($form->get('bonusFrom'));
+	echo $this->formElementErrors($form->get('bonusFrom'));
+	echo $this->formLabel($form->get('bonusTo'));
+	echo $this->formElement($form->get('bonusTo'));
+	echo $this->formElementErrors($form->get('bonusTo'));
+	
+	echo $this->formLabel($form->get('bonusType'));
+	echo $this->formElement($form->get('bonusType'));
+	echo $this->formElementErrors($form->get('bonusType'));
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

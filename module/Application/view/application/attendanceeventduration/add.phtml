@@ -1,0 +1,20 @@
+<?php 
+	$title = 'Add Event Duration';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('eventId'));
+	echo $this->formElement($form->get('eventId'));
+	echo $this->formElementErrors($form->get('eventId'));
+	echo $this->formLabel($form->get('startingDate'));
+	echo $this->formElement($form->get('startingDate'));
+	echo $this->formElementErrors($form->get('startingDate'));
+	echo $this->formLabel($form->get('endingDate'));
+	echo $this->formElement($form->get('endingDate'));
+	echo $this->formElementErrors($form->get('endingDate')); 	
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

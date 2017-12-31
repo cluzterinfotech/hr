@@ -1,0 +1,10 @@
+<?php 
+	$title = 'Locations List';
+	$this->headTitle($title);
+	//echo "<h3>".$title."</h3>"; grid itself displays name
+?>
+<div id="tableContainer"></div>
+<hr />
+<script>
+    $("#tableContainer").zfTable('/location/ajaxlist');
+</script>

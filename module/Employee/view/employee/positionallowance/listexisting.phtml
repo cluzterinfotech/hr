@@ -1,0 +1,11 @@
+<?php 
+	$title = 'Update Existing Salary Grade Allowance'; 
+	$this->headTitle($title); 
+	echo "<h3>".$title."</h3>"; 
+?>
+ 
+<br/> 
+<div id="dialog">Are you sure remove this record?</div>
+<div id="positionAllowanceContainer"></div>
+<script>$("#positionAllowanceContainer").zfTable('/positionallowance/ajaxlistexisting');</script>  
+<br/> 

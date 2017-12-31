@@ -1,0 +1,26 @@
+<h1>Salary Grade Index</h1>
+<a
+	href="<?php echo $this->url('salaryGrade',array('action' => 'add')); ?>">Add
+	Salary Grade </a>
+
+<table class="table">
+	<tr>
+		<th>Grade</th>
+		<th>Action</th>
+	</tr>
+<?php
+foreach ( $grades as $grade ) :
+	?>
+    <tr>
+		<td><?php echo $grade->getSalaryGrade(); ?></td>
+		<td><a
+			href="<?php echo $this->url('salaryGrade',array('action' => 'edit','id' => $grade->getLkpSalaryGradeId())); ?>">Edit</a>
+			<a
+			href="<?php echo $this->url('salaryGrade',array('action' => 'delete','id' => $grade->getLkpSalaryGradeId())); ?>">Delete</a>
+		</td>
+	</tr>
+<?php
+endforeach
+;
+?>
+</table>

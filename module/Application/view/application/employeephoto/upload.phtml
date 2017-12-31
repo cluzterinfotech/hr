@@ -1,0 +1,48 @@
+<?php 
+	$title = 'Upload Photo'; 
+	$this->headTitle($title); 
+	//echo "<h3>".$title."</h3>"; 
+?>
+<div >
+<?php 
+
+$form = $this->form; 
+
+$form->setAttribute('target','_self');  //_blank
+$form->prepare(); 
+    
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Upload Employee Photo</a></li> 
+		<!-- <li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php $form->prepare(); // The correct enctype is set here ?>
+<?php echo $this->form()->openTag($form); ?>
+     <?php //var_dump($form); exit;  //echo $this->formFileSessionProgress(); ?>
+    <div class="form-element">
+         <?php $emp = $form->get('employeePhoto'); ?>
+         <?php echo $this->formLabel($emp); ?>
+        <?php echo $this->formElement($emp); ?>
+        <?php echo $this->formElementErrors($emp); ?>
+        <?php $fileElement = $form->get('photoFile'); ?>
+        <?php echo $this->formLabel($fileElement); ?>
+        <?php echo $this->formFile($fileElement); ?>
+        <?php echo $this->formElementErrors($fileElement); ?>
+    </div>
+    <br/><br/>  
+    <button>Submit</button>
+
+<?php echo $this->form()->closeTag(); ?>
+
+</div>
+
+<br/><br/> 
+</div> 

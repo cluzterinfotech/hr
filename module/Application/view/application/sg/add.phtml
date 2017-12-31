@@ -1,0 +1,14 @@
+<?php 
+	$title = 'Add Salary Grade';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('salaryGrade'));
+	echo $this->formElement($form->get('salaryGrade'));
+	echo $this->formElementErrors($form->get('salaryGrade')); 
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

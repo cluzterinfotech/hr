@@ -1,0 +1,29 @@
+<h1>Bank Index</h1>
+<a href="<?php echo $this->url('bank',array('action' => 'add')); ?>">Add
+	Bank </a>
+
+<table class="table">
+	<tr>
+		<th>Name</th>
+		<th>Branch</th>
+		<th>Account Number</th>
+		<th>Action</th>
+	</tr>
+<?php
+foreach ( $banks as $bank ) :
+	?>
+    <tr>
+		<td><?php echo $bank->getBankName(); ?></td>
+		<td><?php echo $bank->getBranch(); ?></td>
+		<td><?php echo $bank->getAccountNumber(); ?></td>
+		<td><a
+			href="<?php echo $this->url('bank',array('action' => 'edit','id' => $bank->getLkpBankId())); ?>">Edit</a>
+			<a
+			href="<?php echo $this->url('bank',array('action' => 'delete','id' => $bank->getLkpBankId())); ?>">Delete</a>
+		</td>
+	</tr>
+<?php
+endforeach
+;
+?>
+</table>

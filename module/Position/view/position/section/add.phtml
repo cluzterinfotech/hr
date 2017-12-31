@@ -1,0 +1,18 @@
+<?php
+$title = 'Add New Section';
+$this->headTitle ( $title );
+echo "<h3>create new Section </h3>";
+
+$addForm->setAttribute ( 'action', $this->url ( 'section', array (
+		'action' => 'add' 
+) ) );
+echo $this->form ()->openTag ( $addForm );
+echo $this->formHidden ( $addForm->get ( 'id' ) );
+echo "<label>ID</label>" . $this->formRow ( $addForm->get ( 'section_id' ) ) . "<br/>";
+echo "<label>Code</label>" . $this->formRow ( $addForm->get ( 'section_code' ) ) . "<br/>";
+echo "<label>Name</label>" . $this->formRow ( $addForm->get ( 'section_name' ) ) . "<br/>";
+echo "<label>Department</label>" . $this->formSelect ( $addForm->get ( 'department_id' ) ) . "<br/>";
+echo "<label></label>" . $this->formSubmit ( $addForm->get ( 'submit' ) );
+echo $this->form ()->closeTag ();
+
+echo $result;

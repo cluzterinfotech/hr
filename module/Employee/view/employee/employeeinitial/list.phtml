@@ -1,0 +1,69 @@
+<?php 
+$title = 'Add New Employee Initial'; 
+$this->headTitle($title); 
+//echo "<h3>".$title."</h3>"; 
+?>
+<div > 
+<?php 
+$form = $this->form; 
+$form->setAttribute('target','_blank'); 
+$form->prepare(); 
+?>
+</div> 
+<style type="text/css">
+    label  { font-weight:normal; }
+    li { color:red; }
+</style> 
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Employee Initial</a></li>
+		<!--<li><a href="#tabs-2">Search Report</a></li>-->
+	</ul> 
+<div id="tabs-1"> 
+<?php echo $this->form()->openTag($form); ?>
+<div> 
+    <fieldset style="padding:5px;" > 
+        <legend>Add Employee New Initial</legend> 
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php 
+                echo $this->formLabel($form->get('employeeNumberInitial'));
+                echo $this->formElement($form->get('employeeNumberInitial'));
+                echo $this->formElementErrors($form->get('employeeNumberInitial'));
+                echo $this->formLabel($form->get('oldInitial'));
+				echo $this->formElement($form->get('oldInitial'));
+				echo $this->formElementErrors($form->get('oldInitial'));
+				echo $this->formLabel($form->get('newInitial'));
+				echo $this->formElement($form->get('newInitial'));
+				echo $this->formElementErrors($form->get('newInitial'));
+				echo $this->formSubmit($form->get('submit'));  
+				?> 
+				 </div>	
+               <div style="Float:left;width:370px;">
+             <?php 
+             //echo $this->formLabel($form->get('sgAmount'));
+             //echo $this->formElement($form->get('sgAmount'));
+             //echo $this->formElementErrors($form->get('sgAmount'));
+             //echo $this->formLabel($form->get('isApplicableToAll'));
+             //echo $this->formElement($form->get('isApplicableToAll'));
+             //echo $this->formElementErrors($form->get('isApplicableToAll')); 	
+            ?>
+            </div>				
+            	</div>	
+    </fieldset>
+    <!-- 
+    <fieldset style="padding:5px;" >
+        <legend>Submit Form</legend>
+            <div style="float:left;width:320px;margin:-10px 0 0 0;">
+            <?php //echo $this->formSubmit($form->get('submit')); ?> 
+            </div>
+    </fieldset>
+    --> 
+</div> 
+<?php echo $this->form()->closeTag(); ?>
+</div>
+<div id="dialog">Are you sure remove this record?</div> 
+<div id="employeeInitialContainer"></div>
+<script>$("#employeeInitialContainer").zfTable('/employeeinitial/ajaxlist');</script>  
+
+<br/><br/> 
+</div> 

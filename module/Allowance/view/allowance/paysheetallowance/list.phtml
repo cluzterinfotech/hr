@@ -1,0 +1,10 @@
+<?php 
+
+$title = 'Paysheet Allowance List'; 
+
+$this->headTitle($title);
+
+?>
+<div id="dialog">Are you sure delete this record?</div> 
+<div id="tableContainer"></div>
+<script>$("#tableContainer").zfTable('/paysheetallowance/ajaxlist');</script>   

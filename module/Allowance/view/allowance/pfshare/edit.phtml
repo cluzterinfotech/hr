@@ -1,0 +1,25 @@
+<?php 
+	$title = 'Update PF Share';
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>  
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	
+	echo $this->formLabel($form->get('employeeId'));
+	echo $this->formElement($form->get('employeeId'));
+	echo $this->formElementErrors($form->get('employeeId'));
+	
+	echo $this->formLabel($form->get('employeeShare'));
+	echo $this->formElement($form->get('employeeShare'));
+	echo $this->formElementErrors($form->get('employeeShare'));
+	
+	echo $this->formLabel($form->get('companyShare'));
+	echo $this->formElement($form->get('companyShare'));
+	echo $this->formElementErrors($form->get('companyShare'));
+    
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag ();
+?>

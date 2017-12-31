@@ -1,0 +1,39 @@
+<?php 
+	$title = 'Add Increment Criteria'; 
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?>  
+
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formLabel($form->get('Year'));
+	echo $this->formElement($form->get('Year'));
+	echo $this->formElementErrors($form->get('Year'));
+	
+	echo $this->formLabel($form->get('joinDate'));
+	echo $this->formElement($form->get('joinDate'));
+	echo $this->formElementErrors($form->get('joinDate'));
+	
+	echo $this->formLabel($form->get('confirmationDate'));
+	echo $this->formElement($form->get('confirmationDate'));
+	echo $this->formElementErrors($form->get('confirmationDate')); 
+	
+	echo $this->formLabel($form->get('incrementFrom'));
+	echo $this->formElement($form->get('incrementFrom'));
+	echo $this->formElementErrors($form->get('incrementFrom'));
+	
+	echo $this->formLabel($form->get('incrementTo'));
+	echo $this->formElement($form->get('incrementTo'));
+	echo $this->formElementErrors($form->get('incrementTo'));
+	
+	echo $this->formLabel($form->get('colaPercentage'));
+	echo $this->formElement($form->get('colaPercentage'));
+	echo $this->formElementErrors($form->get('colaPercentage'));
+	
+	echo $this->formLabel($form->get('incrementAveragePercentage'));
+	echo $this->formElement($form->get('incrementAveragePercentage'));
+	echo $this->formElementErrors($form->get('incrementAveragePercentage'));
+	
+	echo $this->formSubmit($form->get('submit')); 
+	echo $this->form()->closeTag();  
+?>

@@ -1,0 +1,35 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of Index
+ *
+ * @author AlkhatimVip
+ */
+if (isset ( $approve )) {
+	$title = 'Reject Department';
+	$this->headTitle ( $title );
+	$url = $this->url ( 'department', array (
+			'action' => 'reject',
+			'id' => $approve->getDepartmentId () 
+	) );
+	echo "<form action='$url' method='post'>";
+	echo "<h3>Are you sure you want to reject/cancel this department?</h3>";
+	echo "<label>ID</label>" . $approve->getDepartmentId () . "<br/>";
+	echo "<label>Function Code</label>" . $approve->getDeptFunctionCode () . "<br/>";
+	echo "<label>Name</label>" . $approve->getDepartmentName () . "<br/>";
+	echo "<label>NoOfWorkDays</label>" . $approve->getNoOfWorkDays () . "<br/>";
+	echo "<label>DeptAssistantPosition</label>" . $approve->getDeptAssistantPositionId () . "<br/>";
+	echo "<label>WorkHoursPerDay</label>" . $approve->getWorkHoursPerDay () . "<br/>";
+	// echo "<label>added by </label> ".$approve->getAddedUser()." <label> on </label> ".$approve->getAddedDate()."<br/>";
+	echo "<div>
+            <input type='submit' name='cancelled' value='Yes' />
+            <input type='submit' name='cancelled' value='No' />
+          </div>
+    </form>";
+} else {
+}

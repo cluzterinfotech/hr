@@ -1,0 +1,23 @@
+<?php 
+	$title = 'Update Car Amortization'; 
+	$this->headTitle($title);
+	echo "<h3>".$title."</h3>";
+?> 
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formElement($form->get('id'));
+	echo $this->formLabel($form->get('employeeNumber'));
+	echo $this->formElement($form->get('employeeNumber'));
+	echo $this->formElementErrors($form->get('employeeNumber'));
+	echo $this->formLabel($form->get('paidDate'));
+	echo $this->formElement($form->get('paidDate'));
+	echo $this->formElementErrors($form->get('paidDate'));
+	echo $this->formLabel($form->get('paidAmount'));
+	echo $this->formElement($form->get('paidAmount'));
+	echo $this->formElementErrors($form->get('paidAmount')); 
+	echo $this->formLabel($form->get('numberOfMonths'));
+	echo $this->formElement($form->get('numberOfMonths'));
+	echo $this->formElementErrors($form->get('numberOfMonths'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form ()->closeTag (); 
+?>  
