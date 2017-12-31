@@ -23,7 +23,7 @@ class NewemployeeController extends AbstractActionController {
 	public function indexAction() { exit; }
 	
 	public function listAction() { }
-	
+	// 
 	public function ajaxlistnewAction() {
 		$grid = $this->getGrid();
 		$company = $this->getCompanyService(); 
