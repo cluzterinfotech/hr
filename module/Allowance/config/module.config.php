@@ -1,4 +1,5 @@
 <?php 
+// controller 
 return array (
 		'controllers' => array (
 			'invokables' => array (

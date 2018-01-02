@@ -231,7 +231,73 @@ class PaysheetController extends AbstractActionController
 		return array(
 				'form' => $form,
 		);
-	}  
+	} 
+	
+	public function compreportAction() {
+	    
+	    $form = $this->getReportForm();
+	    $request = $this->getRequest();
+	    if ($request->isPost()) {
+	        $form->setData($request->getPost());
+	        if ($form->isValid()) {
+	            return $this->redirect()->toRoute('paysheet');
+	        }
+	    }
+	    return array(
+	        'form' => $form,
+	    );
+	}
+	
+	public function viewcompreportAction() { 
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    if($request->isPost()) {
+	        $values = $request->getPost();
+	        $month = $values['month'];
+	        $year = $values['year'];
+	        $allowanceDeduction = $values['allowanceDeduction'];
+	        $type = $values['reportType'];
+	        //$type = 1;
+	        $param = array(
+	            'month' => $month,
+	            'year' => $year,
+	            'allowanceDeduction' => $allowanceDeduction,
+	            //'year' => $year,
+	        );
+	        $company = $this->getCompanyService();
+	        
+	        $arr = $this->getBasedOnType($allowanceDeduction);
+	        
+	        if($type == 1) {
+	            $output = $this->getPaysheetService()->getPaysheetByFunction($company,$param);
+	            $vm = array(
+	                'report'            => $output,
+	                'name'              => array('Function' => 'sectionCode'),
+	                'allowance'         => $arr['allowance'],
+	                'deduction'         => $arr['deduction'],
+	                'companyDeduction'  => array(),
+	                'type'              => $type,
+	            );
+	            //$name = array('Function' => 'employeeName');
+	            
+	        } else {
+	            $output = $this->getPaysheetService()->getPaysheetReport($company,$param);
+	            $vm = array(
+	                'report'            => $output,
+	                'name'              => array('Employee Name' => 'employeeName'),
+	                'allowance'         => $arr['allowance'],
+	                'deduction'         => $arr['deduction'],
+	                'companyDeduction'  => array(),
+	                'type'              => $type,
+	            );
+	        }
+	    }
+	    //\Zend\Debug\Debug::dump($output);
+	    $viewmodel->setVariables($vm);
+	    return $viewmodel;
+	} 
 	
 	public function paysheettestAction() { 
 		$form = $this->getEmployeeForm(); 
