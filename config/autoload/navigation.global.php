@@ -2174,9 +2174,9 @@ return array (
 	     						'route'      => 'paysheet',
 	     						'module'     => 'payment',
 	     						'controller' => 'paysheet',
-	     						'action'     => 'report',
+	     						'action'     => 'compreport',
 	     						'resource'	 => 'Payment\Controller\Paysheet',
-	     						'privilege'	 => 'report',
+	     						'privilege'	 => 'compreport', 
 	     					),
 	     					array(
 	     						'label'      => 'Payslip Employee', 

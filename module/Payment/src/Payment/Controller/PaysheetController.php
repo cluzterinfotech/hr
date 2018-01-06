@@ -15,6 +15,7 @@ use Application\Form\EmployeeMonthYear;
 use Application\Form\PaysheetOtherMonthYear;
 use Employee\Form\EmployeeAllowanceForm;
 use Employee\Form\EmployeeForm;
+use Application\Form\FromToDate;
 
 class PaysheetController extends AbstractActionController
 {
@@ -235,7 +236,7 @@ class PaysheetController extends AbstractActionController
 	
 	public function compreportAction() {
 	    
-	    $form = $this->getReportForm();
+	    $form = $this->getCompReportForm(); 
 	    $request = $this->getRequest();
 	    if ($request->isPost()) {
 	        $form->setData($request->getPost());
@@ -255,45 +256,17 @@ class PaysheetController extends AbstractActionController
 	    $output = " ";
 	    if($request->isPost()) {
 	        $values = $request->getPost();
-	        $month = $values['month'];
-	        $year = $values['year'];
-	        $allowanceDeduction = $values['allowanceDeduction'];
-	        $type = $values['reportType'];
-	        //$type = 1;
-	        $param = array(
-	            'month' => $month,
-	            'year' => $year,
-	            'allowanceDeduction' => $allowanceDeduction,
-	            //'year' => $year,
-	        );
+	        $from = $values['fromDate'];
+	        $to = $values['toDate'];
 	        $company = $this->getCompanyService();
-	        
-	        $arr = $this->getBasedOnType($allowanceDeduction);
-	        
-	        if($type == 1) {
-	            $output = $this->getPaysheetService()->getPaysheetByFunction($company,$param);
-	            $vm = array(
-	                'report'            => $output,
-	                'name'              => array('Function' => 'sectionCode'),
-	                'allowance'         => $arr['allowance'],
-	                'deduction'         => $arr['deduction'],
-	                'companyDeduction'  => array(),
-	                'type'              => $type,
-	            );
-	            //$name = array('Function' => 'employeeName');
-	            
-	        } else {
-	            $output = $this->getPaysheetService()->getPaysheetReport($company,$param);
-	            $vm = array(
-	                'report'            => $output,
-	                'name'              => array('Employee Name' => 'employeeName'),
-	                'allowance'         => $arr['allowance'],
-	                'deduction'         => $arr['deduction'],
-	                'companyDeduction'  => array(),
-	                'type'              => $type,
-	            );
-	        }
+	        //$arr = $this->getBasedOnType($allowanceDeduction);
+	        $output = $this->getPaysheetService()
+	                       ->getPaysheetComparisonReport($company,$from,$to);
+	        $vm = array(
+	            'report'     => $output,    
+	        ); 
 	    }
+	    //$output
 	    //\Zend\Debug\Debug::dump($output);
 	    $viewmodel->setVariables($vm);
 	    return $viewmodel;
@@ -613,6 +586,12 @@ class PaysheetController extends AbstractActionController
 		));
 		$form->get('submit')->setValue('View Paysheet Report');
 		return $form; 
+	} 
+	
+	public function getCompReportForm() {
+	    $form = new FromToDate(); 
+	    $form->get('submit')->setValue('View Paysheet Comparison Report');
+	    return $form; 
 	} 
 	
 	public function getOtherReportForm() {

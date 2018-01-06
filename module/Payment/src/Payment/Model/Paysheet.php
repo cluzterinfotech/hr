@@ -609,4 +609,97 @@ class Paysheet extends Payment {
 	     } 
 	     return $output; 
 	 }
+	 
+	 public function getPaysheetColums() {
+	     return array(
+	         'Initial'    => 'Initial',
+             'Airport'    => 'Airport',
+	         'Breakfast'  => 'Breakfast',
+	         'Cashier'    => 'Cashier',
+	         'Cola'       => 'Cola',
+	         'Fitter'     => 'Fitter',
+	         'Hardship'   => 'Hardship',
+	         'Housing'    => 'Housing',  
+	         'SpecialAllowance' => 'SpecialAllowance',
+	         //'President'   => 'President',
+	         'Meal'         => 'Meal',
+	         'NatureofWork' => 'NatureofWork',
+	         'Overtime'       => 'Overtime',
+	         'Representative' => 'Representative',
+	         'Shift'          => 'Shift',
+	         'Transportation' => 'Transportation',
+	         'OtherAllowance' => 'OtherAllowance',
+	         'OtMeal'          => 'OtMeal',
+	         'SocialInsuranceCompany' => 'SocialInsuranceCompany',
+	         'ProvidentFundCompany' => 'ProvidentFundCompany',
+	         'Zamala'              => 'Zamala',
+	         'Zakat'                => 'Zakat',
+	         'UnionShare'           => 'UnionShare',
+	         'PhoneDeduction'       => 'PhoneDeduction',
+	         'SocialInsurance'      => 'SocialInsurance',
+	         'Punishment'           => 'Punishment',
+	         'ProvidentFund'        => 'ProvidentFund',
+	         'OtherDeduction'       => 'OtherDeduction',
+	         'KhartoumUnion'        => 'KhartoumUnion',
+	         'IncomeTax'            => 'IncomeTax',
+	         'Cooperation'          => 'Cooperation',
+	         'AdvanceSalary'        => 'AdvanceSalary',
+	         'Absenteeism'          => 'Absenteeism',
+	         'PersonalLoan'         => 'PersonalLoan',
+	         //'AdvanceHousing'       => 'AdvanceHousing',
+	         'OverPayment'          => 'OverPayment',
+	     );
+	 }
+	 
+	 public function prepareHeader() {
+	     $o = "";
+	     $columns = $this->getPaysheetColums();
+	     foreach($columns as $c) {
+	         $o .="<th>".$c." First</th>
+	         <th>".$c." Second</th>
+	         <th class = 'cy'>".$c." Diff</th>";
+	     }
+	     return $o;
+	 }
+	 
+	 public function outputDiff($first,$second) {
+	     $output = ""; 
+	     $initialF = $first;
+	     $initialT = $second;
+	     $initialD = $initialT - $initialF;
+	     $output .= "<td >$initialF</td>";
+	     $output .= "<td >$initialT</td>";
+	     if($initialD != 0) {
+	         $output .= "<td class = 'compdiff'>$initialD</td>";
+	     } else {
+	         $output .= "<td >$initialD</td>";
+	     }
+	     return $output;
+	 }
+	 
+	 public function getPaysheetComparisonReport(Company $company,$fromDate,$toDate) {
+	     $i = 1; 
+	     $output = "<table class='sortable'> 
+	     <thead><tr><th>#</th><th>Employee No.</th><th>Employee Name</th>";
+	     $output .= $this->prepareHeader();
+         $output .= "</thead>  
+         <tbody class='scrollingContent'>"; 
+	     $result = $this->getPaysheetMapper()->getPaysheetCompleteReport($company,$fromDate);
+	     $foot = array(); 
+	     foreach($result as $f) {
+	         $output .= "<tr><td>".$i++."</td>";
+	         $employeeNumber = $f['employeeNumber'];  
+	         $output .= "<td>$employeeNumber</td>"; 
+	         $t = $this->getPaysheetMapper()->getPaysheetIndividualReport($company,$toDate,$employeeNumber);
+	         $output .= "<td>".$t['employeeName']."</td>";
+	         $columns = $this->getPaysheetColums();  
+	         foreach($columns as $k => $v) {
+	             $diffAll = $this->outputDiff($f[$v],$t[$v]); 
+	             $output .= $diffAll; 
+	         }   
+	         $output .= "</tr>"; 
+	     }
+	     $output .= "</tbody></table>";
+	     return $output; 
+	 } 
 } 

@@ -92,6 +92,53 @@ class PaysheetMapper extends AbstractDataMapper {
 		//$results = $statement->execute();
 		return $statement->execute();
 	}
+	
+	public function getPaysheetCompleteReport(Company $company,$date) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $where = " (1=1) ";
+	    $where .= " and c.company = '".$company->getId()."' ";
+	    $where .= " and c.paysheetDate = '".$date."' "; 
+	    $statement = $adapter->query("SELECT  e.employeeName,s.sectionCode, c.*
+                      FROM   Paysheet AS c 
+                      left JOIN dbo.EmpEmployeeInfoMain AS e ON e.employeeNumber = c.employeeNumber 
+                      left JOIN dbo.Position AS p ON e.empPosition = p.id 
+                      left JOIN dbo.Section AS s ON p.section = s.id
+				where  $where  "); 
+	    //echo $statement->getSql();
+	    //exit;
+	    //$results = $statement->execute();
+	    return $statement->execute();
+	}
+	
+	public function getPaysheetIndividualReport(Company $company,$date,$employeeNumber) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $where = " (1=1) ";
+	    //$where .= " and c.company = '".$company->getId()."' ";
+	    $where .= " and c.paysheetDate = '".$date."' ";
+	    $where .= " and e.employeeNumber = '".$employeeNumber."' ";
+	    $statement = $adapter->query("SELECT  e.employeeName,s.sectionCode, c.*
+                      FROM   Paysheet AS c
+                      left JOIN dbo.EmpEmployeeInfoMain AS e ON e.employeeNumber = c.employeeNumber
+                      left JOIN dbo.Position AS p ON e.empPosition = p.id 
+                      left JOIN dbo.Section AS s ON p.section = s.id
+				where  $where  ");
+	    //echo $statement->getSql();
+	    //exit;
+	    //$results = $statement->execute();
+	    return $statement->execute()->current(); 
+	}
 
 	// by Bank
 	public function getPaysheetByBank(Company $company,array $param=array()) {

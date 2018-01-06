@@ -318,6 +318,11 @@ div#footer a {
 	color: #C6D5FD
 }
 
+.compdiff {
+	background: #333;
+	color: #FFF
+}
+
 div#header a {
 	position: absolute;
 	right: 0;
