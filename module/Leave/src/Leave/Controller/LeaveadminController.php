@@ -34,14 +34,44 @@ class LeaveadminController extends AbstractActionController {
 		$form->setInputFilter($formValidator->getInputFilter());
 		$form->setData($prg); 
 		if ($form->isValid()) {
+		    $service = $this->getService();
+		    $dateMethods = $this->getServiceLocator()->get('dateMethods'); 
 			$data = $form->getData();
-			$service = $this->getService(); 
-			$service->insertAdminLeave($data);
-			$this->flashMessenger()->setNamespace('success')
-			                       ->addMessage('Leave added successfully'); 
-			$this->redirect ()->toRoute('leaveadmin',array (
-					'action' => 'add'
-			));
+			$empId = $data->getEmployeeId();
+			$from = $data->getLeaveFromDate();
+			$to = $data->getLeaveToDate(); 
+			$leaveType = $data->getLkpLeaveTypeId(); 
+			$days = $dateMethods->numberOfDaysBetween($from,$to); 
+			$c = 0; 
+			if($leaveType == 4 && $days > 21) {
+			    $c = 1; 
+			    $this->flashMessenger()->setNamespace('info')
+			         ->addMessage('Sorry! Cant add leave more than 21 days');
+			    $this->redirect ()->toRoute('leaveadmin',array (
+			        'action' => 'add'
+			    ));
+			} 		
+			if($leaveType == 4) {
+			    $isHaveHajj = $service->isHaveHajjLeave($empId); 
+			    if($isHaveHajj) {
+			        $c = 1; 
+    			    $this->flashMessenger()->setNamespace('info')
+    			         ->addMessage('Sorry! Hajj leave already taken');
+    			    $this->redirect()->toRoute('leaveadmin',array (
+    			        'action' => 'add'
+    			    )); 
+			    }
+			} 
+			//\Zend\Debug\Debug::dump($data);  
+			// exit; 
+			if(!$c) {
+    			$service->insertAdminLeave($data);
+    			$this->flashMessenger()->setNamespace('success')
+    			                       ->addMessage('Leave added successfully'); 
+    			$this->redirect ()->toRoute('leaveadmin',array (
+    					'action' => 'add'
+    			));
+			}
 		}
 		return array(
 				'form' => $form,
@@ -78,13 +108,45 @@ class LeaveadminController extends AbstractActionController {
 		$form->setData($prg); 
 		
 		if ($form->isValid()) {
+			//$data = $form->getData(); 		
+			$dateMethods = $this->getServiceLocator()->get('dateMethods');
 			$data = $form->getData();
-			$service->updateAdminLeave($data);
-			$this->flashMessenger()->setNamespace('success')
-			                       ->addMessage('Leave updated successfully');
-			$this->redirect ()->toRoute('leaveadmin',array (
-					'action' => 'list'
-			));
+			$id = $data->getId(); 
+			$empId = $data->getEmployeeId();
+			$from = $data->getLeaveFromDate();
+			$to = $data->getLeaveToDate();
+			$leaveType = $data->getLkpLeaveTypeId();
+			$days = $dateMethods->numberOfDaysBetween($from,$to);
+			$c = 0;
+			if($leaveType == 4 && $days > 21) {
+			    $c = 1;
+			    $this->flashMessenger()->setNamespace('info')
+			         ->addMessage('Sorry! Cant add leave more than 21 days');
+			    $this->redirect ()->toRoute('leaveadmin',array (
+			        'action' => 'add'
+			    ));
+			}
+			if($leaveType == 4) {
+			    $isHaveHajj = $service->isHaveHajjLeaveId($empId,$id);
+			    if($isHaveHajj) {
+			        $c = 1;
+			        $this->flashMessenger()->setNamespace('info')
+			             ->addMessage('Sorry! Hajj leave already taken');
+			        $this->redirect()->toRoute('leaveadmin',array (
+			            'action' => 'add'
+			        ));
+			    }
+			}
+			//\Zend\Debug\Debug::dump($data);
+			// exit;
+			if(!$c) {
+    			$service->updateAdminLeave($data);
+    			$this->flashMessenger()->setNamespace('success')
+    			                       ->addMessage('Leave updated successfully');
+    			$this->redirect ()->toRoute('leaveadmin',array (
+    					'action' => 'list'
+    			));
+			}
 		} 
 		return array(
 				'form' => $form,
