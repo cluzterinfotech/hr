@@ -13,6 +13,8 @@ use Application\Form\SubmitButonForm;
 use Application\Form\MonthYear; 
 use Payment\Form\SelectLeaveAllowanceEmployeeForm;  
 use Application\Model\SelectLeaveAllowanceEmployeeGrid;
+use Application\Form\LeaveAllowanceBatch;
+use Application\Form\LeaveAllowanceAll;
 
 class LeaveallowanceController extends AbstractActionController
 {
@@ -84,8 +86,7 @@ class LeaveallowanceController extends AbstractActionController
 		return $form;
 	}
 	
-	public function closeAction() {
-				
+	public function closeAction() { 	
 		$form = $this->getForm();
 		$form->get('submit')->setValue('Close Leave Allowance');
 		$prg = $this->prg('/leaveallowance/close', true);
@@ -99,17 +100,16 @@ class LeaveallowanceController extends AbstractActionController
 		$dateRange = $this->getDateService(); 
 		$laService = $this->getLeaveAllowanceService();  
 		    
-		$isAlreadyClosed = 0;// $laService->isLaClosed($company,$dateRange);
-		if($isAlreadyClosed) {
-			$this->flashMessenger()->setNamespace('info')
-			     ->addMessage('Leave Allowance already closed for all batches'); 
+		$isNotClosed = $laService->isLaNotClosed($company,$dateRange);
+		if($isNotClosed) {
+		    $routeInfo = $this->getRouteInfo();
+		    $res = $laService->close($company,$dateRange,$routeInfo);
+		    $this->flashMessenger()->setNamespace('success')
+		         ->addMessage('Leave Allowance Closed Successfully'); 
 		} else {  
 			// @todo 
-			$routeInfo = $this->getRouteInfo(); 
-			// $laService = $this->getLeaveAllowanceService(); 
-			$laService->close($company,$dateRange,$routeInfo); 
-			$this->flashMessenger()->setNamespace('success')
-		         ->addMessage('Leave Allowance Closed Successfully'); 
+		    $this->flashMessenger()->setNamespace('info')
+		         ->addMessage('Leave Allowance already closed for all batches'); 
 		}  
 		$this->redirect()->toRoute('leaveallowance',array( 
 				'action' => 'close'
@@ -143,8 +143,7 @@ class LeaveallowanceController extends AbstractActionController
 		exit;
 	}
 	
-	public function reportAction() {
-		
+	public function reportAction() { 
 		$form = $this->getReportForm(); 
 		$request = $this->getRequest();
 		if ($request->isPost()) { 
@@ -158,6 +157,20 @@ class LeaveallowanceController extends AbstractActionController
 		);
 	}
 	
+	public function allreportAction() { 
+	    $form = $this->getAllReportForm();
+	    $request = $this->getRequest();
+	    if ($request->isPost()) {
+	        $form->setData($request->getPost());
+	        if ($form->isValid()) {
+	            return $this->redirect()->toRoute('leaveallowance');
+	        }
+	    }
+	    return array(
+	        'form' => $form,
+	    );
+	}
+	
 	/*private function getLeaveAllowanceService() {
 		return $this->getServiceLocator()->get('Paysheet'); 
 	}*/
@@ -169,24 +182,58 @@ class LeaveallowanceController extends AbstractActionController
     private function getDateService() {
         return $this->getServiceLocator()->get('dateRange');
     } 
+    
+    public function viewallreportAction() {
+        $viewmodel = new ViewModel();
+        $viewmodel->setTerminal(1);
+        $request = $this->getRequest();
+        $output = " ";
+        if($request->isPost()) {
+            $values = $request->getPost();
+            $batch = $values['laBatch'];
+            $type = trim($values['reportType']);
+            $bank = trim($values['bank']); 
+            $employee = $values['employeeNo'];
+            $department = $values['department']; 
+            $fromDate = $values['fromDate']; 
+            $toDate = $values['toDate']; 
+            //$year = $values['year']; 
+            $param = array('batch' => $batch);
+            if($batch && !$type) { 
+                $output = $this->getLeaveAllowanceService()->getLeaveAllowanceReport($param);
+            } elseif($batch && $type && $bank) {
+                if($type == 1) {
+                    $output = $this->getLeaveAllowanceService()->reportByFunction($batch,$bank); 
+                } elseif($type == 2) {
+                    $output = $this->getLeaveAllowanceService()->reportByBank($batch,$bank);
+                }
+            } elseif($employee) {
+                $output = $this->getLeaveAllowanceService()->reportByEmployee($employee); 
+            } elseif($department) {
+                $output = $this->getLeaveAllowanceService()->reportByDepartment($department);
+            } elseif($fromDate) { 
+                $output = $this->getLeaveAllowanceService()->reportByFrom($fromDate,$toDate);
+            }
+             
+        }
+        $viewmodel->setVariables(array(
+            'report'            => $output,
+        ));
+        return $viewmodel;
+    } 
 	
-	public function viewreportAction() { 
-                                                                                
+	public function viewreportAction() {                                                                   
         $viewmodel = new ViewModel();
         $viewmodel->setTerminal(1);       
         $request = $this->getRequest();
         $output = " "; 
-        
         if($request->isPost()) {
-            
             $values = $request->getPost(); 
-            $month = $values['month']; 
-            $year = $values['year']; 
+            $batch = $values['laBatch'];
+            //$type = $values['reportType']; 
+            //$year = $values['year']; 
             $type = 1;
-            
-            $param = array('month' => $month,'year' => $year);
-            
-            //$results = $this->getLeaveAllowanceService()->getPaysheetReport($param); 
+            $param = array('batch' => $batch);            
             $output = $this->getLeaveAllowanceService()->getLeaveAllowanceReport($param); 
            // \Zend\Debug\Debug::dump($output);
             /* if($results) {
@@ -209,16 +256,10 @@ class LeaveallowanceController extends AbstractActionController
                 $output = $this->getReportTable()->report($values,'2'); 
             } else if ($type == 6) {
                 $output = $this->getReportTable()->duplicateobr($values); 
-            } */
-            
-        }
-                   
+            } */    
+        }         
         $viewmodel->setVariables(array(
-            'report'            => $output,
-        	//'name'              => array('Employee Name' => 'employeeNamex'),
-         	//'allowance'         => $this->getPaysheetAllowanceArray(),
-        	//'deduction'         => $this->getPaysheetDeductionArray(),
-        	//'companyDeduction'  => $this->companyDeductionArray() 
+            'report'            => $output, 
         ));
         return $viewmodel; 
 	} 
@@ -243,19 +284,72 @@ class LeaveallowanceController extends AbstractActionController
 		return $this->getServiceLocator()->get('leaveAllowanceService');
 	}
 	
+	private function employeeList(Company $company) {
+	    $companyId = $company->getId(); 
+	    return $this->getEmployeeService()->employeeList($companyId);
+	}
+	
 	private function notTakenLAEmployeeList(Company $company) {
 		return $this->getEmployeeService()->notTakenLAEmployeeList($company);
 	}
 	
 	public function getReportForm() {
-		$form = new MonthYear(); 
-		$form->get('submit')->setValue('View Paysheet Report');
+	    $form = new LeaveAllowanceBatch(); 
+	    //$form->get('laBatch')->setValue('View Leave Allowance Report'); 
+	    $form->get('laBatch')
+	         ->setOptions(array('value_options' => $this->getUnclosedBatch()
+	    ));
+		$form->get('submit')->setValue('View Leave Allowance Report');
 		return $form;
+	}
+	
+	public function getAllReportForm() {
+	    $form = new LeaveAllowanceAll(); 
+	    $company = $this->getCompanyService(); 
+	    //$form->get('laBatch')->setValue('View Leave Allowance Report');
+	    $form->get('laBatch')
+	         ->setOptions(array('value_options' => $this->getClosedBatch()
+	    ));
+	    $form->get('bank')
+	         ->setOptions(array('value_options' => $this->getEmpBank()
+	    ));
+	    $form->get('department')
+	         ->setOptions(array('value_options' => $this->getDepartment()
+	    ));
+	    $form->get('employeeNo')
+	         ->setOptions(array('value_options' => $this->employeeList($company)
+	    )); 
+	    $form->get('submit')->setValue('View Leave Allowance Report');
+	    return $form;
 	}
     
 	/*private function getLeaveAllowanceService() {
 		return $this->getServiceLocator()->get('paysheet');
 	}*/  
+	
+	private function getClosedBatch() {
+	    $company = $this->getCompanyService(); 
+	    $service = $this->getLeaveAllowanceService(); 
+	    return $service->getClosedBatch($company); 
+	}
+	
+	private function getUnclosedBatch() {
+	    $company = $this->getCompanyService();
+	    $service = $this->getLeaveAllowanceService(); 
+	    return $service->getUnclosedBatch($company);  
+	}
+	
+	private function getDepartment() {
+	    return $this->getLookupService()->getDepartmentList();
+	}
+	
+	private function getEmpBank() {
+	    return $this->getLookupService()->getBankList();
+	}
+	
+	private function getLookupService() {
+	    return $this->getServiceLocator()->get('lookupService');
+	}
 	
 	private function getPaysheetAllowanceArray() {
 		return array(

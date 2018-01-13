@@ -2257,13 +2257,21 @@ return array (
 	     						'resource'	 => 'Payment\Controller\Leaveallowance',
 	     						'privilege'	 => 'close',
 	     					),array(
-	     						'label'      => 'Leave Allowance Report',
+	     						'label'      => 'Unclosed Batch Report',
 	     						'route'      => 'leaveallowance',
 	     						'module'     => 'payment',
 	     						'controller' => 'leaveallowance',
 	     						'action'     => 'report',
 	     						'resource'	 => 'Payment\Controller\Leaveallowance',
 	     						'privilege'	 => 'report',
+	     					),array(
+	     					    'label'      => 'Leave Allowance Report',
+	     					    'route'      => 'leaveallowance',
+	     					    'module'     => 'payment',
+	     					    'controller' => 'leaveallowance',
+	     					    'action'     => 'allreport',
+	     					    'resource'	 => 'Payment\Controller\Leaveallowance',
+	     					    'privilege'	 => 'allreport',
 	     					),array(
 			     				'label'      => 'POLICY AND MANUAL',
 			     				'route'      => 'policymanual',
