@@ -2,19 +2,17 @@
 
 namespace Leave\Controller; 
 
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController; 
-use Zend\View\Model\ViewModel; 
-use Leave\Form\AnnualLeaveForm; 
-use Leave\Form\AnnualLeaveFormValidator; 
-use Application\Model\LeaveFormApprovaListGrid;
-use Application\Form\ApprovalForm;
-use Application\Form\ApprovalFormValidator;
-use Leave\Form\LeaveReportForm; 
-use Application\Model\OutstandingBalanceGrid;
-use Application\Form\LeaveApprovalFormValidator;
-use Application\Model\LeaveAppForm;
 use Application\Form\LeaveApprovalForm;
+use Application\Form\LeaveApprovalFormValidator;
+use Application\Model\LeaveFormApprovaListGrid;
+use Application\Model\LeaveFormLoaGrid;
+use Application\Model\OutstandingBalanceGrid;
+use Leave\Form\AnnualLeaveForm;
+use Leave\Form\AnnualLeaveFormValidator;
+use Leave\Form\LeaveReportForm;
+use Zend\Http\Response;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class AnnualleaveController extends AbstractActionController {
     
@@ -28,6 +26,16 @@ class AnnualleaveController extends AbstractActionController {
 		     ->setSource($this->getLeaveService()->getLeaveFormApprovalList())
 		     ->setParamAdapter($this->getRequest()->getPost()); 
 		return $this->htmlResponse($grid->render()); 
+	}
+	
+	public function loalistAction() { }
+	
+	public function loaajaxlistAction() {
+	    $grid = $this->getLoaGrid(); 
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getLeaveService()->getLeaveFormLoaList())
+	         ->setParamAdapter($this->getRequest()->getPost());
+	    return $this->htmlResponse($grid->render()); 
 	}
 	
 	public function addAction() { 
@@ -348,6 +356,10 @@ class AnnualleaveController extends AbstractActionController {
 	
 	private function getGrid() {
 		return new LeaveFormApprovaListGrid();
+	}
+	
+	private function getLoaGrid() {
+	    return new LeaveFormLoaGrid(); 
 	}
 	
 	private function getobGrid() {

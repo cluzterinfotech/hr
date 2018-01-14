@@ -36,12 +36,25 @@ class GlassallowanceController extends AbstractActionController {
 		if ($form->isValid()) {
 			$data = $form->getData(); 
 			$service = $this->getService();  
-			$service->insert($data);
-			$this->flashMessenger()->setNamespace('success')
-			                       ->addMessage('Glass Allowance added successfully'); 
-			$this->redirect ()->toRoute('glassallowance',array (
-					'action' => 'add'
-			));
+			//\Zend\Debug\Debug::dump($data);
+			//exit; 
+			$memberId = $data->getFamilyMemberId(); 
+			$appliedDate = $data->getFromDate();  
+			$isHave = $service->isHaveGlassAllowance($memberId,$appliedDate); 
+			if(!$isHave) {
+    			$service->insert($data);
+    			$this->flashMessenger()->setNamespace('success')
+    			                       ->addMessage('Glass Allowance added successfully'); 
+    			$this->redirect ()->toRoute('glassallowance',array (
+    					'action' => 'add'
+    			));
+			} else {
+			    $this->flashMessenger()->setNamespace('info')
+			         ->addMessage('Not elegible for Glass Allowance');
+			    $this->redirect ()->toRoute('glassallowance',array (
+			        'action' => 'add'
+			    ));
+			}
 		}
 		return array(
 				'form' => $form,
@@ -49,8 +62,7 @@ class GlassallowanceController extends AbstractActionController {
 		);
 	}
 	
-	public function editAction() {
-		
+	public function editAction() { 
 		$id = (int) $this->params()->fromRoute('id', 0);
 		if (!$id) {
 			$this->flashMessenger()->setNamespace('info')
@@ -78,14 +90,25 @@ class GlassallowanceController extends AbstractActionController {
 		$form->setData($prg); 
 		
 		if ($form->isValid()) {
-			$data = $form->getData();
-			// Check is have  
-			$service->update($data);
-			$this->flashMessenger()->setNamespace('success')
-			                       ->addMessage('Glass Allowance updated successfully');
-			$this->redirect ()->toRoute('glassallowance',array (
-					'action' => 'list'
-			));
+		    $data = $form->getData();
+		    $id = $data->getId(); 
+		    $memberId = $data->getFamilyMemberId();
+		    $appliedDate = $data->getFromDate();
+		    $isHave = $service->isHaveGlassAllowanceEdt($id,$memberId,$appliedDate);
+		    if(!$isHave) {
+		        $service->update($data);
+		        $this->flashMessenger()->setNamespace('success')
+		             ->addMessage('Glass Allowance updated successfully');
+		        $this->redirect ()->toRoute('glassallowance',array (
+		            'action' => 'list'
+		        ));
+		    } else {
+		        $this->flashMessenger()->setNamespace('info')
+		        ->addMessage('Sorry! Not elegible for Glass Allowance');
+		        $this->redirect ()->toRoute('glassallowance',array (
+		            'action' => 'add'
+		        ));
+		    } 
 		} 
 		return array(
 				'form' => $form,

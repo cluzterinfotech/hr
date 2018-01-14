@@ -1717,6 +1717,14 @@ return array (
 	     			    'action'     => 'report',
 	     			    'resource'	 => 'Leave\Controller\Annualleave',
 	     			    'privilege'	 => 'report',
+	     			),array(
+	     			    'label'      => 'LEAVE LOA',
+	     			    'route'      => 'annualleave',
+	     			    'module'     => 'leave',
+	     			    'controller' => 'annualleave',
+	     			    'action'     => 'loalist',
+	     			    'resource'	 => 'Leave\Controller\Annualleave',
+	     			    'privilege'	 => 'loalist',
 	     			),
 	     			array(
 	     				'label'      => 'ANNUAL LEAVE', 

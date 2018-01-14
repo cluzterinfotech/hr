@@ -56,6 +56,10 @@ class LeaveService extends Approvals {
     	return $this->leaveFormMapper->fetchLeaveById($id); 
     }
     
+    public function getLeaveFormLoaList() {
+        return $this->leaveFormMapper->getLeaveFormLoaList();
+    }
+    
     public function getLeaveFormApprovalList() {   
     	$employeeNumber = $this->userInfoService->getEmployeeId(); 
     	$leaveList = $this->leaveFormMapper->getLeaveFormList(); 

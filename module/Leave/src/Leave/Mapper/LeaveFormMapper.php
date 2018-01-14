@@ -214,6 +214,15 @@ class LeaveFormMapper extends AbstractDataMapper {
 		$entity = new LeaveAdmin(); 
 		return $this->arrayToEntity($row,$entity);
 	}
+	
+	public function getLeaveFormLoaList() {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'LeaveApprovalLevel'))
+	           ->columns(array('id','ApprovalLevelName','ApprovalSequence'))
+	    ; 
+	    return $select; 
+	}
     
     public function fetchLeaveById($id) { 
     	if ($this->identityMap->hasId($id)) { 

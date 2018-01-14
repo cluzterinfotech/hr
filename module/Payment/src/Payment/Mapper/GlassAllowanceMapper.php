@@ -56,6 +56,74 @@ class GlassAllowanceMapper extends AbstractDataMapper {
 		return $this->customArrayList($results,'id','memberName');
 	}
 	
+	public function isHaveGlassAllowanceEdt($id,$memberId,$appliedDate) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    
+	    $statement = $adapter->query("select
+                    convert(varchar(10),Max(fromDate),120) as fromDate
+                                      from ".$qi('GlassAllowance')." where
+					familyMemberId  = '".$memberId."' and id != '".$id."'
+					order by fromDate desc
+		");
+	    $results = $statement->execute()->current();
+	    if($results) {
+	        $applicationDate = $results['fromDate'];
+	        $date = date($applicationDate);
+	        $dateParts = explode('-', $date);
+	        $Year = $dateParts[0]; // GetYear($Date); // yields 2003
+	        $Month = $dateParts[1];
+	        $Day = $dateParts[2];
+	        $secoundYear = $Year + 2;
+	        $newDate = $secoundYear . "-" . $Month . "-" . $Day;
+	        if($appliedDate >= $newDate) { //Employee Eligible for New Glasses
+	            return false;
+	        } else {
+	            return true; //Employee Not Eligible for New Glasses
+	        }
+	    }
+	    return false; 
+	}
+	
+	public function isHaveGlassAllowance($memberId,$appliedDate) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    
+	    $statement = $adapter->query("select 
+      convert(varchar(10),Max(fromDate),120) as fromDate
+                                      from ".$qi('GlassAllowance')." where
+					familyMemberId  = '".$memberId."' 
+					order by fromDate desc
+		");  
+	    $results = $statement->execute()->current();
+	    if($results) {
+	        $applicationDate = $results['fromDate'];
+	        $date = date($applicationDate);
+	        $dateParts = explode('-', $date);
+	        $Year = $dateParts[0]; // GetYear($Date); // yields 2003
+	        $Month = $dateParts[1];
+	        $Day = $dateParts[2];
+	        $secoundYear = $Year + 2;
+	        $newDate = $secoundYear . "-" . $Month . "-" . $Day;        
+	        if($appliedDate >= $newDate) { //Employee Eligible for New Glasses
+	            return false;
+	        } else {  
+	            return true; //Employee Not Eligible for New Glasses
+	        }
+	    } 
+	    return false;     
+	}
+	
 	protected function customArrayList($results,$key,$val) {
 		$array = array ();
 		$array[''] = '';
