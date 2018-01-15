@@ -5,6 +5,7 @@ use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 use Employee\Model\Location;
+use Employee\Model\FinalEntitlement;
 
 class FinalEntitlementForm extends Form
 {
@@ -14,7 +15,7 @@ class FinalEntitlementForm extends Form
 		$this->setAttribute('method','post');
 		
 		$this->setAttribute('novalidate');
-		//$this->setHydrator(new ClassMethods(false))->setObject(new Location());
+		//$this->setHydrator(new ClassMethods(false))->setObject(new FinalEntitlement());
 		
 		$this->add(array(
 			'name' => 'employeeNumberFinalEntitlement',

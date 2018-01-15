@@ -153,7 +153,7 @@ abstract class AbstractDataMapper implements DataMapperInterface {
 		$temp = 0; 
 		if($results) {  
 			foreach($results as $r) {
-				$effDate = $r['effectiveDate'];
+				$effDate = $r['effectiveDate']; 
 				$thisDays = $dateMethod->numberOfDaysBetween($fromDate,$effDate)-1; 
 				//echo "<br/>this days".$thisDays;
 				$effectiveDate = date("Y-m-d",strtotime($effDate)); 

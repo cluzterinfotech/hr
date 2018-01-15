@@ -26,6 +26,10 @@ class FinalEntitlement extends Payment {
     	// @todo remove unclosed leave allowance for the company 
     	$this->getFeMapper()->removeFinalEntitlement($company);   
     }    
+    
+    public function saveFeBuffer($data) {
+        return $this->getFeMapper()->saveFeBuffer($data);  
+    }
 	   
 	public function calculate($employeeId,$routeInfo) {  
 	 	try {  
@@ -106,17 +110,13 @@ class FinalEntitlement extends Payment {
 		 	throw $e; 
 		} 
 		// return $this->paysheet;    
-		
 	 } 
 	 
 	 public function getFeDetails($employeeId) {  
-	 	
 	 	$employee = $this->getEmployeeById($employeeId); 
-	 	
 	 	//$emp = new Employee();
 	 	//$emp->getEmpJoinDate();
 	 	$dateRange = $this->service->get('dateRange'); 
-	 	
 	 	$dateOfJoin = date("Y-m-d",strtotime($employee->getEmpJoinDate()));  
 	 	
 	 	// @todo get termination date 
@@ -441,6 +441,158 @@ class FinalEntitlement extends Payment {
 	    	
 	    	'dtls'                            => $output,
 	     ); 
+     }
+     /*id
+     employeeNumberFinalEntitlement
+     employmentDate
+     relievingDate
+     yearsOfService
+     nonPayDays
+     zeroToTenAmount
+     tenToFifteenAmount
+     fifteenToTwentyAmount
+     twentyToTwentyFiveAmount
+     twentyFiveandAboveAmount
+     afterServiceBenefitTotal
+     balanceLeaveDays
+     leaveDaysAmount
+     
+     salaryDifferenceToCompany
+     carRent
+     carRentToCompany
+     carLoanToCompany
+     splLoanToCompany
+     phoneToCompany
+     overPaymentToCompany
+     leaveDaysToCompany
+     leaveAllowanceToEmployee
+     leaveAllowanceFromEmployeeDesc
+     leaveAllowanceFromEmployee
+     personalLoanPending
+     AdvanceSalaryPending
+     advanceHousingPending
+     lastMonthDueToCompany
+     lastMonthDueFormCompany
+     totalAllowance
+     totalDeduction
+     finalAmount*/
+     
+     public function getFeReport($employeeId) {
+         $r = $this->getFeMapper()->getFeReport($employeeId);
+         $output = "<table style='padding:10px;'>
+         <thead>
+         <tr>
+         <td><b>Subject</b></td>
+         <td>&nbsp;<b>Entitlement</b></td>
+         </tr>
+         </thead>
+         <tbody>
+         <tr>
+         <td>Employment Date </td>
+         <td>".$r['employmentDate']."</td>
+         </tr>
+         <tr>
+         <td>Relieving Date </td>
+         <td>".$r['employmentDate']."</td>
+         </tr>
+         <tr>
+         <td>Basic </td>
+         <td>".$r['employmentDate']."</td>
+         </tr>
+         <tr>
+         <td>Gross </td>
+         <td>".$r['employmentDate']."</td>
+         </tr>
+         <tr>
+         <td align='left'>10 Years of Service((Basic * 1) * 10 )</td>
+         <td align='right'>".$r['zeroToTenAmount']."</td>
+         </tr><tr>
+         <td align='left'>10 - 21 Years of Service((Basic * 2) * 1.246 )</td>
+         <td align='right'>".$r['tenToFifteenAmount']."</td>
+         </tr><tr>
+         <td>Leave Days Amount(Employee) </td>
+         <td>".$r['leaveDaysAmount']."</td>
+         </tr>
+         <tr>
+         <td>Leave Allowance(Employee) </td>
+         <td>".$r['leaveAllowanceToEmployee']."</td>
+         </tr>
+         <tr>
+         <td>Salary Difference(Employee) </td>
+         <td>".$r['salaryDifference']."</td>
+         </tr>
+         <tr>
+         <td>Last Month salary (Employee) </td>
+         <td>".$r['lastMonthDueFormCompany']."</td>
+         </tr>
+         <tr>
+         <td>Car Rent(Employee) </td>
+         <td>".$r['carRent']."</td>
+         </tr>
+         <tr>
+         <td>Leave Days Amount(Company) </td>
+         <td>".$r['leaveDaysAmount']."</td>
+         </tr>
+         <tr>
+         <td>Leave Allowance(Company) </td>
+         <td>".$r['leaveAllowanceFromEmployee']."</td>
+         </tr>
+         <tr>
+         <td>Salary Difference(Company) </td>
+         <td>".$r['salaryDifferenceToCompany']."</td>
+         </tr>
+         <tr>
+         <td>Last Month salary (Company) </td>
+         <td>".$r['lastMonthDueToCompany']."</td>
+         </tr>
+         <tr>
+         <td>Car Rent(Company) </td>
+         <td>".$r['carRentToCompany']."</td>
+         </tr>
+         <tr>
+         <td>Advance Salary </td>
+         <td>".$r['AdvanceSalaryPending']."</td>
+         </tr>
+         <tr>
+         <td>Advance Housing </td>
+         <td>".$r['advanceHousingPending']."</td>
+         </tr>
+         <tr>
+         <td>Personal Loan </td>
+         <td>".$r['personalLoanPending']."</td>
+         </tr>
+         <tr>
+         <td>Over Payment </td>
+         <td>".$r['overPaymentToCompany']."</td>
+         </tr>
+         <tr>
+         <td>Phone Exceeding </td>
+         <td>".$r['phoneToCompany']."</td>
+         </tr>
+         <tr>
+         <td>Car Loan </td>
+         <td>".$r['carLoanToCompany']."</td>
+         </tr>
+         <tr>
+         <td>Special Loan </td>
+         <td>".$r['splLoanToCompany']."</td>
+         </tr>
+         <tr>
+         <td>Total Entitlement </td>
+         <td>".$r['totalAllowance']."</td>
+         </tr>
+         <tr>
+         <td>Total Deduction </td>
+         <td>".$r['totalDeduction']."</td>
+         </tr>
+         <tr>
+         <td><b>Final Amount </b></td>
+         <td>".$r['finalAmount']."</b></td>
+         </tr>
+         </tbody><tbody>
+         </tbody></table> ";
+         
+         return $output; 
      }
 	 
 	 public function isAlreadyClosed($empId) { 

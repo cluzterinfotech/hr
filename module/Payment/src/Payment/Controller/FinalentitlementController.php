@@ -12,6 +12,7 @@ use Payment\Model\Person;
 use Application\Form\SubmitButonForm;
 use Application\Form\MonthYear;
 use Application\Form\FinalEntitlementForm;
+use Application\Form\FinalEntitlementReportForm;
 
 class FinalentitlementController extends AbstractActionController
 {
@@ -37,6 +38,9 @@ class FinalentitlementController extends AbstractActionController
 		
 		if ($form->isValid()) {
 			$data = $form->getData();
+			//\Zend\Debug\Debug::dump($data);
+			//exit; 
+			//$data->getEmployeeNumberFinalEntitlement(); // 
 			$empId = $data['employeeNumberFinalEntitlement']; 
 			$isAlreadyClosed = $feService->isAlreadyClosed($empId);
 			if($isAlreadyClosed) {
@@ -44,7 +48,8 @@ class FinalentitlementController extends AbstractActionController
 				     ->addMessage('Final Entitlement Already closed for this employee'); 
 			} else { 
 				$routeInfo = $this->getRouteInfo();   
-				$feService->calculate($empId,$routeInfo);   
+				//$feService->calculate($empId,$routeInfo);  
+				$feService->saveFeBuffer($data); 
 			    $this->flashMessenger()->setNamespace('success') 
 			         ->addMessage('Final Entitlement Calculated Successfully'); 
 			} 
@@ -68,6 +73,17 @@ class FinalentitlementController extends AbstractActionController
         ; 
 		return $form;
 	}    
+	
+	private function getReportForm() {
+	    $form = new FinalEntitlementReportForm();
+	    $company = $this->getServiceLocator()->get('company');
+	    $form->get('employeeNumberFE')
+	    ->setOptions(array('value_options' =>
+	        $this->notTakenFEEmployeeList($company)))
+	        //->setAttribute('readOnly', true)
+	    ;
+	    return $form;
+	}
 	
 	public function closeAction() { 
 				
@@ -107,7 +123,7 @@ class FinalentitlementController extends AbstractActionController
 	
 	public function reportAction() {
 		
-		$form = $this->getForm();
+		$form = $this->getReportForm(); 
 		$form->get('submit')->setValue('View Report'); 
 		$request = $this->getRequest();
 		if ($request->isPost()) { 
@@ -141,15 +157,15 @@ class FinalentitlementController extends AbstractActionController
         if($request->isPost()) {
             
             $values = $request->getPost(); 
-            $empId = $values['employeeNumberFinalEntitlement']; 
-            $type = 1;
-            $param = array('empId' => $empId); 
-            $output = $this->getFinalEntitlementService()->getPaysheetReport($param); 
+            $empId = $values['employeeNumberFE']; 
+            //$type = 1;
+            //$param = array('empId' => $empId); 
+            $output = $this->getFinalEntitlementService()->getFeReport($empId); 
         }
         // \Zend\Debug\Debug::dump($output) ;        
         $viewmodel->setVariables(array(
             'report'            => $output,
-        	'name'              => array('Employee Name' => 'employeeName'), 
+        	//'name'              => array('Employee Name' => 'employeeName'), 
         ));
         return $viewmodel;  
 	} 
@@ -160,6 +176,10 @@ class FinalentitlementController extends AbstractActionController
 	
 	private function notTakenFEEmployeeList(Company $company) {
 		return $this->getEmployeeService()->notTakenFEEmployeeList($company);
+	}
+	
+	private function employeeList(Company $company) {
+	    return $this->getEmployeeService()->employeeList($company);
 	}
 	 
 	public function successAction() {

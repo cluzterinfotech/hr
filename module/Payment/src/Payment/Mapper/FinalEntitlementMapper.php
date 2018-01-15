@@ -8,6 +8,7 @@ use Application\Abstraction\AbstractDataMapper,
 use Employee\Model\EmployeeLocation;
 use Payment\Model\Company;
 use Employee\Model\NewEmployee;
+use Employee\Model\FinalEntitlement;
 
 class FinalEntitlementMapper extends AbstractDataMapper {
 	
@@ -16,7 +17,7 @@ class FinalEntitlementMapper extends AbstractDataMapper {
 	protected $mainTable = "FinalEntitlement"; 
         	
 	protected function loadEntity(array $row) {
-		 $entity = new EmployeeLocation();
+		 $entity = new FinalEntitlement(); 
 		 return $this->arrayToEntity($row,$entity);
 	}
 	
@@ -26,6 +27,32 @@ class FinalEntitlementMapper extends AbstractDataMapper {
 		$insert->values($leaveEmployeeInfo);
 		$sqlString = $sql->getSqlStringForSqlObject($insert);
 		$this->adapter->query($sqlString)->execute(); 
+	}
+	
+	public function getFeReport($employeeId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array('*'))
+	           ->where(array('employeeNumberFinalEntitlement' => $employeeId))
+	    ;
+	    // echo $sql->getSqlStringForSqlObject($select);
+	    // exit;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    $results = $this->adapter->query($sqlString)->execute()->current();
+	    return $results;
+	}
+	
+	public function saveFeBuffer($data) {
+	    $sql = $this->getSql();
+	    $insert = $sql->Insert($this->entityTable);
+	    //$this->arrayToEntity($array, $entity); 
+	    unset($data['submit']);
+	    $insert->values($data);
+	    $sqlString = $sql->getSqlStringForSqlObject($insert);
+	    //echo $sqlString;
+	    //exit; 
+	    $this->adapter->query($sqlString)->execute();
 	}
 	
 	public function insertLaMst($mstArray) { 
