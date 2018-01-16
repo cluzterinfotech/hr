@@ -9,6 +9,7 @@ use Employee\Model\EmployeeLocation;
 use Payment\Model\Company;
 use Employee\Model\NewEmployee;
 use Payment\Model\DateRange; 
+use Zend\Db\Sql\Predicate\Predicate;
 
 class CarRentMapper extends AbstractDataMapper {
 	
@@ -117,13 +118,14 @@ class CarRentMapper extends AbstractDataMapper {
 		return $this->adapter->query($sqlString)->execute()->count();
 	} 
 	
-	public function getCarRentReport(array $param = array()) {
+	public function getCarRentReport($from,$to) {
+	    $predicate = new Predicate(); 
 	    $sql = $this->getSql(); 
 		$select = $sql->select(); 
 		$select->from(array('e' => $this->entityTable))
 		       ->columns(array('*')) 
 		       ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.employeeId',
-		    		  array('employeeName')) 
+		           array('employeeName','employeeNumber')) 
 		       ->join(array('p' => 'Position'),'p.id = m.empPosition',
 		              array('positionName'))
 		       ->join(array('l' => 'Location'),'l.id = m.empLocation',
@@ -132,18 +134,51 @@ class CarRentMapper extends AbstractDataMapper {
 		              array('bankName'))
 		       ->join(array('g' => 'lkpCarRentGroup'),'g.id = e.lkpCarRentGroupId',
 		              array('groupName'))
-		     //->where(array('fyYear' =>$param['year'])) 
-		       ->where(array('isClosed' =>0)) 
+		     //->where(array('month' =>$param['year'])) 
+		->where($predicate->greaterThanOrEqualTo('rentDate',$from))
+		->where($predicate->lessThanOrEqualTo('rentDate',$to))
+		       //->where(array('isClosed' =>0)) 
 	    ;         
 		      
-	    // echo $sql->getSqlStringForSqlObject($select);   
-	    // exit;    
+	    //echo $sql->getSqlStringForSqlObject($select);   
+	    //exit;    
 	       
 	    $sqlString = $sql->getSqlStringForSqlObject($select);    
 		$results = $this->adapter->query($sqlString)->execute();    
 		return $results;  
 		      
-	}  
+	} 
+	
+	public function getCarRentReportDtls($from,$to) {
+	    $predicate = new Predicate(); 
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array('*'))
+	           ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.employeeId',
+	                  array('employeeName','employeeNumber'))
+	           ->join(array('p' => 'Position'),'p.id = m.empPosition',
+	                  array('positionName'))
+	           ->join(array('l' => 'Location'),'l.id = m.empLocation',
+	                  array('locationName'))
+	           ->join(array('b' => 'lkpBank'),'b.id = m.empBank',
+	                  array('bankName'))
+	           ->join(array('g' => 'lkpCarRentGroup'),'g.id = e.lkpCarRentGroupId',
+	                  array('groupName'))
+	                  ->where($predicate->greaterThanOrEqualTo('rentDate',$from))
+	                  ->where($predicate->lessThanOrEqualTo('rentDate',$to))
+	                        //->where(array('fyYear' =>$param['year']))
+	    //->where(array('isClosed' =>0))
+	    ;
+	    
+	    // echo $sql->getSqlStringForSqlObject($select);
+	    // exit;
+	    
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    $results = $this->adapter->query($sqlString)->execute();
+	    return $results;
+	    
+	}
 	
 	public function closeThisCarrent(Company $company,DateRange $dateRange) {
 		$adapter = $this->adapter;

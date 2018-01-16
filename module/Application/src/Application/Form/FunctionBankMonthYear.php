@@ -112,6 +112,7 @@ class FunctionBankMonthYear extends Form
 						'1' => 'By Function',
 						'2' => 'By Bank',
 						'3' => 'Bank Summary',
+				        '4' => 'By Details',
 				),
 		    ),
 		)); 

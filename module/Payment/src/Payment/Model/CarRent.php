@@ -19,14 +19,13 @@ class CarRent extends Payment {
     
     public function getNonPayDays($employeeId,$fromDate,$toDate) {
     	$service = $this->service->get('NonPaymentDaysService'); 
-    	return $service->getEmployeeLeaveAllowanceNonWorkingDays($employeeId,$fromDate,$toDate); 
+    	return $service->getCarRentNonWorkingDays($employeeId,$fromDate,$toDate); 
     	// return $days;  
     } 
-    
+        
     public function removeUnclosedCarRent(Company $company) {
     	// @todo remove unclosed leave allowance for the company 
     	$this->getCarRentMapper()->removeUnclosedCarRent($company);  
-    	
     } 
 	   
 	public function calculate(Company $company,DateRange $dateRange,$routeInfo) {  
@@ -34,6 +33,22 @@ class CarRent extends Payment {
 	 	    $this->transaction->beginTransaction();   
 	 	    // @todo from last taken LA to now number of days 
 	 	    // @todo  
+	 	    /*$workDays = 0;
+              $sickLeaveDays = 0;
+              $twelthMonth = 0;
+              $susDays = 0;
+              $suspendDays = 0;
+              $levWithoutPayDays = 0;
+              $annualDays = 0;
+              $workingDays = 0;
+              $emergencyDays = 0;
+              $examDays = 0;
+              $hejjDays = 0;
+              $maternityDays = 0;
+              $sickLeaveDaysRent = 0;
+              $rentNet = 0;
+              $rentWorkingDays = 0;
+            */
 	 	    $this->removeUnclosedCarRent($company); 
 	 	    // get employee list based on company 
 	 	    // $employeeList =  
@@ -56,27 +71,31 @@ class CarRent extends Payment {
 	 	    $daysInMonth = $dateMethods->numberOfDaysBetween($fromDate,$toDate);  
             
 	 	    foreach($employeeList as $emp) {  
-	 	    	//\Zend\Debug\Debug::dump($employee);
+	 	        //\Zend\Debug\Debug::dump($emp);
 	 	    	//exit; 
+	 	        $actAmount = 0; 
 	 	    	$amount = 0; 
 	 	    	$nonPayDays = 0;  
-	 	    	
-	 	    	$this->carRentMst = '';  
-	 	    	
+	 	    	$nonPay = array();  
+	 	    	$this->carRentMst = '';   
+	 	    	 
 	 	    	$employeeId = $emp['employeeNumber'];  
 	 	    	$employee = $this->getEmployeeById($employeeId);  
-	 	    	$nonPayDays = $this->getNonPayDays($employeeId,$fromDate,$toDate);  
+	 	    	
+	 	    	$nonPay = $this->getNonPayDays($employeeId,$fromDate,$toDate);  
+
+	 	    	$nonPayDays = $nonPay['0']; 
+	 	    	
+	 	    	//$dtls = $nonPay['1'];  
 	 	    	
 	 	    	$workDays = $daysInMonth - $nonPayDays; 
 	 	    	
-	 	    	$amount = $emp['employeeNumber'];  
+	 	    	$amount = $emp['amount'];  
+	 	    	
+	 	    	$actAmount = $amount; 
 	 	    	
 	 	    	$amount = $this->workingDaysPay($amount,$daysInMonth,$workDays);
-	 	    	
-	 	    	
-                //echo $employee->getEmployeeNumber()."<br/>"; 
-                //exit;  
-                		        
+                                		        
 		        $this->carRentMst['rentDate'] = date('Y-m-d');
 		        $this->carRentMst['isClosed'] = 0;
 		        //$this->carRentMst['doneBy'] = $routeInfo->
@@ -90,9 +109,10 @@ class CarRent extends Payment {
 		        $this->carRentMst['empLocation'] = $emp['empLocation']; 
 		        $this->carRentMst['empPosition'] = $emp['empPosition'];  
 		        $this->carRentMst['companyId'] = $company->getId();   
-		        // \Zend\Debug\Debug::dump($this->leaveAllowanceMst);  
+		        $this->carRentMst['dtls'] = $nonPay['1']; 
+		        $this->carRentMst['actualRent'] = $actAmount;
+		        //\Zend\Debug\Debug::dump($this->carRentMst);  
 		        //exit; 
-		         
 		        $mstId = $carRentMapper->insertCarRent($this->carRentMst); 
 	 	    }   
 	 	    //exit;    
@@ -161,7 +181,16 @@ class CarRent extends Payment {
 	 public function  getCarRentReport(array $param = array()) 
 	 {
 	 	//$count = 0;
-	 	return $this->getCarRentMapper()->getCarRentReport($param);  
+	    $from = $this->dateMethods->getFirstDayByMonthYear($param['month'],$param['year']); 
+	    $to = $this->dateMethods->getLastDayOfDate($from);
+	    return $this->getCarRentMapper()->getCarRentReport($from,$to);  
+	 }
+	 
+	 public function  getCarRentReportDtls(array $param = array())
+	 {
+	     $from = $this->dateMethods->getFirstDayByMonthYear($param['month'],$param['year']);
+	     $to = $this->dateMethods->getLastDayOfDate($from);
+	     return $this->getCarRentMapper()->getCarRentReportDtls($from,$to);
 	 }
 	 
 	 public function getCarRentByFunction(Company $company,$param) {
