@@ -19,7 +19,7 @@ $(function() {
 	    document.onmouseup=reEnable
 	}*/
 	
-	$( "#startingDate,#endingDate").datepicker({
+	$( "#startingDate,#endingDate,#otDate").datepicker({
         dateFormat: 'yy-mm-dd',
     	changeMonth: true,
     	changeYear: true,

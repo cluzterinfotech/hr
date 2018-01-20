@@ -141,7 +141,7 @@ class Acl extends ZendAcl {
         ->addResource('Employee\Controller\Employeeinitial')
         ->addResource('Employee\Controller\Increment')
         ->addResource('Employee\Controller\Employeerating')
-        ->addResource('Payment\Controller\Overtimenew')
+        ->addResource('Payment\Controller\Overtimebyemp')
         ->addResource('Payment\Controller\Overtimemanual')
         ->addResource('Payment\Controller\Otmeal')
         ->addResource('Payment\Controller\Carrent')
@@ -187,10 +187,10 @@ class Acl extends ZendAcl {
         ->allow('employee','Employee\Controller\Newemployee' , 'changepassword')
         ->allow('employee','Employee\Controller\Employeeinfo' , 'updateinfo')
         /* over Time And Attendence */
-        ->allow('employee','Payment\Controller\Overtimenew' , 'add')
-        ->allow('employee','Payment\Controller\Overtimenew' , 'approve')
-        ->allow('employee','Payment\Controller\Overtimenew' , 'ajaxlist')
-        ->allow('employee','Payment\Controller\Overtimenew' , 'approvelist')
+        ->allow('employee','Payment\Controller\Overtimebyemp' , 'add')
+        ->allow('employee','Payment\Controller\Overtimebyemp' , 'approve')
+        ->allow('employee','Payment\Controller\Overtimebyemp' , 'ajaxlist')
+        ->allow('employee','Payment\Controller\Overtimebyemp' , 'approvelist')
         
         ->allow('employee','Payment\Controller\Attenjustification' , 'add')
         ->allow('employee','Payment\Controller\Attenjustification' , 'ajaxlist')
@@ -286,7 +286,7 @@ class Acl extends ZendAcl {
          ->allow('payroll','Employee\Controller\Positionallowance')
          ->allow('payroll','Allowance\Controller\Affectedallowance')
          ->allow('payroll','Allowance\Controller\Paysheetallowance')
-         ->allow('payroll','Payment\Controller\Overtimenew')
+         ->allow('payroll','Payment\Controller\Overtimebyemp')
          ->allow('payroll','Application\Controller\Babycareexception')
          ->allow('payroll','Application\Controller\Babycareexception')
          ->allow('payroll','Application\Controller\Attendanceevent')
@@ -294,7 +294,7 @@ class Acl extends ZendAcl {
          ->allow('payroll','Application\Controller\Attendancegroup')
          ->allow('payroll','Application\Controller\Attendancelocgroup')
          ->allow('payroll','Application\Controller\Attendancegrpworkhrs')
-         ->allow('payroll','Payment\Controller\Overtimenew')
+         ->allow('payroll','Payment\Controller\Overtimebyemp')
          ->allow('payroll','Leave\Controller\Annualleave')
          ->allow('payroll','Leave\Controller\Entitlementannualleave')
          ->allow('payroll','Leave\Controller\Leaveadmin')
@@ -361,7 +361,7 @@ class Acl extends ZendAcl {
         ->allow('116','Payment\Controller\Difference')
         ->allow('116','Payment\Controller\Finalentitlement')
         ->allow('116','Payment\Controller\Advancesalary')
-        ->allow('116','Payment\Controller\Overtimenew')
+        ->allow('116','Payment\Controller\Overtimebyemp')
         ->allow('116','Payment\Controller\Otmeal')
         ->allow('116','Payment\Controller\Paysheet')
         ->allow('116','Employee\Controller\Telephone')
@@ -419,8 +419,6 @@ class Acl extends ZendAcl {
         //$this->deny('1', 'Leave\Controller\Annualleave','list');
         //$this->deny('1', 'Payment\Controller\Advancehousing','getadvancehousingdetails');
         //$this->deny('admin', 'Employee\Controller\Promotion','getpromotiondetails');
-        
         return $this;
     }
 }//--=_mixed 003147984325820F_=--
-

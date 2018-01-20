@@ -1613,11 +1613,11 @@ return array (
 	     				),
 	     			),*/array(
 			     		'label'      => 'OVERTIME', 
-			     		'route'      => 'overtimenew',
+			     		'route'      => 'overtimebyemp',
 			     		'module'     => 'payment',
-			     		'controller' => 'overtimenew',
+			     		'controller' => 'overtimebyemp',
 			     		'action'     => 'add',
-			     		'resource'	 => 'Payment\Controller\Overtimenew',
+			     		'resource'	 => 'Payment\Controller\Overtimebyemp',
 			     		'privilege'	 => 'add',
 			            'pages'      => array( 
 			            	/*array(
@@ -1631,29 +1631,29 @@ return array (
 			            	),*/
 			                array(
 			                 	'label'      => 'Add/Edit Employee Overtime', 
-			                	'route'      => 'overtimenew', 
+			                	'route'      => 'overtimebyemp', 
 			                	'module'     => 'payment', 
-			                	'controller' => 'overtimenew', 
+			                	'controller' => 'overtimebyemp', 
 			               		'action'     => 'add',
-			                	'resource'	 => 'Payment\Controller\Overtimenew',
+			                	'resource'	 => 'Payment\Controller\Overtimebyemp',
 			                	'privilege'	 => 'add',
 			               	),   
 			            	array(
 			            		'label'      => 'Approve By Supervisor', 
-			            		'route'      => 'overtimenew',
+			            		'route'      => 'overtimebyemp',
 			            		'module'     => 'payment',
-			            		'controller' => 'overtimenew',
+			            		'controller' => 'overtimebyemp',
 			            		'action'     => 'approve', 
-			            		'resource'	 => 'Payment\Controller\Overtimenew',
+			            		'resource'	 => 'Payment\Controller\Overtimebyemp',
 			            		'privilege'	 => 'approve',
 			            	), 
 			               	array(
 			               		'label'      => 'HR Endorsement',  
-			               		'route'      => 'overtimenew',  
+			               		'route'      => 'overtimebyemp',  
 			               		'module'     => 'payment',  
-			               		'controller' => 'overtimenew',  
+			               		'controller' => 'overtimebyemp',  
 			               		'action'     => 'endorsehr', 
-			               		'resource'	 => 'Payment\Controller\Overtimenew',
+			               		'resource'	 => 'Payment\Controller\Overtimebyemp',
 			               		'privilege'	 => 'endorsehr',
 			               	),array(
 			               	    'label'      => 'Overtime Manual Entry',

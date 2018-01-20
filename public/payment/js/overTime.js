@@ -1,6 +1,7 @@
 $(document).ready(function()
 {   
 	$("#empIdOvertime").combobox("option", "disabled", true); 
+	$("#employeeOtId").combobox("option", "disabled", true); 
 	$("#submitOtToSup").button(); 
 	$("#approveOt").button();
 	$("#endorseOt").button(); 
