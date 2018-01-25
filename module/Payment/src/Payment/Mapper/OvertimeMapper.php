@@ -19,6 +19,54 @@ class OvertimeMapper extends AbstractDataMapper {
 		$entity = new OvertimeEntity(); 
 		return $this->arrayToEntity($row,$entity); 
 	} 
+	
+	public function saveot($values) {
+	    $this->setEntityTable('otByEmployee'); 
+	    $this->insert($values); 
+	}
+	
+	public function getAttendanceByDate($date,$emp) { 
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+                SELECT id,cardId,attendanceDate,startingTime
+                      ,locStartTime,endingTime,locEndTime,difference,locWorkHours
+                FROM EmployeeAttendance e
+                where id not in (
+                    select attendanceId from otByEmployee where otStatus != '9'
+                )
+                and attendanceDate = '".$date."' and cardId = '".$emp."' 
+		");
+	    //echo $statement->getSql(); 
+	    //exit; 
+	    return $statement->execute()->current(); 
+	    /*if($row) { 
+	        return $row;  
+	    } 
+	    return 0;*/    
+	    //$predicate = new Predicate(); 
+	    /*$sql = $this->getSql(); 
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->attendanceTable))
+        	   ->columns(array('id','cardId','startingTime','endingTime',
+        	        'difference','duration','noOfMeals',
+        	        'attendanceDate' => new Expression('CONVERT(varchar(12),attendanceDate,107)'),
+        	        'normalHour' => new Expression('CONVERT(varchar(5),normalHour,108)'),
+        	        'holidayHour' => new Expression('CONVERT(varchar(5),holidayHour,108)')
+        	   ))
+        	   //->where($predicate->greaterThanOrEqualTo('attendanceDate',$arr['from']))
+        	   //->where($predicate->lessThanOrEqualTo('attendanceDate',$arr['to']))
+        	   ->where(array('cardId' => $arr['emp']))
+        	   //->where($predicate->greaterThan('difference',0))
+        ; 
+        $sqlString = $sql->getSqlStringForSqlObject($select); 
+        return $this->adapter->query($sqlString)->execute(); */  
+	}
     // 
 	public function selectEmployeeOvertime($employeeNumber) { 
 		$sql = $this->getSql(); 
@@ -35,7 +83,22 @@ class OvertimeMapper extends AbstractDataMapper {
 			   //echo $select->getSqlString(); 
 			   //exit;   
 		return $select;     
-	}    
+	}   
+	
+	public function selectEmpOvertime($employeeNumber) { 	    
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployee'))
+	           ->columns(array('*'))
+	           ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeOtId',
+	                  array('employeeName'))
+	           //->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
+	                  //array('overtimeStatus'))
+	           ->where(array('employeeOtId' => $employeeNumber));
+	                //echo $select->getSqlString();
+	                //exit;
+	           return $select; 
+	} 
 	
 	public function selectEmployeeAttendance($arr,$ids) { 
 		$predicate = new Predicate();
@@ -125,8 +188,7 @@ class OvertimeMapper extends AbstractDataMapper {
 			    return $i;    
 			}  
 		}
-		return 0;
-     
+		return 0; 
 	}
 	//->join(array('ec' => 'EmployeeIdCard'), 'ec.idCard = e.cardId',
 	//array('idCard'))

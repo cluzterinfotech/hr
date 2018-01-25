@@ -21,20 +21,37 @@ class OvertimeService extends Approvals {
 	    return $this->services->get('overtimeMapper'); 
 	} 
 	
+	public function getAttendanceByDate($date,$emp) { 
+	    $row = $this->getOvertimeMapper()->getAttendanceByDate($date,$emp);
+	    if($row) {
+	        $inT = $row['startingTime'];
+	        $out = $row['endingTime'];
+    	    $res = array(
+    	        'inTime'          => $inT,
+    	        'outTime'         => $out,
+    	        'locWorkHours'    => $row['locWorkHours'],
+    	        'otElegibleHours' => $row['difference'],
+    	        'attendanceId'    => $row['id']
+    	    ); 
+    	    return $res; 
+	    }
+	    return array('rec' => 0); 
+	} 
+	
+	public function saveot($values) {
+	    return $this->getOvertimeMapper()->saveot($values); 
+	}
+	
 	public function selectEmployeeOvertime($employeeNumber) {
 		return $this->getOvertimeMapper()->selectEmployeeOvertime($employeeNumber);
 	} 
 	
-	public function selectEmployeeAttendance($arr) { 
-		if(!$arr['emp'] || !$arr['from'] || !$arr['to']) {
+	public function selectEmpOvertime($arr) { 
+	    $emp = $arr['emp'];
+	    if(!$emp) {
 			return array(); 
-			//$emp = $this->userInfoService->getEmployeeId();
-			//$dayMinus = date('d') - 10;
-			//$from = date('Y')."-".date('m')."-".$dayMinus;
-			//$arr = array('emp' => $emp,'from' => $from,'to' => $this->dateMethods->getToday());
 		}  
-		$ids = $this->getSubmittedOtIds($arr); 
-		return $this->getOvertimeMapper()->selectEmployeeAttendance($arr,$ids); 
+		return $this->getOvertimeMapper()->selectEmpOvertime($emp);   
 	}
 	
 	public function selectEmployeeManualAttendance() {

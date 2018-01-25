@@ -144,7 +144,26 @@ $(function() {
         "Please enter a valid date"
     ); 
     
-    $.validator.addMethod("dojRange", 
+    $.validator.addMethod("dobRange", 
+            function(value, element,params) { 
+        	    var startDt = new Date(); 
+        	    // alert(startDt); 
+        	    var maxDate = new Date(startDt.getFullYear() - 17,startDt.getMonth(),startDt.getDate()); 
+        	    //alert(maxDate); 
+        	    // var endDt = 
+    	    	// var minDate = Date.parse("1940-01-01"); 
+    		    //var maxDate = Date.parse("2006-01-01");
+    		    var valueEntered = Date.parse($(params[0]).val()); 
+                if(valueEntered > maxDate) {
+                	//alert("fasle"); 
+                	return false;  
+                }
+                return !/Invalid|NaN/.test(new Date(minDate)) 
+            },
+            "Please enter a valid date"
+    ); 
+    
+    $.validator.addMethod("otValidation", 
             function(value, element,params) { 
         	    var startDt = new Date(); 
         	    var maxDate = new Date(startDt.getFullYear(),startDt.getMonth()-1,startDt.getDate()); 
