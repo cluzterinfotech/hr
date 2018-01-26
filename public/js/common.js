@@ -175,7 +175,7 @@ $(function() {
                 return !/Invalid|NaN/.test(new Date(minDate)) 
             },
             "Please enter a valid date"
-        );
+     ); 
     
    /* $.validator.addMethod("overlap", 
         function(value, element, params) {

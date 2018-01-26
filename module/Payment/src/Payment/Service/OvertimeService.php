@@ -31,7 +31,8 @@ class OvertimeService extends Approvals {
     	        'outTime'         => $out,
     	        'locWorkHours'    => $row['locWorkHours'],
     	        'otElegibleHours' => $row['difference'],
-    	        'attendanceId'    => $row['id']
+    	        'attendanceId'    => $row['id'],
+    	        'dayStatus'       => $row['dayStatus']
     	    ); 
     	    return $res; 
 	    }
@@ -46,8 +47,7 @@ class OvertimeService extends Approvals {
 		return $this->getOvertimeMapper()->selectEmployeeOvertime($employeeNumber);
 	} 
 	
-	public function selectEmpOvertime($arr) { 
-	    $emp = $arr['emp'];
+	public function selectEmpOvertime($emp) { 
 	    if(!$emp) {
 			return array(); 
 		}  
@@ -202,18 +202,13 @@ class OvertimeService extends Approvals {
 		return $this->approvalService->isApprover($this->formType,$applicant,$approver,$approvedLevel);
 	}
 	
-	public function submittosup($array) { 		 
+	public function submittosup($emp) { 		 
 		try {
 			$empId = $array['emp'];
-			$from = $array['from'];
-			$to = $array['to'];
 			$this->databaseTransaction->beginTransaction(); 
 			// get sum 
-			$sum = $this->getAttendanceOtSum($array);
-			//var_dump($array);
-			
-			//\Zend\Debug\Debug::dump($array);
-			//exit;
+			$sum = $this->getAttendanceOtSum($array); 
+			// N
 			$norHr = $sum['normalHour'];
 			$holiHr = $sum['holidayHour'];
 			$norHrArr = explode(':', $norHr); 
@@ -229,8 +224,8 @@ class OvertimeService extends Approvals {
 					'startingDate'      => $from,
 					'endingDate'        => $to,
 					'otStatus'          => 2,
-			    'employeeNoNOHours' => $normalHr,
-			    'employeeNoHOHours' => $holidayHr,
+			        'employeeNoNOHours' => $normalHr,
+			        'employeeNoHOHours' => $holidayHr,
 					'numberOfMeals'     => $sum['noOfMeals'], 
 			); 
 			// add ot details

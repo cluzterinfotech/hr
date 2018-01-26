@@ -34,7 +34,7 @@ class OvertimeMapper extends AbstractDataMapper {
 	        return $adapter->driver->formatParameterName($name);
 	    };
 	    $statement = $adapter->query("
-                SELECT id,cardId,attendanceDate,startingTime
+                SELECT id,cardId,attendanceDate,startingTime,dayStatus
                       ,locStartTime,endingTime,locEndTime,difference,locWorkHours
                 FROM EmployeeAttendance e
                 where id not in (
@@ -89,15 +89,24 @@ class OvertimeMapper extends AbstractDataMapper {
 	    $sql = $this->getSql();
 	    $select = $sql->select();
 	    $select->from(array('e' => 'otByEmployee'))
-	           ->columns(array('*'))
+	           ->columns(array('numberOfMeals',
+	               'otDate' => new Expression('CONVERT(varchar(12),otDate,107)'),
+	               'inTime' => new Expression('CONVERT(varchar(5),inTime,108)'),
+	               'outTime' => new Expression('CONVERT(varchar(5),outTime,108)'),
+	               'locWorkHours' => new Expression('CONVERT(varchar(5),locWorkHours,108)'),
+	               'otElegibleHours' => new Expression('CONVERT(varchar(5),otElegibleHours,108)'),
+	               'overTimeHours' => new Expression('CONVERT(varchar(5),overTimeHours,108)')
+	           ))
 	           ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeOtId',
 	                  array('employeeName'))
 	           //->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
 	                  //array('overtimeStatus'))
-	           ->where(array('employeeOtId' => $employeeNumber));
-	                //echo $select->getSqlString();
-	                //exit;
-	           return $select; 
+	           ->where(array('employeeOtId' => $employeeNumber))
+	           ->where(array('otStatus' => 1))
+	    ;
+	    //echo $select->getSqlString(); 
+	    //exit; 
+	    return $select;  
 	} 
 	
 	public function selectEmployeeAttendance($arr,$ids) { 

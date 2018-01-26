@@ -19,11 +19,9 @@ $(function() {
 		var request = $.ajax({
             url: '/annualleave/employeeleaveinfo', 
             type: "POST",
-            
             data: {  
                 empNumber:ui.item.value
-            }
-            
+            } 
         }).done(function(data) { 
             var obj = jQuery.parseJSON(data);
             $("#positionId").val($.trim(obj.position));

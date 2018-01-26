@@ -1639,7 +1639,7 @@ return array (
 			                	'privilege'	 => 'add',
 			               	),   
 			            	array(
-			            		'label'      => 'Approve By Supervisor', 
+			            		'label'      => 'Approval', 
 			            		'route'      => 'overtimebyemp',
 			            		'module'     => 'payment',
 			            		'controller' => 'overtimebyemp',
