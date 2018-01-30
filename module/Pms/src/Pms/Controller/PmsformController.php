@@ -3,12 +3,15 @@
 namespace Pms\Controller; 
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 use Zend\Http\PhpEnvironment\Response;
 use Pms\Form\IpcForm; 
 use Pms\Form\ManageFormValidator;
 use Pms\Grid\ManageGrid;
 //use Pms\Grid\ManageGrid;
 use Zend\View\Model\JsonModel;
+use Pms\Grid\PmsReportGrid;
+use Pms\Grid\PmsStatusGrid;
      
 class PmsformController extends AbstractActionController {
     
@@ -19,11 +22,23 @@ class PmsformController extends AbstractActionController {
 	public function listAction() { }  
     
 	public function ajaxlistAction() { 
-		$grid = $this->getGrid(); 
+	    $grid = $this->getStatusGrid(); 
+	    $employeeId = $this->getUser(); 
 		$grid->setAdapter($this->getDbAdapter())
-		     ->setSource($this->getService()->select())
+		     ->setSource($this->getService()->selectStatus($employeeId))
 		     ->setParamAdapter($this->getRequest()->getPost());
 		return $this->htmlResponse($grid->render()); 
+	}
+	
+	public function reportlistAction() { }
+	
+	public function reportajaxlistAction() {
+	    $grid = $this->getGrid();
+	    $employeeId = $this->getUser(); 
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getService()->selectReport($employeeId))
+	         ->setParamAdapter($this->getRequest()->getPost());  
+	    return $this->htmlResponse($grid->render()); 
 	}
 	
 	public function ipcAction() { 
@@ -40,7 +55,7 @@ class PmsformController extends AbstractActionController {
 			     ->addMessage('IPC is not opened at the moment');  
 			$this->redirect ()->toRoute('pmsform',array ( 
 					'action' => 'status'
-			)); 
+			));  
 		} 
 		// check is have ipc 
 		if(!$id) { 
@@ -142,6 +157,63 @@ class PmsformController extends AbstractActionController {
 				$prg
 		);
 	}
+	
+	public function submittosupAction() {
+	    
+	    $m = "Weightage is not 100"; 
+	    /*
+	     * conditions required
+	     * is weightage 100?
+	     * is all compulsory fields filled 
+	     */
+	    
+	    /*$m = "Form is incomplete, please fill "." , "."performance indicator"
+	    ." , "."Objective"
+	    ; */
+	    $a = array('s' => 11,'m' => $m);
+	    return $this->jsonResponse($a);
+	    
+	    /*$formValues = $this->params()->fromPost('formVal');
+	    $elegible = $formValues['otElegibleHours'];
+	    $entered = $formValues['overTimeHours'];
+	    $x = explode($elegible,':');
+	    $otHrs = $formValues['overTimeHours'];
+	    $otMin = $formValues['overTimeHoursMin'];
+	    $hr = $x[0];
+	    $min = $x[1];
+	    // 12 ot more than elegible hours
+	    if($otHrs < $hr) {
+	        $a = array('s' => 12);
+	        return $this->jsonResponse($a);
+	    }
+	    if(($hr == $otHrs) && ($otMin > $min)) {
+	        $a = array('s' => 14);
+	        return $this->jsonResponse($a);
+	    }
+	    // 14 less than 30 minutes
+	    if(($hr == 0) && ($min < 30)) {
+	        $a = array('s' => 14);
+	        return $this->jsonResponse($a);
+	    }
+	    $values = array(
+	        'id'               => $formValues['id'],
+	        'attendanceId'     => $formValues['attendanceId'],
+	        'employeeOtId'     => $formValues['employeeOtId'],
+	        'otDate'           => $formValues['otDate'],
+	        'inTime'           => $formValues['inTime'],
+	        'outTime'          => $formValues['outTime'],
+	        'locWorkHours'     => $formValues['locWorkHours'],
+	        'otElegibleHours'  => $elegible,
+	        'overTimeHours'    => $otHrs,
+	        'numberOfMeals'    => $formValues['numberOfMeals'],
+	        'otStatus'         => 1,
+	    );
+	    $service = $this->getService();
+	    $service->saveot($values);
+	    $a = array('s' => 1);
+	    return $this->jsonResponse($a);*/
+	}
+	
 	
 	// save new Objective
 	public function saveobjectiveAction() {
@@ -302,6 +374,34 @@ class PmsformController extends AbstractActionController {
 		
 	}
 	
+	public function ipcreportAction() {
+	    /*$employeeId = $this->params()->fromPost('empMonthYearId',0);
+	    if(!$employeeId) {
+	        $employeeId = $this->getUser();
+	    }*/
+	    
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	   // if($request->isPost()) {
+	        //$values = $request->getPost();
+	       // $month = $values['month'];
+	       // $year = $values['year'];
+	       // $type = 1;
+	       // $param = array('month' => $month,'year' => $year,'empId' => $employeeId);
+	       // $company = $this->getCompanyService();
+	        //$results = $this->getPaysheetService()->getPaysheetReport($param);
+	        //$output = $this->getPaysheetService()->getPayslipReport($company,$param);
+	        $output = " IPC Header"; 
+	    //}
+	    /// \Zend\Debug\Debug::dump($output) ;
+	    $viewmodel->setVariables(array(
+	        'report'            => $output,
+	    ));
+	    return $viewmodel;
+	}
+	
 	public function ipcapproveAction() {
 	
 	} 
@@ -323,7 +423,11 @@ class PmsformController extends AbstractActionController {
 	}
 	
 	private function getGrid() {
-		return new ManageGrid();
+		return new PmsReportGrid(); 
+	}
+	
+	private function getStatusGrid() {
+	    return new PmsStatusGrid(); 
 	}
     
 	private function getDbAdapter() {
@@ -377,5 +481,16 @@ class PmsformController extends AbstractActionController {
 	private function getUserInfoService() {
 		return $this->getServiceLocator()->get('userInfoService');
 	} 
+	
+	public function jsonResponse($data)
+	{
+	    if(!is_array($data)){
+	        throw new \Exception('$data param must be array');
+	    }
+	    $response = $this->getResponse();
+	    $response->setStatusCode(200);
+	    $response->setContent(json_encode($data));
+	    return $response;
+	}
 	
 }   

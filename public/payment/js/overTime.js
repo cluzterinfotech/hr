@@ -111,7 +111,7 @@ $(document).ready(function()
 	});*/
 	
 	// $(".rejectOvertime").on('click',function(e) { 
-	$(document.body).on('click','.rejectOvertime a',function(e) { 
+	/*$(document.body).on('click','.rejectOvertime a',function(e) { 
 		e.preventDefault(); 
 		//alert("individual reject"); 
 		targetUrl = $(this).attr('href'); 
@@ -136,7 +136,7 @@ $(document).ready(function()
 			      }
 			}); 
 			$("#dialogRej").dialog("open"); 
-	});  
+	});  */ 
 	
 	/*$("#approveOt").on('click',function(e) { 
 		e.preventDefault(); 
@@ -245,7 +245,7 @@ $(document).ready(function()
 	}); */ 
 	
     //*********************************************************************************************************
-   $(document.body).on('click','.removeOvertime a',function(e) { 
+   /*$(document.body).on('click','.removeOvertime a',function(e) { 
 		e.preventDefault();
 		targetUrl = $(this).attr('href'); 
 		$("#dialog").dialog({
@@ -270,7 +270,7 @@ $(document).ready(function()
 		      }
 		}); 
 		$("#dialog").dialog("open"); 
-	});
+	});*/ 
     
     /*$('#OverTimeForm').validate({ 
     	rules: { 

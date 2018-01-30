@@ -30,6 +30,20 @@ class PmsFormMapper extends AbstractDataMapper {
 		return $this->insert($data);  
 	}
 	
+	public function selectReport($employeeId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array ('id','Pmnt_Emp_Mst_Id','Pms_Fyear_Id'))
+	           ->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
+	                  array('Year'))
+	          ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                      array('employeeName'))
+	          ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	    ; 
+	    return $select; 
+	}
+	
 	public function insertNewSubObjective($data) {
 		$this->setEntityTable($this->dtlsDtlsTable);
 		return $this->insert($data);
@@ -108,7 +122,7 @@ class PmsFormMapper extends AbstractDataMapper {
 	}
 	
 	public function isIpcOpened($pmsId) {
-	return true; 
+	    //return true; 
 		$sql = $this->getSql();
 		$select = $sql->select();
 		$select->from(array('e' => $this->pmsFyear))
@@ -125,7 +139,7 @@ class PmsFormMapper extends AbstractDataMapper {
 	}
 	
 	public function isMyrOpened($pmsId) {
-		return true;
+		//return true;
 		$sql = $this->getSql();
 		$select = $sql->select();
 		$select->from(array('e' => $this->pmsFyear))
@@ -142,7 +156,7 @@ class PmsFormMapper extends AbstractDataMapper {
 	}
     
 	public function isYendOpened($pmsId) {
-		return true;
+		//return true;
 		$sql = $this->getSql();
 		$select = $sql->select();
 		$select->from(array('e' => $this->pmsFyear))
@@ -255,6 +269,8 @@ class PmsFormMapper extends AbstractDataMapper {
 		       ->columns(array ('id'))
 		       ->where(array('Year' => $year ));
 		$sqlString = $sql->getSqlStringForSqlObject($select);
+		//echo $sqlString;
+		//exit; 
 		$results = $this->adapter->query($sqlString)->execute()->current();
 		if($results['id']) {
 			return $results['id'];

@@ -5,15 +5,14 @@ echo "<h4>".$title."</h4>";
 ?>
 <style type="text/css">
 textarea {
-    width:360px !important;;
+    width:360px !important;
     padding: 3px;
     border-style: solid;
     border-color: #ccc;
     z-index:1200;
     }
-#Obj_Weightage {
-    width:50px !important;;
-}
+    #subIpcToSupDialog { display:none; } 
+#Obj_Weightage { width:50px !important; }
 </style>
 
 <?php 
@@ -65,3 +64,6 @@ echo $this->form ()->closeTag ();
 ?>
 </div>	
 </div> 
+<input type='button' id = 'submitIpcToSup' value = "Submit IPC To Supervisor" > 
+<br/>
+<div id="subIpcToSupDialog">Submit IPC to Supervisor?</div> 

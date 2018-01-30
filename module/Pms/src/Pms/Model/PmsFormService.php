@@ -157,6 +157,13 @@ class PmsFormService {
 		return $this->pmsFormMapper->getDtlsDtlsById($id);
 	}
 	
+	public function selectStatus($employeeId) {
+	    return $this->pmsFormMapper->selectReport($employeeId); 
+	}
+	
+	public function selectReport($employeeId) {
+	    return $this->pmsFormMapper->selectReport($employeeId);  
+	}
 	
 	public function getTotalWeightageById($id) { 
 		return $this->pmsFormMapper->getTotWeightage($id); 
@@ -235,8 +242,7 @@ class PmsFormService {
 		} else {
 			$name = "Base";
 		} 
-		$output = "
-		  
+		$output = " 
 		    <tr bgcolor='#ccc' ".$formType." style ='font-weight:bold;'>
             <td width='9px' align='center' >&nbsp;</td>
             <td width='20px' align='center' >&nbsp;
@@ -316,9 +322,9 @@ class PmsFormService {
 		$output = "<tr  >
 		<td align='left' colspan='8'>&nbsp;
 		<p><b><a href='#' id = '".$mstid."' class = 'pmsMainNew'>Add Main Objective</a></b></p>		
-		</td>
+		</td> 
 		</tr>";
-		return $output;
+		return $output; 
 	}
 	
 	public function getHeader($row) {

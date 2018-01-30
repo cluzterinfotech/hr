@@ -89,7 +89,7 @@ class OvertimeMapper extends AbstractDataMapper {
 	    $sql = $this->getSql();
 	    $select = $sql->select();
 	    $select->from(array('e' => 'otByEmployee'))
-	           ->columns(array('numberOfMeals',
+	           ->columns(array('id','numberOfMeals',
 	               'otDate' => new Expression('CONVERT(varchar(12),otDate,107)'),
 	               'inTime' => new Expression('CONVERT(varchar(5),inTime,108)'),
 	               'outTime' => new Expression('CONVERT(varchar(5),outTime,108)'),
@@ -162,6 +162,17 @@ class OvertimeMapper extends AbstractDataMapper {
 	public function removeManualOt($id) {
 	    $sql = $this->getSql();
 	    $delete = $sql->delete('OvertimeByEmployee');
+	    $delete->where(array(
+	        'id' => $id
+	    ));
+	    //$sqlString = $delete->getSqlString();
+	    $sqlString = $sql->getSqlStringForSqlObject($delete);
+	    return $this->adapter->query($sqlString)->execute()->count();
+	}
+	
+	public function removeEmpOvertime($id) {
+	    $sql = $this->getSql();
+	    $delete = $sql->delete('otByEmployee'); 
 	    $delete->where(array(
 	        'id' => $id
 	    ));

@@ -58,6 +58,10 @@ class OvertimeService extends Approvals {
 	    return $this->getOvertimeMapper()->selectEmployeeManualAttendance();
 	}
 	
+	public function removeEmpOvertime($id) {
+	    return $this->getOvertimeMapper()->removeEmpOvertime($id);
+	}
+	
 	public function removeManualOt($id) {
 	    return $this->getOvertimeMapper()->removeManualOt($id);
 	}

@@ -1,8 +1,6 @@
 <?php
-$title = 'Form Status';
-$this->headTitle ( $title );
-echo "<h4>".$title."</h4>";
+$title = 'PMS Form Status';
+$this->headTitle($title);
 ?>
-<?php 
-echo "<p>".$status."</p>";  
-?>
+<div id="tableContainer"></div>
+<script>$("#tableContainer").zfTable('/pmsform/ajaxlist');</script>  
