@@ -232,10 +232,40 @@ class MailService  {
 	
 	}
 	
-	public function overtimeFormSubmitAlert() {
-	
+	public function overtimeFormSubmitAlert($applicant,$approver) {
+	    $sender = $this->mailMapper->getEmailIdByEmployee($applicant);
+	    $receiver = $this->mailMapper->getEmailIdByEmployee($approver);
+	    $from = $sender['empEmail'];
+	    $to = $receiver['empEmail'];
+	    $empName = $sender['employeeName'];
+	    $superiorName = $receiver['employeeName'];
+	    //$name =
+	    $subject = 'Ovetime Form';
+	    $body = "<p>Dear Mr./Mrs." . $superiorName . "</p>
+        <p>Please be informed that you have been identified by Mr./Mrs." . $empName . " as his/her immediate supervisor. Please review the Overtime form for your approval. </p>
+        <p>(If you have been  mistakenly choosen as a supervisor by Mr./Mrs." . $empName . " Please notify HRD)</p>
+        <p>Thank you. </p>";
+	    //echo $body;
+	    //exit;
+	    $this->sendMailAlert($from, $to, $subject, $body);
 	} 
 	// Approval Alert
+	
+	public function overtimeFormLocalApprovalAlert($applicant,$approver) {
+	    $sender = $this->mailMapper->getEmailIdByEmployee($applicant);
+	    $receiver = $this->mailMapper->getEmailIdByEmployee($approver);
+	    $hod = $this->mailMapper->getEmailIdByEmployee($hod);
+	    $hodCc = $hod['empEmail'];
+	    $from = $sender['empEmail'];
+	    $to = $receiver['empEmail'];
+	    $empName = $sender['employeeName'];
+	    $superiorName = $receiver['employeeName'];
+	    $subject = 'Overtime Form Approval Alert';
+	    $body = "<p>Dear Mr./Mrs." . $empName . "</p>
+                 <p>Please be informed that your Overtime form has been approved by  Mr./Mrs." . $superiorName . " . </p>
+                 <p>Thank you. </p>";
+	    $this->sendMailAlert($from, $to, $subject, $body); 
+	}
 	
 	
 	

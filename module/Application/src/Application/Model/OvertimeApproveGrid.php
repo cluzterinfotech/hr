@@ -32,7 +32,7 @@ class OvertimeApproveGrid extends AbstractTable {
 			),'numberOfMeals' => array (
 				'title' => 'Total Meals', 
 				//'filters' => 'text'
-			),'startingDate' => array (
+			),/*'startingDate' => array (
 				'title' => 'OT From Date',  
 				//'filters' => 'text'
 			),'endingDate' => array (
@@ -43,12 +43,12 @@ class OvertimeApproveGrid extends AbstractTable {
 				'filters' => 'text'
 			),*/  
 			'approve' => array (
-				'title' => 'Approve'
+				'title' => 'Approve/Reject'
 			), 
-			/*'reject' => array (
-				'title' => 'Reject',
-				'width' => '50' 
-			)*/  
+			'view' => array (
+				'title' => 'View Details',
+				//'width' => '50' 
+			)  
 	) 
 	// 'active' => array('title' => 'Active' , 'width' => 100 , 
 	//'filters' => array( null => 'All' , 1 => 'Active' , 0 => 'Inactive')),
@@ -68,7 +68,7 @@ class OvertimeApproveGrid extends AbstractTable {
 		}*/
 		
 		$this->getHeader('approve')->getCell()->addDecorator('link', array (
-				'url' => '/overtimenew/approvesup/%s',
+				'url' => '/overtimebyemp/approvesup/%s',
 				'vars' => array (
 						'id'
 				),
