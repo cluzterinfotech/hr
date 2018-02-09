@@ -410,11 +410,11 @@ class Acl extends ZendAcl {
          ->allow('hrmanager','Payment\Controller\Leaveallowance')
          ->allow('hrmanager','Payment\Controller\Difference')
          ->allow('hrmanager','Payment\Controller\Finalentitlement')*/
-        ;
+        ; 
         
         $this->allow('1');
         $this->allow('hrmanager');
-        
+        $this->deny('planning','Payment\Controller\Paysheet','calculate' ); 
         //$this->deny('1', 'Employee\Controller\Allowancespecialamount');
         //$this->deny('1', 'Leave\Controller\Annualleave','list');
         //$this->deny('1', 'Payment\Controller\Advancehousing','getadvancehousingdetails');

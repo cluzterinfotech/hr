@@ -21,21 +21,21 @@ class OvertimeApproveGrid extends AbstractTable {
             'employeeName' => array (
 			    'title' => 'Employee Name',
 				'filters' => 'text' 
-			),
-			'employeeNoNOHours' => array (
+			), 
+			'normalHours' => array (
 				'title' => 'NormalHrs',
 				//'filters' => 'text' 
 			),        
-			'employeeNoHOHours' => array (
+			'holidayHours' => array (
 				'title' => 'HolidayHrs', 
 				//'filters' => 'text'
 			),'numberOfMeals' => array (
 				'title' => 'Total Meals', 
 				//'filters' => 'text'
-			),/*'startingDate' => array (
-				'title' => 'OT From Date',  
+			),'totalHours' => array (
+				'title' => 'Total Hours',  
 				//'filters' => 'text'
-			),'endingDate' => array (
+			),/*'endingDate' => array (
 				'title' => 'OT To Date', 
 				//'filters' => 'text'
 			),/*'year' => array (
@@ -45,10 +45,10 @@ class OvertimeApproveGrid extends AbstractTable {
 			'approve' => array (
 				'title' => 'Approve/Reject'
 			), 
-			'view' => array (
+			/*'view' => array (
 				'title' => 'View Details',
 				//'width' => '50' 
-			)  
+			) */  
 	) 
 	// 'active' => array('title' => 'Active' , 'width' => 100 , 
 	//'filters' => array( null => 'All' , 1 => 'Active' , 0 => 'Inactive')),
@@ -77,14 +77,14 @@ class OvertimeApproveGrid extends AbstractTable {
 		$this->getHeader('approve')->getCell()
 		     ->addDecorator('class', array('class' => 'approveOvertime'));
         
-		/*$this->getHeader('reject')->getCell()->addDecorator('link', array (
+		/*$this->getHeader('view')->getCell()->addDecorator('link', array (
 				'url' => '/overtimenew/rejectsup/%s', 
 				'vars' => array (
-						'id'
+						'refNumber'
 				),
-				'txt' => 'Reject'
+				'txt' => 'Details'
 		));   
-		$this->getHeader('reject')->getCell()
-		     ->addDecorator('class', array('class' => 'rejectOvertime'));*/  
+		$this->getHeader('view')->getCell()
+		     ->addDecorator('class', array('class' => 'viewOtDetails'));*/   
 	}   
 }   

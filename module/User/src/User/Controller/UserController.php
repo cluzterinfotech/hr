@@ -64,7 +64,7 @@ class UserController extends AbstractActionController {
 								'username'   => $stor->username,
 								'ipAddress'  => $request->getServer('REMOTE_ADDR'),
 								'userAgent'  => $request->getServer('HTTP_USER_AGENT'),
-								'role'       => $positionId,
+							    'role'       => $positionId,  
 								'company'    => $usrData['company'], 
 								'employeeId' => $stor->employeeId, 	
 							)
