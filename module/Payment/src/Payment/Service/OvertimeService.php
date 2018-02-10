@@ -95,14 +95,7 @@ class OvertimeService extends Approvals {
 		return $this->getOvertimeMapper()->selectEmpOvertime($emp);   
 	}
 	
-	public function selectEmpAppOvertime($emp) {
-	    if(!$emp) {
-	        return array();
-	    }
-	    
-	    // @todo condition 
-	    return $this->getOvertimeMapper()->selectEmpAppOvertime(/*@ids$emp*/);
-	}
+	
 	
 	public function selectEmployeeManualAttendance() {
 	    return $this->getOvertimeMapper()->selectEmployeeManualAttendance();
@@ -138,6 +131,44 @@ class OvertimeService extends Approvals {
 		} 
 		return 0;    
 	}*/        
+	
+	public function selectEmpAppOvertime($emp) {
+	    if(!$emp) {
+	        return array();
+	    }
+	    // get subordinate ids
+	    $ids = $this->getSubordinateIds($emp);
+	    // @todo condition
+	    return $this->getOvertimeMapper()->selectEmpAppOvertimeByIds($ids); 
+	} 
+	
+	public function getSubordinateIds($emp) {
+	    //$employeeNumber = $this->userInfoService->getEmployeeId();
+	    $otList = $this->getOvertimeMapper()->selectEmpAppOvertime(); 
+	    if($otList) {
+	        $totId = array(); 
+	        $i = 1;
+	        foreach($otList as $lst) {
+	            //\Zend\Debug\Debug::dump($lst);
+	            $applicant = $lst['employeeId'];
+	            $approvedLevel = $lst['status'] + 1;
+	            $approver = $emp;
+	            //echo "Employee Number <br/>".$employeeNumber;
+	            // @todo check is the current user approver for current level
+	            $isApprover = 1;//$this->checkIsApprover($applicant,$approver,$approvedLevel);
+	            if($isApprover) {
+	                $totId[] = $lst['id'];
+	            }
+	            $i++;
+	        }
+	        //\Zend\Debug\Debug::dump($totId);
+	        //exit;
+	        if(!$totId) {
+	            $totId[] = 0;
+	        }
+	    }
+	    return $totId;
+	} 
 	
 	public function isHaveThisMonthOt($user,DateRange $dateRange) { 
 		return $this->getOvertimeMapper()->isHaveThisMonthOt($user,$dateRange);	 
@@ -417,14 +448,19 @@ class OvertimeService extends Approvals {
 			if($appType == 1) {
 			    if(($totHrs > 50) && ($status == '2')) {
 			        $inc = 3;
+			    } else if(($totHrs < 50) && ($status == '2')) {
+			        $inc = 4; 
 			    } else {
 			        $inc = $status + 1;
 			    }
 			    $update = array(
 			        'otStatus' => $inc,
-			        'id'       => $otId,
+			        //'approvalRefNumber'       => $refNumber,
 			    );
-			    $this->getOvertimeMapper()->updateot($update); 
+			    $this->getOvertimeMapper()->reverseot($update,$refNumber); 
+			    
+			    
+			    
 			} else {
 			    $inc = 1; 
 			    $update = array(
@@ -449,7 +485,7 @@ class OvertimeService extends Approvals {
 		if($inc == 4) {
 		    // send mail to HR  
 		}
-		if($inc == 4) {
+		if($inc == 5) {
 		    // send approval alert 
 		}
 		return 0; 

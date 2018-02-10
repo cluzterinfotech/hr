@@ -151,6 +151,7 @@ class OvertimeMapper extends AbstractDataMapper {
 	}   
 	
 	public function selectEmpAppOvertime() {
+	    $predicate = new Predicate(); 
 	    $sql = $this->getSql();
 	    $select = $sql->select();
 	    $select->from(array('e' => 'otByEmployeeApproval'))
@@ -158,14 +159,36 @@ class OvertimeMapper extends AbstractDataMapper {
         	                  ,'employeeId','refNumber','totalHours'))
         	   ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeId',
         	           array('employeeName'))
-        	        //->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
-        	    //array('overtimeStatus'))
+        	  // ->join(array('os' => 'otByEmployee'), 'os.approvalRefNumber = e.refNumber',
+        	         // array('otStatus'))       
+	           ->where($predicate->lessThan('status',5))
         	    //->where(array('employeeOtId' => $employeeNumber))
-        	    //->where(array('otStatus' => 1))
+        	   // ->where(array('status' => 1))
 	    ;      
 	    //echo $select->getSqlString();
 	    //exit;
 	    return $select; 
+	} 
+	
+	public function selectEmpAppOvertimeByIds($ids) {
+	    $predicate = new Predicate();
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployeeApproval'))
+	           ->columns(array('id','normalHours','holidayHours','numberOfMeals'
+	                          ,'employeeId','refNumber','totalHours'))
+	           ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeId',
+	                  array('employeeName'))
+	            // ->join(array('os' => 'otByEmployee'), 'os.approvalRefNumber = e.refNumber',
+	    // array('otStat
+	          ->where($predicate->In('e.id',$ids)) 
+	    //->where($predicate->in('id',$ids)) // lessThan('status',5))
+	    //->where(array('employeeOtId' => $employeeNumber))
+	    // ->where(array('status' => 1))
+	    ;
+	    //echo $select->getSqlString();
+	    //exit;
+	    return $select;
 	} 
 	
 	public function selectEmpOvertime($employeeNumber) { 	    
