@@ -143,13 +143,14 @@ class OvertimeService extends Approvals {
 	} 
 	
 	public function getSubordinateIds($emp) {
-	    //$employeeNumber = $this->userInfoService->getEmployeeId();
+	    //$employeeNumber = $this->userInfoService->getEmployeeId(); 
 	    $otList = $this->getOvertimeMapper()->selectEmpAppOvertime(); 
 	    if($otList) {
 	        $totId = array(); 
 	        $i = 1;
 	        foreach($otList as $lst) {
 	            //\Zend\Debug\Debug::dump($lst);
+	            //exit; 
 	            $applicant = $lst['employeeId'];
 	            $approvedLevel = $lst['status'] + 1;
 	            $approver = $emp;
@@ -159,7 +160,7 @@ class OvertimeService extends Approvals {
 	            if($isApprover) {
 	                $totId[] = $lst['id'];
 	            }
-	            $i++;
+	            $i++; 
 	        }
 	        //\Zend\Debug\Debug::dump($totId);
 	        //exit;
@@ -240,8 +241,7 @@ class OvertimeService extends Approvals {
 	}
 	
 	// @todo endorse approver check
-	public function getOvertimeFormEndorseList($userId) { 
-	
+	public function getOvertimeFormEndorseList($userId) { 	
 		return $this->getOvertimeMapper()
 		            ->getOvertimeFormApprovalListHr($this->getIdsList($userId,'3'));
 	} 
@@ -253,8 +253,8 @@ class OvertimeService extends Approvals {
 			$totId = array();
 			$i = 1;
 			foreach($otWaitingList as $lst) {
-				//\Zend\Debug\Debug::dump($lst);
-				//exit;
+				\Zend\Debug\Debug::dump($lst);
+				exit;
 				$applicant = $lst['empIdOvertime'];
 				$approvedLevel = $lst['otStatus'];
 				//\Zend\Debug\Debug::dump($approvedLevel);
@@ -333,7 +333,8 @@ class OvertimeService extends Approvals {
     	            'numberOfMeals' => $meals,
     	            'employeeId'    => $empId,
     	            'refNumber'     => $plusOne,
-    	            'totalHours'     => $tot,
+    	            'totalHours'    => $tot,
+    	            'status'        => 2,
     	        ); 
     	        // insert into buffer  
     	        $this->getOvertimeMapper()->insertOtBuff($buff); 

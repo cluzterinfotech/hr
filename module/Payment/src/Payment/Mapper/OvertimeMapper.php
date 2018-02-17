@@ -155,7 +155,7 @@ class OvertimeMapper extends AbstractDataMapper {
 	    $sql = $this->getSql();
 	    $select = $sql->select();
 	    $select->from(array('e' => 'otByEmployeeApproval'))
-        	   ->columns(array('id','normalHours','holidayHours','numberOfMeals'
+        	   ->columns(array('id','normalHours','status','holidayHours','numberOfMeals'
         	                  ,'employeeId','refNumber','totalHours'))
         	   ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeId',
         	           array('employeeName'))
@@ -167,7 +167,8 @@ class OvertimeMapper extends AbstractDataMapper {
 	    ;      
 	    //echo $select->getSqlString();
 	    //exit;
-	    return $select; 
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    return $this->adapter->query($sqlString)->execute();
 	} 
 	
 	public function selectEmpAppOvertimeByIds($ids) {
