@@ -580,13 +580,13 @@ class OvertimeMapper extends AbstractDataMapper {
 	            array('employeeName'))
 	            ->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
 	                array('overtimeStatus'))
-	                ->where(array('e.otStatus' => 4))
+	                ->where(array('e.otStatus' => 3))
 	                 //->where(array('e.otStatus' => 3))
 	    ;
 	            //$select->where($predicate->lessThan('e.otStatus',4));
 	            $select->where($predicate->In('e.id',$ids));
-	           // echo $select->getSqlString();
-	           // exit;
+	           //echo $select->getSqlString();
+	          //exit;
 	            return $select; 
 	} 
 	

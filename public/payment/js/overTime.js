@@ -19,7 +19,7 @@ $(document).ready(function()
 		    buttons : {
 			    "Endorse" : function() {       
 			        var request = $.ajax({
-			            url: "/overtimenew/endorsehrall",
+			            url: "/overtimebyemp/endorsehrall",
 			            type: "POST",
 			        }).done(function(data) {    
 	                    // console.log("success"); 
@@ -48,7 +48,7 @@ $(document).ready(function()
 			// table(); 
 			targetUrl = $(this).attr('href');    
 			var request = $.ajax({
-	            url: '/overtimenew/savedinfo', 
+	            url: '/overtimebyemp/savedinfo', 
 	            type: "POST",
 	            data: {  
 	                from:f,
@@ -68,7 +68,7 @@ $(document).ready(function()
 	});
 	
 	function table() {
-        $("#overtimeContainer").zfTable('/overtimenew/ajaxlist', {
+        $("#overtimeContainer").zfTable('/overtimebyemp/ajaxlist', {
             sendAdditionalParams: function() {
                 var data = $('#OverTimeForm').serialize(); 
                 return '&' + data;
