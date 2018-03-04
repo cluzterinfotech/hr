@@ -149,27 +149,27 @@ class OvertimeService extends Approvals {
 	        $totId = array(); 
 	        $i = 1;
 	        foreach($otList as $lst) {
-	            //\Zend\Debug\Debug::dump($lst);
+	            //\Zend\Debug\Debug::dump($lst); 
 	            //exit; 
 	            $applicant = $lst['employeeId'];
 	            $approvedLevel = $lst['status'] + 1;
 	            $approver = $emp;
 	            //echo "Employee Number <br/>".$employeeNumber;
 	            // @todo check is the current user approver for current level
-	            $isApprover = 1;//$this->checkIsApprover($applicant,$approver,$approvedLevel);
+	            $isApprover = $this->checkIsApprover($applicant,$approver,$approvedLevel);
 	            if($isApprover) {
-	                $totId[] = $lst['id'];
-	            }
+	                $totId[] = $lst['id']; 
+	            } 
 	            $i++; 
-	        }
-	        //\Zend\Debug\Debug::dump($totId);
-	        //exit;
-	        if(!$totId) {
-	            $totId[] = 0;
-	        }
-	    }
-	    return $totId;
-	} 
+	        } 
+	        //\Zend\Debug\Debug::dump($totId); 
+	        //exit; 
+	        if(!$totId) { 
+	            $totId[] = 0; 
+	        } 
+	    } 
+	    return $totId; 
+	}  
 	
 	public function isHaveThisMonthOt($user,DateRange $dateRange) { 
 		return $this->getOvertimeMapper()->isHaveThisMonthOt($user,$dateRange);	 
@@ -203,10 +203,7 @@ class OvertimeService extends Approvals {
 		return $this->getOvertimeMapper()->update($entity); 
 	}
 	
-	public function getOvertimeFormApprovalList($userId) { 
-		return $this->getOvertimeMapper()
-		            ->getOvertimeFormApprovalList($this->getIdsList($userId,'1'));
-	}
+	
 	
 	public function endorseAllByHr(DateRange $dateRange) {
 	    try {
@@ -240,23 +237,28 @@ class OvertimeService extends Approvals {
 	    } 
 	}
 	
+	public function getOvertimeFormApprovalList($userId) {
+	    return $this->getOvertimeMapper()
+	                ->getOvertimeFormApprovalList($this->getIdsList($userId,'4'));
+	} 
+	
 	// @todo endorse approver check
-	public function getOvertimeFormEndorseList($userId) { 	
-		return $this->getOvertimeMapper()
-		            ->getOvertimeFormApprovalListHr($this->getIdsList($userId,'3'));
+	public function getOvertimeFormEndorseList($userId) {
+	    //echo "here";
+	    //exit; 
+	    return $this->getOvertimeMapper()
+	                ->getOvertimeFormEndorseList($this->getIdsList($userId,'5'));
 	} 
 	
 	public function getIdsList($userId,$lvl) {
 		$employeeNumber = $userId;// $this->userInfoService->getEmployeeId(); 
-		$otWaitingList = $this->getOvertimeMapper()->getOvertimeFormWaitingAppList();
+		$otWaitingList = $this->getOvertimeMapper()->getOvertimeFormWaitingAppList($lvl);
 		if($otWaitingList) {
 			$totId = array();
 			$i = 1;
-			foreach($otWaitingList as $lst) {
-				\Zend\Debug\Debug::dump($lst);
-				exit;
-				$applicant = $lst['empIdOvertime'];
-				$approvedLevel = $lst['otStatus'];
+			foreach($otWaitingList as $lst) { 
+				$applicant = $lst['employeeId'];
+				$approvedLevel = $lst['status'];
 				//\Zend\Debug\Debug::dump($approvedLevel);
 				//exit; 
 				/*if($lvl == 2) {
@@ -265,13 +267,13 @@ class OvertimeService extends Approvals {
 				$approver = $employeeNumber;
 				// @todo check is the current user approver for current level
 				$isApprover = $this->checkIsApprover($applicant,$approver,$approvedLevel);
-				if($isApprover) {
-					$totId[] = $lst['id'];
-				}
-				$i++;
+				if($isApprover) { 
+					$totId[] = $lst['id']; 
+				} 
+				$i++; 
 			}
-			 //\Zend\Debug\Debug::dump($totId); 
-			 //exit; 
+			 //\Zend\Debug\Debug::dump($totId);  
+			 //exit;  
 			if(!$totId) { 
 				$totId[] = 0; 
 			} 
@@ -440,35 +442,76 @@ class OvertimeService extends Approvals {
 			$ref = $this->getOvertimeMapper()->isNotApproved($id); 
 			if(!$ref) {
 			    return 0;     
-			} 
-			$otId = $ref['id']; 
-			$status = $ref['otStatus']; 
+			}   
+			$otId = $ref['id'];  
+			$status = $ref['otStatus'];  
 			$totHrs = $ref['totalHours']; 
-			$refNumber = $ref['refNumber'];
-            
-			if($appType == 1) {
-			    if(($totHrs > 50) && ($status == '2')) {
-			        $inc = 3;
-			    } else if(($totHrs < 50) && ($status == '2')) {
+			$refNumber = $ref['refNumber']; 
+			//\Zend\Debug\Debug::dump($data); 
+			//\Zend\Debug\Debug::dump($appType); 
+			//exit;  
+			if($appType == 1) { 
+			    if(($totHrs > 50) && ($status == '2')) { 
+			        $inc = 3; 
+			    } else if(($totHrs < 50) && ($status == '2')) { 
 			        $inc = 4; 
-			    } else {
-			        $inc = $status + 1;
-			    }
-			    $update = array(
+			    } else { 
+			        $inc = $status + 1; 
+			    } 
+			    if($inc == 4) {
+			       // @todo add to paysheet ot and ot meal 
+			        $result = $this->getOvertimeMapper()->empAppliedOtById($refNumber); 
+			        foreach ($result as $row) {
+			            //\Zend\Debug\Debug::dump($row);
+			            $hour = 0;
+			            $hHour = 0; 
+			            $day = $row['dayStatus'];
+			            $normalHr = $row['overTimeHours'];
+			            $nSplit = explode(':',$normalHr);
+			            $tot = $nSplit[0] + ($nSplit[1]/60);  
+			            if($day == 'N') {
+			                $hour = $tot;
+			            } else {
+			                $hHour = $tot;
+			            } 
+			           $endorse = array(
+    			           'empIdOvertime'       => $row['employeeOtId'],
+			               'employeeNoNOHours'   => $hour,
+			               'employeeNoHOHours'   => $hHour,
+    			           'numberOfMeals'       => $row['numberOfMeals'],
+    			           'startingDate'        => $row['otDate'],
+    			           'endingDate'          => $row['otDate'],
+    			           'otStatus'            => 3,
+    			           //'endorsedDate'        => $row[''],
+    			           //'supervisorComments'  => $row[''],
+    			           //'hrComments'          => $row[''],
+        			   );  
+			           //\Zend\Debug\Debug::dump($endorse);
+			           $this->getOvertimeMapper()->addOtToEndorsement($endorse);   
+			        }
+			        //exit; 
+			        $this->getOvertimeMapper()->removeFromMapper($refNumber);  
+			    } // else { 
+			    $update = array( 
 			        'otStatus' => $inc,
 			        //'approvalRefNumber'       => $refNumber,
 			    );
-			    $this->getOvertimeMapper()->reverseot($update,$refNumber); 
-			    
-			    
-			    
+			    $updateOne = array(
+			        'status' => $inc,
+			        //'approvalRefNumber'       => $refNumber,
+			    );
+			    $this->getOvertimeMapper()->reverseot($update,$refNumber);  
+			    $this->getOvertimeMapper()->reverseotApp($updateOne,$refNumber);  
+			    //} 
 			} else {
 			    $inc = 1; 
 			    $update = array(
 			        'otStatus' => $inc,
-			        'approvalRefNumber'       => 0,
+			        'approvalRefNumber'    => 0,
 			    );
-			    $this->getOvertimeMapper()->reverseot($update,$refNumber); 
+			    
+			    $this->getOvertimeMapper()->reverseot($update,$refNumber);  
+			    $this->getOvertimeMapper()->removeFromMapper($refNumber); 
 			} 
 			
 			$this->databaseTransaction->commit(); 
@@ -492,6 +535,10 @@ class OvertimeService extends Approvals {
 		return 0; 
 	} 
 	
+	// adds ot and meal 
+	//public function addOtToEndorsement($refNumber) {
+	    //return $this->getOvertimeMapper()->removeFromMapper($refNumber);  
+	//}
 	
 	public function attendanceReport($company,$values) { 
 		$i = 1; 

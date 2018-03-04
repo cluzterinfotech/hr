@@ -441,12 +441,12 @@ class PositionMapper extends AbstractDataMapper {
 	
 	public function getGmId() {
 		//@todo if required 
-		$positionId = 133; 
+	    $positionId = 82; 
 		return $this->getEmployeeByPosition($positionId);
 	}
 	
 	public function getHrServiceId() {
-		$positionId = 116;
+	    $positionId = 85;
 		return $this->getEmployeeByPosition($positionId); 
 	}
 	
