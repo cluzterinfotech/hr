@@ -1,28 +1,30 @@
-<?php
+<?php 
 
-namespace Pms\Model;
+namespace Pms\Model; 
 
 use Pms\Mapper\PmsFormMapper;
-use Payment\Model\Company;
-use Payment\Model\DateRange; 
+//use Payment\Model\Company;
+//use Payment\Model\DateRange; 
 use Application\Persistence\TransactionDatabase;
+//use Leave\Model\ApprovalService;
+use Leave\Model\Approvals; 
 
-class PmsFormService {
+class PmsFormService extends Approvals {
     
-    private $pmsFormMapper; 
+    //private $pmsFormMapper; 
     
-    private $service;
+   // private $service;
     	
-	public function __construct(PmsFormMapper $pmsFormMapper,$sm) {
+	/*public function __construct(PmsFormMapper $pmsFormMapper,$sm) {
 		$this->pmsFormMapper = $pmsFormMapper; 
 		$this->service = $sm; 
 		$this->transaction = 
 		new TransactionDatabase($this->service->get('sqlServerAdapter'));
-	} 
+	} */
 	
 	public function isNonExecutive($employeeId) {
 		//return 1; 
-		$posService = $this->service->get('positionService');
+		$posService = $this->services->get('positionService');
 		return $posService->isNonExecutive($employeeId); 
 	}
 	
@@ -188,7 +190,13 @@ class PmsFormService {
 	}
 	
 	public function selectStatus($employeeId) {
+	    //return array(); 
 	    return $this->pmsFormMapper->selectReport($employeeId); 
+	}
+	
+	public function selectAppList($employeeId) {
+	    //return array();
+	    return $this->pmsFormMapper->selectAppList($employeeId);
 	}
 	
 	public function selectReport($employeeId) {
@@ -390,30 +398,29 @@ class PmsFormService {
 				<td bgcolor='#ccc' width='20%'><font color='000000'><b>Location</b></font></td>
 				<td bgcolor='#fff'>".$row['locationName']."</td>
 				</tr>
-				</table>";
-		return $output;
+				</table>"; 
+		return $output; 
 	}
 	
 	
 	public function prepareNewIpc($employeeId,$pmsId) { 
 		try {
-			$this->transaction->beginTransaction();
-			$posService = $this->service->get('positionService');
+			$this->databaseTransaction->beginTransaction();
+			$posService = $this->services->get('positionService');
 			$immSuperior = $posService->getImmediateSupervisorByEmployee($employeeId);
 			$hod = $posService->getHodByEmployee($employeeId);
 			$mstId = $this->addMainInfo($employeeId,$pmsId,$immSuperior,$hod);
 			$isHaveSubordinates = $posService->isHaveSubordinatesByEmployee($employeeId); 
 			$this->preparegenerikkpi($mstId,$isHaveSubordinates); 
-			$this->transaction->commit();
+			$this->databaseTransaction->commit();
 			return $res;
 		} catch(\Exception $e) {
-			$this->transaction->rollBack();
-			throw $e;
+		    $this->databaseTransaction->rollBack(); 
+			throw $e; 
 		} 
 	} 
 	
 	public function addMainInfo($employeeId,$pmsId,$immSuperior,$hod) {
-		
 		$data = array(
 			'Pms_Fyear_Id' => $pmsId,
 			'Pmnt_Emp_Mst_Id' => $employeeId,
@@ -422,8 +429,7 @@ class PmsFormService {
 			'Immediate_Supervisor' => $immSuperior,
 			'Emp_Edit' => 1,
 			'HOD' => $hod,
-		);
-		
+		); 
 		return $this->pmsFormMapper->insertPmsMst($data);
 	}
 		
@@ -804,4 +810,129 @@ class PmsFormService {
 		    ";
 		return $output;
 	} 
+	
+	public function getApprovalService() {
+	    return $this->services->get('');     
+	}
+	
+	
+	public function getPmsStatus($empId) { 
+	    $currentFyYear = date('Y');
+	    $pmsId = $this->getPmsIdByYear($currentFyYear); 
+	    $empName = $this->pmsFormMapper->getUserName($empId);   
+	    $r = $this->pmsFormMapper->getPmsRowByYear($currentFyYear);
+	    $output = "<table width='700px' border='0'cellspacing='0px' cellpadding='5px'>
+					  <tr>
+					  	<th><b>Employee Name</b></th>
+					    <th><b>PMS Year</b></th>
+					    <th><b>Status</b></th>
+					  </tr>"; 	    
+	    if ($r) {
+	        $fyId = $r['id']; 
+	        $fyYear = $r['Year']; 
+	        $currActivity = $r['Curr_Activity']; 
+	        $status = "";
+	        $rEmp = $this->pmsFormMapper->getPmsRowByEmployee($empId,$pmsId); 
+	        if ($r['Close_Year'] == 1) { 
+	            $status = "PMS Closed";
+	        } elseif ($r['Close_Year'] == 0) { 
+	            $status = "PMS Open"; 
+	            $openIpc = $r['IPC_Open_Close']; 
+	            if ($openIpc == 1) { 
+	                $status = "IPC Open";
+	                if ($rEmp) {
+	                    //echo"------->".$rEmp['Emp_Edit'];
+	                    if ($rEmp['Emp_Edit'] == 1) {
+	                        $status = "Your IPC to be Amend and Submit to your Immediate Supervisor";
+	                    } elseif ($rEmp['Emp_Edit'] == 0) {
+	                        if (($rEmp['Sup_Approval'] == 0)) {
+	                            //$supName = "x";//$empModel->getEmpName($db, $rEmp['Immediate_Supervisor']);
+	                            $status = "Your IPC is Waiting For Supervisor Approval";
+	                        } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 0)) {
+	                            //$hodName = "x";//$empModel->getEmpName($db, $rEmp['HOD']);
+	                            $status = "Your IPC is Waiting For HOD Approval";
+	                        } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 1)) {  
+	                            $status = "Your IPC is Approved";
+	                        }
+	                    }
+	                } elseif (!$rEmp) {
+	                    $status = "You Didn't Add your IPC yet for current year";
+	                }
+	            } elseif ($openIpc == 0) {
+	                $status = "IPC Closed";
+	                if ($r['MYR_Open_Close'] == 1) {
+	                    $status = "MYR Open";
+	                    if ($rEmp) {
+	                        if ($rEmp['Emp_Edit'] == 1) {
+	                            $status = "Your MYR to be Amend and Submit to your Immediate Supervisor";
+	                        } elseif ($rEmp['Emp_Edit'] == 0) { 
+	                            if (($rEmp['M_Imm_Sup_App'] == 0)) {
+	                                //$supName = "x";//$empModel->getEmpName($db, $rEmp['M_Imm_Sup_Id']);
+	                                $status = "Your MYR is Witing For Supervisor Approval";
+	                            } elseif (($rEmp['M_Imm_Sup_App'] == 1) && ($rEmp['M_Hod_App'] == 0)) { 
+	                                //$hodName = "x";//$empModel->getEmpName($db, $rEmp['M_Hod_Id']);
+	                                $status = "Your MYR is  Witing For HOD Approval";
+	                            } elseif (($rEmp['M_Imm_Sup_App'] == 1) && ($rEmp['M_Hod_App'] == 1)) { 
+	                                $status = "Your MYR is Approved";
+	                            }
+	                        }
+	                    } elseif (!$rEmp) {
+	                        $status = "You Didn't Add your IPC yet for current year";
+	                    }
+	                } elseif ($r['MYR_Open_Close'] == 0) {
+	                    $status = "MYR is Closed";
+	                    if ($r['YED_Open_Close'] == 1) {
+	                        $status = "PPA Open";
+	                        if ($rEmp) {
+	                            if ($rEmp['Emp_Edit'] == 1) {   
+	                                $status = "Your PPA to be Amend and Submit to your Immediate Supervisor";
+	                            } elseif ($rEmp['Emp_Edit'] == 0) {
+	                                if (($rEmp['Sup_Approval'] == 0)) {
+	                                    //$supName = "x";//$empModel->getEmpName($db, $rEmp['Immediate_Supervisor']);   
+	                                    $status = "Your PPA is Waiting For Supervisor Approval ";
+	                                } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 0)) {
+	                                    //$hodName = "x";//$empModel->getEmpName($db, $rEmp['Y_Hod_Id']);
+	                                    $status = "Your PPA is Waiting For HOD Approval";
+	                                } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 1)) {
+	                                    $status = "Your PPA is Approved";
+	                                }
+	                            }
+	                        } elseif (!$rEmp) {
+	                            $status = "You Didn't Add your IPC yet for current year";
+	                        }
+	                    } elseif ($r['YED_Open_Close'] == 0) {
+	                        $currActivity = $r['Curr_Activity'];
+	                        if ($currActivity == 0) {
+	                            $status = "Nothing Open Yet in Pms wait for HR Announcement";
+	                        } elseif ($currActivity == 1 && $r['IPC_Open_Close'] == 0) {
+	                            $status = "IPC In Progress but temporarily closed by admin ";
+	                        } elseif ($currActivity == 2 && $r['MYR_Open_Close'] == 0) {
+	                            $status = "MYR In Progress but temporarily closed by admin ";
+	                        } elseif ($currActivity == 3) {
+	                            $status = "Year End In Progress but temporarily closed by admin ";
+	                        } elseif ($currActivity == 4) {
+	                            $status = "Everything was Closed";
+	                        }
+	                    }
+	                }
+	            }
+	        }   
+	        $output .= "<tr>
+                            <td>" . $empName . "</td>
+                            <td>" . $fyYear . "</td>
+                            <td><b>" . $status . "</b></td>
+                        </tr>";
+	    } else { 
+	        $status = "PMS Not Available Yet for This Year";
+	        $output .= "<tr>
+                            <td>" . $empName . "</td>
+                            <td>" . $currentFyYear . "</td>
+                            <td><b>" . $status . "</b></td>
+                        </tr>";
+	    } 
+	    return $output;
+	}
+	
+	
+	
 }   

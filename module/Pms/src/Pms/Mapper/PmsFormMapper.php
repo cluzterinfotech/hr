@@ -44,6 +44,34 @@ class PmsFormMapper extends AbstractDataMapper {
 	    return $select; 
 	}
 	
+	public function selectAppList($employeeId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array ('id','Pmnt_Emp_Mst_Id','Pms_Fyear_Id'))
+	           ->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
+	                  array('Year'))
+	           ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                  array('employeeName'))
+	           ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	    ;
+	    return $select;
+	}
+	
+	/*public function fetchPmsRow($employeeId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	    ->columns(array ('id','Pmnt_Emp_Mst_Id','Pms_Fyear_Id'))
+	    ->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
+	        array('Year'))
+	        ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	            array('employeeName'))
+	            ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	            ;
+	            return $select;
+	}*/
+	
 	public function insertNewSubObjective($data) {
 		$this->setEntityTable($this->dtlsDtlsTable);
 		return $this->insert($data);
@@ -215,6 +243,20 @@ class PmsFormMapper extends AbstractDataMapper {
 		return array();
 	}
 	
+	public function getUserName($empId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'EmpEmployeeInfoMain'))
+	           ->columns(array ('employeeName'))
+	           ->where(array('employeeNumber' => $empId ));
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    $results = $this->adapter->query($sqlString)->execute()->current();
+	    if($results) {
+	        return $results['employeeName'];
+	    }
+	    return ''; 
+	} 
+	
 	public function getTotWeightage($id) {
 		$sql = $this->getSql();
 		$select = $sql->select();
@@ -278,6 +320,22 @@ class PmsFormMapper extends AbstractDataMapper {
 		return 0;
 	}
 	
+	public function getPmsRowByYear($year) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'Pms_Fyear'))
+	    ->columns(array ('*'))
+	    ->where(array('Year' => $year ));
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    $row = $this->adapter->query($sqlString)->execute()->current();
+	    if($row) {
+	        return $row;
+	    }
+	    return 0;
+	}
+	
 	public function getPmsIdByEmployee($employeeId,$pmsId) {
 		$this->setEntityTable($this->entityTable);  
 		$sql = $this->getSql();
@@ -294,5 +352,24 @@ class PmsFormMapper extends AbstractDataMapper {
 		}
 		return 0;
 	} 
+	
+	public function getPmsRowByEmployee($employeeId,$pmsId) {
+	    $this->setEntityTable($this->entityTable);
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array ('*'))
+	           ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	           ->where(array('Pms_Fyear_Id' => $pmsId ))
+	    ;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit; 
+	    $results = $this->adapter->query($sqlString)->execute()->current();
+	    if($results) {
+	        return $results;
+	    }
+	    return 0;
+	}
 	
 }

@@ -12,6 +12,7 @@ use Pms\Grid\ManageGrid;
 use Zend\View\Model\JsonModel;
 use Pms\Grid\PmsReportGrid;
 use Pms\Grid\PmsStatusGrid;
+use Pms\Grid\IpcAppGrid;
      
 class PmsformController extends AbstractActionController {
     
@@ -28,6 +29,17 @@ class PmsformController extends AbstractActionController {
 		     ->setSource($this->getService()->selectStatus($employeeId))
 		     ->setParamAdapter($this->getRequest()->getPost());
 		return $this->htmlResponse($grid->render()); 
+	}
+	
+	public function applistAction() { }
+	
+	public function ajaxapplistAction() {
+	    $grid = $this->getAppGrid();
+	    $employeeId = $this->getUser();
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getService()->selectStatus($employeeId))
+	    ->setParamAdapter($this->getRequest()->getPost());
+	    return $this->htmlResponse($grid->render());
 	}
 	
 	public function reportlistAction() { }
@@ -392,9 +404,34 @@ class PmsformController extends AbstractActionController {
 	
 	} 
 	
+	public function approveAction() {
+	    $id = (int) $this->params()->fromRoute('id',0);
+	    $viewmodel = new ViewModel();
+	    //$viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    $output = $this->getService()->getIpcReport($id);
+	    //\Zend\Debug\Debug::dump($output) ;
+	    $viewmodel->setVariables(array(
+	        'report'     => $output,
+	    ));
+	    return $viewmodel; 
+	}
+	
 	public function statusAction() {
-		$status = "not opened";// $this->getService()->getPmsStatus($this->getUser());
-	    return array('status' => $status); 
+	    $empId = $this->getUser(); 
+	    //$viewmodel = new ViewModel();
+	    //$viewmodel->setTerminal(1);
+	    //$request = $this->getRequest();
+	    $output = " ";
+	    $output = $this->getService()->getPmsStatus($empId);
+	    //\Zend\Debug\Debug::dump($output) ;
+	    //$viewmodel->setVariables(array(
+	        //'report'     => $output,
+	    //));
+	    return array(
+	        'report'     => $output,
+	    ); 
 	}
     
 	public function htmlResponse($html) {
@@ -412,8 +449,8 @@ class PmsformController extends AbstractActionController {
 		return new PmsReportGrid(); 
 	}
 	
-	private function getStatusGrid() {
-	    return new PmsStatusGrid(); 
+	private function getAppGrid() {
+	    return new IpcAppGrid(); 
 	}
     
 	private function getDbAdapter() {
@@ -454,7 +491,6 @@ class PmsformController extends AbstractActionController {
 	private function getEmpTypeList() {
 		return $this->getLookupService()->getEmpTypeList();
 	} 
-	
 	
 	private function getLookupService() {
 		return $this->getServiceLocator()->get('lookupService');
