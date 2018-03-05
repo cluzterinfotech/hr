@@ -10,16 +10,16 @@ textarea {
     border-style: solid;
     border-color: #ccc;
     z-index:1200;
-    }
-    #subIpcToSupDialog { display:none; } 
+}
+#subIpcToSupDialog { display:none; } 
 #Obj_Weightage { width:50px !important; }
 </style>
 
 <?php 
 $isNonEx;
-echo $output; 
-echo "<br/>"; 
-echo "<br/>"; 
+echo $output;  
+echo "<br/>";  
+echo "<br/>";  
 ?> 
 <div id="dialogIpc">
 <?php 
@@ -37,8 +37,7 @@ echo $this->formElement($form->get('Obj_Weightage'));
 echo $this->formElementErrors($form->get('Obj_Weightage'));
 echo $this->formLabel($form->get('Obj_PI'));
 echo $this->formElement($form->get('Obj_PI'));
-echo $this->formElementErrors($form->get('Obj_PI'));
-
+echo $this->formElementErrors($form->get('Obj_PI')); 
 ?>
 </div>	
 <div style="Float:left;width:380px;">
@@ -67,3 +66,4 @@ echo $this->form ()->closeTag ();
 <input type='button' id = 'submitIpcToSup' value = "Submit IPC To Supervisor" > 
 <br/>
 <div id="subIpcToSupDialog">Submit IPC to Supervisor?</div> 
+<br/><br/><br/><br/><br/> 

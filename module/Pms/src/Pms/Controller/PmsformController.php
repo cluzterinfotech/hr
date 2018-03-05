@@ -172,60 +172,18 @@ class PmsformController extends AbstractActionController {
 		);
 	}
 	
-	public function submittosupAction() {
-	    
-	    $m = "Weightage is not 100"; 
-	    /*
-	     * conditions required
-	     * is weightage 100?
-	     * is all compulsory fields filled 
-	     */
-	    
-	    /*$m = "Form is incomplete, please fill "." , "."performance indicator"
-	    ." , "."Objective"
-	    ; */
-	    $a = array('s' => 11,'m' => $m);
-	    return $this->jsonResponse($a);
-	    
-	    /*$formValues = $this->params()->fromPost('formVal');
-	    $elegible = $formValues['otElegibleHours'];
-	    $entered = $formValues['overTimeHours'];
-	    $x = explode($elegible,':');
-	    $otHrs = $formValues['overTimeHours'];
-	    $otMin = $formValues['overTimeHoursMin'];
-	    $hr = $x[0];
-	    $min = $x[1];
-	    // 12 ot more than elegible hours
-	    if($otHrs < $hr) {
-	        $a = array('s' => 12);
-	        return $this->jsonResponse($a);
+	public function submittosupAction() {  
+	    $checkIsIpcValid = $this->getService()->isIpcValid($this->getUser());  
+	    if(!$checkIsIpcValid) {
+	        $a = array('s' => 11,'m' => $m);
+	    } else {
+	        //$m = "Weightage is not 100";
+	        $m .= "Form is incomplete, please fill "." , "."performance indicator"
+	            ." , "."Objective"
+	        ;
+	        $a = array('s' => 12,'m' => $m);
 	    }
-	    if(($hr == $otHrs) && ($otMin > $min)) {
-	        $a = array('s' => 14);
-	        return $this->jsonResponse($a);
-	    }
-	    // 14 less than 30 minutes
-	    if(($hr == 0) && ($min < 30)) {
-	        $a = array('s' => 14);
-	        return $this->jsonResponse($a);
-	    }
-	    $values = array(
-	        'id'               => $formValues['id'],
-	        'attendanceId'     => $formValues['attendanceId'],
-	        'employeeOtId'     => $formValues['employeeOtId'],
-	        'otDate'           => $formValues['otDate'],
-	        'inTime'           => $formValues['inTime'],
-	        'outTime'          => $formValues['outTime'],
-	        'locWorkHours'     => $formValues['locWorkHours'],
-	        'otElegibleHours'  => $elegible,
-	        'overTimeHours'    => $otHrs,
-	        'numberOfMeals'    => $formValues['numberOfMeals'],
-	        'otStatus'         => 1,
-	    );
-	    $service = $this->getService();
-	    $service->saveot($values);
-	    $a = array('s' => 1);
-	    return $this->jsonResponse($a);*/
+	    return $this->jsonResponse($a); 
 	}
 	
 	
@@ -440,19 +398,19 @@ class PmsformController extends AbstractActionController {
 	    } elseif ($prg === false) {
 	        return array ('form' => $form,'report' => $leaveInfo,);
 	    } 
-	    $formValidator = $this->getApprovalFormValidator();
-	    $form->setInputFilter($formValidator->getInputFilter());
-	    $form->setData($prg);
-	    if ($form->isValid()) {
-	        $data = $form->getData();
-	        //\Zend\Debug\Debug::dump($data);
-	        //exit;
-	        $message = "x";//$service->approveLeave($data,'1');
+	    $formValidator = $this->getApprovalFormValidator(); 
+	    $form->setInputFilter($formValidator->getInputFilter()); 
+	    $form->setData($prg); 
+	    if ($form->isValid()) { 
+	        $data = $form->getData(); 
+	        //\Zend\Debug\Debug::dump($data);  
+	        //exit;  
+	        $message = "From Submitted Successfully";//$service->approveLeave($data,'1');
 	        $this->flashMessenger()->setNamespace('info')
-	             ->addMessage($message);
+	             ->addMessage($message); 
 	        $this->redirect ()->toRoute('pmsform',array (
 	            'action' => 'ipcapprove'
-	        )); 
+	        ));  
 	    } 
 	    return array(
 	        'id'        => $id,

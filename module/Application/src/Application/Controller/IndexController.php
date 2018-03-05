@@ -7,12 +7,12 @@ use Zend\View\Model\ViewModel;
 class IndexController extends AbstractActionController  {
 	
 	public function dashboardAction() { 
-	    $service = $this->getService(); 
+	    /*$service = $this->getService(); 
 	    if(!$service->isDailyProcessPrepared()) { 
 	        $service->performDailyProcess();    
-	    }
+	    }*/ 
 	}  
-	
+	 
 	public function unabletoprepareAction() {
 		return array();
 	}

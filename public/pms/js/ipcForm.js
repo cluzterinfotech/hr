@@ -303,7 +303,8 @@ $(document).ready(function()
 		e.preventDefault();     	
 		$("#subIpcToSupDialog").dialog({
 		      buttons : {
-		        "Yes" : function() {       
+		        "Yes" : function() {    
+		        	$.blockUI({ message: '<h4>Please Wait...while checking form</h4>' });
 		            var request = $.ajax({
 		                url: "/pmsform/submittosup", 
 		                type: "POST",
@@ -315,11 +316,12 @@ $(document).ready(function()
 		            }).done(function(data) {  	            	
 		            	var obj = jQuery.parseJSON(data); 
 		            	if(obj.s == 12) {
+		            		$.unblockUI(); 
 		            		alert(obj.m); 
 		            	} else {
 		            		window.location.replace("/pmsform/status");
 		            	}
-		               
+		            	//$.unblockUI(); 
 		          }).fail(function() {
 		              alert("Error! Problem in submitting to supervisor"); 
 		          });     
