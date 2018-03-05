@@ -36,11 +36,11 @@ class PmsformController extends AbstractActionController {
 	    $grid = $this->getGrid();
 	    $employeeId = $this->getUser(); 
 	    $grid->setAdapter($this->getDbAdapter())
-	    ->setSource($this->getService()->selectReport($employeeId))
+	         ->setSource($this->getService()->selectReport($employeeId))
 	         ->setParamAdapter($this->getRequest()->getPost());  
 	    return $this->htmlResponse($grid->render()); 
-	}
-	
+	}   
+	 
 	public function ipcAction() { 
 		$service = $this->getService(); 
 		$year = date('Y');
@@ -374,33 +374,19 @@ class PmsformController extends AbstractActionController {
 		
 	}
 	
-	public function ipcreportAction() {
-	    /*$employeeId = $this->params()->fromPost('empMonthYearId',0);
-	    if(!$employeeId) {
-	        $employeeId = $this->getUser();
-	    }*/
-	    
+	public function ipcreportAction() { 
+	    $id = (int) $this->params()->fromRoute('id',0);
 	    $viewmodel = new ViewModel();
 	    $viewmodel->setTerminal(1);
 	    $request = $this->getRequest();
 	    $output = " ";
-	   // if($request->isPost()) {
-	        //$values = $request->getPost();
-	       // $month = $values['month'];
-	       // $year = $values['year'];
-	       // $type = 1;
-	       // $param = array('month' => $month,'year' => $year,'empId' => $employeeId);
-	       // $company = $this->getCompanyService();
-	        //$results = $this->getPaysheetService()->getPaysheetReport($param);
-	        //$output = $this->getPaysheetService()->getPayslipReport($company,$param);
-	        $output = " IPC Header"; 
-	    //}
-	    /// \Zend\Debug\Debug::dump($output) ;
+	    $output = $this->getService()->getIpcReport($id); 
+        //\Zend\Debug\Debug::dump($output) ;
 	    $viewmodel->setVariables(array(
-	        'report'            => $output,
-	    ));
-	    return $viewmodel;
-	}
+	        'report'     => $output,
+	    )); 
+	    return $viewmodel; 
+	} 
 	
 	public function ipcapproveAction() {
 	

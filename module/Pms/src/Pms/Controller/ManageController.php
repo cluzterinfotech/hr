@@ -66,8 +66,7 @@ class ManageController extends AbstractActionController {
 			$this->redirect()->toRoute('manage', array(
 					'action' => 'add'
 			)); 
-		}
-		
+		} 
 		$form = $this->getForm();
 		$service = $this->getService();
 		$values = $service->fetchById($id);

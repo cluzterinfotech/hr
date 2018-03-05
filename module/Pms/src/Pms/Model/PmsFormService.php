@@ -113,6 +113,36 @@ class PmsFormService {
 		return $this->getHeader($id); 
 	}
 	
+	public function getIpcReport($id) {
+	    $row = $this->pmsFormMapper->getPmsHeaderId($id);
+	    $output = $this->getHeader($row); 
+	    $employeeId = $row['Pmnt_Emp_Mst_Id'];
+	    //$isNonEx = 1;//$this->isNonExecutive($employeeId);
+	    $output .= $this->getTotalWeightage($id);
+	    $output .= "<br/>
+          <table width='1050px' border='1' font-size='6px' align='center' id='table1' width='100%'
+	      bordercolor='#ccc' cellpadding = '6px'  style='border-collapse: collapse'> ";
+	    $dtls = $this->pmsFormMapper->getDtlsByMstId($id);
+	    foreach($dtls as $r) {
+	        $dtlsId = $r['id'];
+	        $objId = $r['Obj_Id'];
+	        if($objId != '21' && $objId != '22') {
+	            //\Zend\Debug\Debug::dump($objId);
+	            //exit;
+	            $output .= $this->getFormDtlsMain($r,$c,$isNonEx);
+	            $dtlsDtls = $this->pmsFormMapper->getDtlsDtlsByDtlsId($dtlsId);
+	            foreach($dtlsDtls as $subsub) {
+	                $output .= $this->getFormDtlsSub($subsub,$formType,$isNonEx);
+	            } 
+	        } else {
+	            $output .= $this->getFormDtlsMainWoEditDel($r,$c,$isNonEx);
+	        }
+	        $c++;
+	    }
+	    $output .= "</table><br/>"; 
+	    return $output;
+	}
+	
 	public function getIpcPmsById($id,$isNonEx) {
 		$formType = "IPC"; 
 		$c= 1; 
@@ -187,15 +217,14 @@ class PmsFormService {
 	} 
 	
 	
-	public function getFormDtlsMain($row,$c,$isNonEx) {
+	public function getFormDtlsMain($row,$c,$isNonEx,$disp = 'class = "noDisp"') {
 		$r = array(); 
 		if($isNonEx) {
 		    $name = "Standard";
 		} else {
 			$name = "Base";
 		} 
-		$output = "
-		     
+		$output = " 	     
 		    <tr bgcolor='#ccc' ".$formType." style ='font-weight:bold;'>  
             <td width='9px' align='center' >&nbsp;</td>
             <td width='20px' align='center' >&nbsp;
@@ -207,16 +236,13 @@ class PmsFormService {
                 $output .="<td width='150px' align='center' <b>Stretch 2</b></td>
                            <td width='50px' align='center' <b>Stretch 1</b></td>";
             }		     
-           
-            
-            $output .="</tr>
-            		
+            $output .="</tr>	
             <tr >
             <td align='center' class='noBorder'>".$c."</td>
             <td align='left' > 
-            <p><b><a href='#' id = '".$row['id']."' class = 'editIpc'>Edit</a></b></p>
+            <p $disp><b><a href='#' id = '".$row['id']."' class = 'editIpc'>Edit</a></b></p>
             <p><b>Main</b></p>
-            <p><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpc'>Delete</a></b></p>
+            <p $disp><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpc'>Delete</a></b></p>
             </td> 
             <td>".$row['Obj_Desc']."</td>
             <td>".$row['Obj_Weightage']."</td>
@@ -228,9 +254,7 @@ class PmsFormService {
             }
            // $output .="<td>".$row['Obj_Stretch_02']."</td>
             //<td>".$row['Obj_Stretch_01']."</td>
-            
-            $output .="</tr>
-            		
+            $output .="</tr> 	
 		    ";
 		return $output;
 	}
@@ -277,16 +301,16 @@ class PmsFormService {
 		return $output;
 	}
 	
-	public function getFormDtlsSub($row,$formType,$isNonEx) {
+	public function getFormDtlsSub($row,$formType,$isNonEx,$disp = 'class = "noDisp"') {
 		$r = array();
 		$name = "";
 		$output = " 
             <tr ".$formType.">
 	            <td align='center' class='noBorder'>".$i."</td>
 	            <td align='left' >
-	            <p><b><a href='#' id = '".$row['id']."' class = 'editIpcDtls'>Edit</a></b></p>
+	            <p $disp><b><a href='#' id = '".$row['id']."' class = 'editIpcDtls'>Edit</a></b></p>
 	            <p><b>Sub</b></p>
-	            <p><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpcDtls'>Delete</a></b></p>
+	            <p $disp><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpcDtls'>Delete</a></b></p>
 	            </td>
 	            <td>".$row['S_Obj_Desc']."</td>
 	            <td>".$row['S_Obj_Weightage']."</td>
