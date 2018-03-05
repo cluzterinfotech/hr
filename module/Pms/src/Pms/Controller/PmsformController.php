@@ -13,6 +13,8 @@ use Zend\View\Model\JsonModel;
 use Pms\Grid\PmsReportGrid;
 use Pms\Grid\PmsStatusGrid;
 use Pms\Grid\IpcAppGrid;
+use Application\Form\LeaveApprovalForm;
+use Application\Form\LeaveApprovalFormValidator;
      
 class PmsformController extends AbstractActionController {
     
@@ -405,7 +407,7 @@ class PmsformController extends AbstractActionController {
 	} 
 	
 	public function approveAction() {
-	    $id = (int) $this->params()->fromRoute('id',0);
+	   /* $id = (int) $this->params()->fromRoute('id',0);
 	    $viewmodel = new ViewModel();
 	    //$viewmodel->setTerminal(1);
 	    $request = $this->getRequest();
@@ -415,7 +417,58 @@ class PmsformController extends AbstractActionController {
 	    $viewmodel->setVariables(array(
 	        'report'     => $output,
 	    ));
-	    return $viewmodel; 
+	    return $viewmodel; */
+	    
+	    $id = (int) $this->params()->fromRoute('id',0);
+	    if (!$id) {
+	        $this->flashMessenger()->setNamespace('info')
+	             ->addMessage('Form not found,Please Add');
+	        $this->redirect()->toRoute('pmsform', array(
+	            'action' => 'add'
+	        )); 
+	    } 
+	    $service = $this->getService();
+	    $leaveInfo = $service->getIpcReport($id);
+	    $form = $this->getApprovalForm();
+	    // $form->bind($leave);
+	    $form->get('id')->setValue($id);
+	    // $form->get('submit')->setAttribute('value','Approve Annual Leave');
+	    $prg = $this->prg('/pmsform/approve/'.$id, true);
+	    
+	    if ($prg instanceof Response ) {
+	        return $prg;
+	    } elseif ($prg === false) {
+	        return array ('form' => $form,'report' => $leaveInfo,);
+	    } 
+	    $formValidator = $this->getApprovalFormValidator();
+	    $form->setInputFilter($formValidator->getInputFilter());
+	    $form->setData($prg);
+	    if ($form->isValid()) {
+	        $data = $form->getData();
+	        //\Zend\Debug\Debug::dump($data);
+	        //exit;
+	        $message = "x";//$service->approveLeave($data,'1');
+	        $this->flashMessenger()->setNamespace('info')
+	             ->addMessage($message);
+	        $this->redirect ()->toRoute('pmsform',array (
+	            'action' => 'ipcapprove'
+	        )); 
+	    } 
+	    return array(
+	        'id'        => $id,
+	        'form'      => $form,
+	        'report' => $leaveInfo,
+	        $prg
+	    ); 
+	}
+	
+	private function getApprovalForm() {
+	    return new LeaveApprovalForm();
+	    // return $form;
+	} 
+	
+	private function getApprovalFormValidator() {
+	    return new LeaveApprovalFormValidator(); 
 	}
 	
 	public function statusAction() {
