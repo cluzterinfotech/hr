@@ -59,8 +59,8 @@ class PmsFormService extends Approvals {
 		return $this->pmsFormMapper->isIpcOpened($pmsId); 
 	}
 	
-	public function isIpcSubmitted($employeeId,$pmsId) {
-	    return $this->pmsFormMapper->isIpcSubmitted($employeeId,$pmsId);
+	public function isIpcSubmitted($employeeId,$id) {
+	    return $this->pmsFormMapper->isIpcSubmitted($employeeId,$id);
 	}
 	
 	public function isMyrOpened($pmsId) {
@@ -198,7 +198,7 @@ class PmsFormService extends Approvals {
 	public function selectStatus($employeeId) {
 	    //return array(); 
 	    return $this->pmsFormMapper->selectReport($employeeId); 
-	}
+	} 
 	
 	public function selectAppList($employeeId) {
 	    //return array();
@@ -1031,5 +1031,82 @@ class PmsFormService extends Approvals {
 	    }
 	    return array($v,$myFieds);
 	}   
+	
+	
+	public function approveIpc($data,$type = 1) { 
+	    $isSupervisor = 0;
+	    $isHod = 0; 
+	    $id = $data->getId(); 
+	    $approvalType = $data->getApprovalType();
+	    $approver = $this->userInfoService->getEmployeeId();
+	    $approval = $approvalType;  
+	    $udt = array(); 
+	    $udt['id'] = $id; 
+	    $row = $this->pmsFormMapper->getPmsById($id); 
+	    $employeeId = $row['Pmnt_Emp_Mst_Id']; 
+	    $immSup = $this->positionService->getImmediateSupervisorByEmployee($employeeId); 
+	    $hod = $this->positionService->getHodByEmployee($employeeId); 
+	    if($immSup == $approver) {
+	        $isSupervisor = 1;
+	    } 
+	    if($hod == $approver) {
+	        $isHod = 1;
+	    } 
+	    if($row['Sup_Approval'] == 1 && $row['Hod_Approval'] == 1) {
+	        return "Form Already Approved!"; 
+	    } 
+	    if(!$row) {
+	        return "This form is not valid for approval!";
+	    } 
+	    if($approvalType == 1) {
+	        if(($row['Sup_Approval'] == 0) && $isSupervisor) {
+    	        $udt['Sup_Approval'] = 1; 
+    	        $udt['Immediate_Supervisor']  = $approver; 
+	        } else {
+	            return "Not valid approver"; 
+	        }
+    	    if(($row['Hod_Approval'] == 0) && $isHod) {
+    	        $udt['Hod_Approval'] = 1; 
+    	        $udt['HOD']  = $approver; 
+    	    } else {
+    	        return "Not Valid Approver"; 
+    	    }
+	    } else {
+	        $udt['Emp_Edit'] = 1;
+	        $udt['Sup_Approval'] = 0; 
+	        $udt['Hod_Approval'] = 0; 
+	    } 
+	    $this->pmsFormMapper->update($udt);         
+	    return "approved successfully";   
+	} 
+	
+	public function getIpcFormApprovalList($employeeId) { 
+	    $ipcList = $this->pmsFormMapper->getIpcFormApprovalList();
+	    if($ipcList) {
+	        $totId = array();
+	        //$i = 1;
+	        foreach($ipcList as $lst) { 
+	            $applicant = $lst['Pmnt_Emp_Mst_Id'];
+	            $isImmSupApproved = $lst['Sup_Approval'];
+	            $isHodApproved = $lst['Hod_Approval'];
+	            $immSup = $this->positionService->getImmediateSupervisorByEmployee($applicant); 
+	            $hod = $this->positionService->getHodByEmployee($applicant); 
+	            if(($immSup == $employeeId) && ($isImmSupApproved == 0)) {
+	                $totId[] = $lst['id'];
+	            } elseif(($hod == $employeeId) && ($isHodApproved == 0 && $isImmSupApproved == 1)) {
+	                $totId[] = $lst['id']; 
+	            } 
+	            //$isApprover = 1;//$this->checkIsApprover($applicant,$approver,$approvedLevel);
+	            //if($isApprover) {
+	                //$totId[] = $lst['id'];
+	            //}
+	            //$i++;
+	        }
+	        if(!$totId) {
+	            $totId[] = 0; 
+	        }
+	    }
+	    return $this->pmsFormMapper->getIpcAppFormSelect($totId); 
+	} 
 	
 }   

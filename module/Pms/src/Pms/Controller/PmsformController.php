@@ -28,7 +28,7 @@ class PmsformController extends AbstractActionController {
 	    $grid = $this->getStatusGrid(); 
 	    $employeeId = $this->getUser(); 
 		$grid->setAdapter($this->getDbAdapter())
-		     ->setSource($this->getService()->selectStatus($employeeId))
+		->setSource($this->getService()->selectStatus($employeeId))
 		     ->setParamAdapter($this->getRequest()->getPost());
 		return $this->htmlResponse($grid->render()); 
 	}
@@ -39,7 +39,7 @@ class PmsformController extends AbstractActionController {
 	    $grid = $this->getAppGrid();
 	    $employeeId = $this->getUser();
 	    $grid->setAdapter($this->getDbAdapter())
-	    ->setSource($this->getService()->selectStatus($employeeId))
+	    ->setSource($this->getService()->getIpcFormApprovalList($employeeId))
 	    ->setParamAdapter($this->getRequest()->getPost());
 	    return $this->htmlResponse($grid->render());
 	}
@@ -73,7 +73,7 @@ class PmsformController extends AbstractActionController {
 		}
 		
 		// check if IPC is Submitted
-		$isIpcSubmitted = $this->getService()->isIpcSubmitted($employeeId,$pmsId);
+		$isIpcSubmitted = $this->getService()->isIpcSubmitted($employeeId,$id);
 		if($isIpcSubmitted) {
 		    $this->flashMessenger()
 		         ->setNamespace('info')
@@ -374,19 +374,7 @@ class PmsformController extends AbstractActionController {
 	
 	} 
 	
-	public function approveAction() {
-	   /* $id = (int) $this->params()->fromRoute('id',0);
-	    $viewmodel = new ViewModel();
-	    //$viewmodel->setTerminal(1);
-	    $request = $this->getRequest();
-	    $output = " ";
-	    $output = $this->getService()->getIpcReport($id);
-	    //\Zend\Debug\Debug::dump($output) ;
-	    $viewmodel->setVariables(array(
-	        'report'     => $output,
-	    ));
-	    return $viewmodel; */
-	    
+	public function approveAction() { 
 	    $id = (int) $this->params()->fromRoute('id',0);
 	    if (!$id) {
 	        $this->flashMessenger()->setNamespace('info')
@@ -415,12 +403,13 @@ class PmsformController extends AbstractActionController {
 	        $data = $form->getData(); 
 	        //\Zend\Debug\Debug::dump($data);  
 	        //exit;  
-	        $message = "From Submitted Successfully";//$service->approveLeave($data,'1');
+	        $message = $service->approveIpc($data,'1');
+	        //$message = "From Submitted Successfully";//$service->approveIpc($data,'1');
 	        $this->flashMessenger()->setNamespace('info')
 	             ->addMessage($message); 
 	        $this->redirect ()->toRoute('pmsform',array (
 	            'action' => 'ipcapprove'
-	        ));  
+	        ));   
 	    } 
 	    return array(
 	        'id'        => $id,

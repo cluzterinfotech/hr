@@ -30,19 +30,77 @@ class PmsFormMapper extends AbstractDataMapper {
 		return $this->insert($data);  
 	}
 	
+	public function getIpcFormApprovalList() {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array ('*'))
+	           //->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
+	                 // array('Year'))
+	          //->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                      //array('employeeName'))
+	          ->where->NEST
+	          ->equalTo('e.Sup_Approval', 0)
+	          ->or
+	          ->equalTo('e.Hod_Approval', 0)
+	          ->UNNEST
+	          ->where->NEST
+	          ->AND
+	          ->equalTo('e.Emp_Edit', 0)
+	          ->UNNEST 
+	    ; 
+	    //return $select;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit; 
+	    $results = $this->adapter->query($sqlString)->execute();
+	    if($results) {
+	        return $results;
+	    }
+	    return array(); 
+	}
+	
+	public function getIpcAppFormSelect($ids) {
+	    $predicate = new Predicate(); 
+    	$sql = $this->getSql();
+    	$select = $sql->select();
+    	$select->from(array('e' => $this->entityTable))
+    	       ->columns(array ('id','Pmnt_Emp_Mst_Id','Pms_Fyear_Id'))
+    	       ->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
+    	              array('Year'))
+    	       ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+    	              array('employeeName'))
+    	       ->where($predicate->in('e.id',$ids))
+    	       //->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	    ;  
+    	//$sqlString = $sql->getSqlStringForSqlObject($select);
+    	//echo $sqlString;
+    	//exit; 
+	    return $select;
+	}
+	
 	public function selectReport($employeeId) {
+	    //$predicate = new Predicate();
 	    $sql = $this->getSql();
 	    $select = $sql->select();
 	    $select->from(array('e' => $this->entityTable))
 	           ->columns(array ('id','Pmnt_Emp_Mst_Id','Pms_Fyear_Id'))
 	           ->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
 	                  array('Year'))
-	          ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
-	                      array('employeeName'))
-	          ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
-	    ; 
+	           ->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                  array('employeeName'))
+	            //->where($predicate->in('e.id',$ids))
+	           ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	    ;
+	    //$sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
 	    return $select; 
 	}
+	/*public function isIpcWaitingForApproval($id) { 
+	    return false; 
+	    return true; 
+	}*/
 	
 	public function selectAppList($employeeId) {
 	    $sql = $this->getSql();

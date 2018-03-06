@@ -48,10 +48,9 @@ class AnnualleaveController extends AbstractActionController {
 		}
 		$formValidator = $this->getFormValidator(); 
 		$form->setInputFilter($formValidator->getInputFilter()); 
-		
-		$service = $this->getLeaveService(); 
-		//echo "outside"; 
-		//exit; 
+		$service = $this->getLeaveService();  
+		//echo "outside";  
+		//exit;  
 		
 		$form->setData($prg); 
 		if ($form->isValid()) {
