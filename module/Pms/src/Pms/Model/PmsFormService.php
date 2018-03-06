@@ -59,6 +59,10 @@ class PmsFormService extends Approvals {
 		return $this->pmsFormMapper->isIpcOpened($pmsId); 
 	}
 	
+	public function isIpcSubmitted($employeeId,$pmsId) {
+	    return $this->pmsFormMapper->isIpcSubmitted($employeeId,$pmsId);
+	}
+	
 	public function isMyrOpened($pmsId) {
 		return $this->pmsFormMapper->isMyrOpened($pmsId);
 	}
@@ -935,17 +939,16 @@ class PmsFormService extends Approvals {
 	    return $output;
 	}
 	
-	public function isIpcValid($userId) {
-	    //$db = Zend_Registry::get('database');
-	    $pmsMstId = $this->_getParam('mstId');
-	    // $hod = 136; //$this->_getParam('');
-	    // $immsup = 14; //$this->_getParam('');
-	    $selectDtls = "Select * from Pms_Info_Dtls where Pms_Info_Mst_Id='" . $pmsMstId . "'  ";
-	    //echo $selectDtls;
-	    $resultDtls = $db->fetchAll($selectDtls);
-	    $emptyField = array();
-	    $myFieds = "";
-	    foreach ($resultDtls as $dtls) {
+	public function isIpcValid($userId) { 
+	    $v = 0; 
+	    $year = date('Y'); 
+	    $pmsId = $this->pmsFormMapper->getPmsIdByYear($year); 
+	    $pmsMstId = $this->pmsFormMapper->getPmsIdByEmployee($userId,$pmsId); 
+	    $wei = $this->pmsFormMapper->getTotWeightage($pmsMstId); 
+	    $resultDtls = $this->pmsFormMapper->getDtlsByMstId($pmsMstId);
+	    $emptyField = array(); 
+	    $myFieds = ""; 
+	    foreach ($resultDtls as $dtls) { 
 	        $name = '';
 	        $dtlsId = $dtls['id'];
 	        $dtlsDesc = $dtls['Obj_Desc'];
@@ -953,73 +956,80 @@ class PmsFormService extends Approvals {
 	        $dtlsPi = $dtls['Obj_PI'];
 	        $dtlsBase = $dtls['Obj_Base'];
 	        $result = $dtls['Myr_Result'];
-	        //$dtlsStreh01 = $dtls['Obj_Stretch_01'];
-	        $selectDtlsDtls = " Select * from Pms_Info_Dtls_Dtls where Pms_Info_Dtls_id='" . $dtlsId . "'";
-	        $resultDtlsDtls = $db->fetchAll($selectDtlsDtls);
+	        $resultDtlsDtls = $this->pmsFormMapper->getDtlsDtlsByDtlsId($dtlsId); 
 	        if ($dtlsDesc == Null || $dtlsDesc == null) {
-	            $name = $dtlsId . "mdesc";
-	            //	Zend_Debug::dump($name);
-	            //array_push($emptyField, $name);
-	            $myFieds .= $name . ",";
-	        }//if
-	        if ($resultDtlsDtls) {
-	            $totalSubWeig = 0;
-	            $weigList = '';
-	            foreach ($resultDtlsDtls as $dtlsdtls) {
-	                $ddtlsId = $dtlsdtls['id'];
-	                $ddtlsDesc = $dtlsdtls['S_Obj_Desc'];
-	                $ddtlsWeig = $dtlsdtls['S_Obj_Weightage'];
-	                $ddtlsPi = $dtlsdtls['S_Obj_PI'];
-	                $ddtlsBase = $dtlsdtls['S_Obj_Base'];
-	                $dtlsresult = $dtlsdtls['Myr_Result'];
+	            $v = 1; 
+	            $name = $dtlsId . "mdesc"; 
+	            $myFieds .= "Main Obj Description "; 
+	        }//if 
+	        if ($resultDtlsDtls) { 
+	            $totalSubWeig = 0; 
+	            $weigList = ''; 
+	            foreach ($resultDtlsDtls as $dtlsdtls) { 
+	                $ddtlsId = $dtlsdtls['id']; 
+	                $ddtlsDesc = $dtlsdtls['S_Obj_Desc']; 
+	                $ddtlsWeig = $dtlsdtls['S_Obj_Weightage'];  
+	                $ddtlsPi = $dtlsdtls['S_Obj_PI']; 
+	                $ddtlsBase = $dtlsdtls['S_Obj_Base']; 
+	                $dtlsresult = $dtlsdtls['Myr_Result']; 
 	                $totalSubWeig+=$ddtlsWeig;
 	                if ($ddtlsWeig == null || $ddtlsWeig == Null) {
-	                    $name = $ddtlsId . "weig";
-	                    $weigList+=$name . ",";
-	                    //array_push($emptyField, $name);
-	                    $myFieds .= $name . ",";
+	                    $v = 1; 
+	                    $myFieds .= ", objective weightage ";
 	                }//if
 	                if ($ddtlsPi == null || $ddtlsPi == Null) {
-	                    $name = $ddtlsId . "peri";
-	                    //array_push($emptyField, $name);
-	                    $myFieds .= $name . ",";
+	                    $v = 1; 
+	                    $myFieds .= ", performance indicator ";
 	                }//if
 	                if ($ddtlsBase == null || $ddtlsBase == Null) {
-	                    $name = $ddtlsId . "base";
-	                    //array_push($emptyField, $name);
-	                    $myFieds .= $name . ",";
+	                    $v = 1; 
+	                    $myFieds .= ", base ";
 	                }
-	                if ($dtlsresult == null || $dtlsresult == Null) {
-	                    $name = $ddtlsId . "result";
+	               // if ($dtlsresult == null || $dtlsresult == Null) {
+	                    //$v = 1; 
+	                    //$name = $ddtlsId . "result";
 	                    //array_push($emptyField, $name);
-	                    $myFieds .= $name . ",";
-	                }
+	                   // $myFieds .= "result ,";
+	                //}
 	            }//foreach
 	        }//if The Main objective have Sub-Objective no need to fill base / PI/Desc
 	        elseif (!$resultDtlsDtls) {
 	            if ($dtlsPi == null || $dtlsPi == Null || $dtlsPi == ' ') {
-	                $name = $dtlsId . "mperi";
+	                $v = 1; 
+	                //$name = $dtlsId . "mperi";
 	                array_push($emptyField, $name);
-	                $myFieds .= $name . ",";
+	                $myFieds .= ", performance indicator ";
 	            }//if
 	            //Zend_Debug::dump($dtlsBase);
 	            if ($dtlsBase == null || $dtlsBase == Null || $dtlsBase == ' ') {
-	                $name = $dtlsId . "mbase";
+	                $v = 1; 
+	                //$name = $dtlsId . "mbase";
 	                array_push($emptyField, $name);
-	                $myFieds .= $name . ",";
+	                $myFieds .= ", base";
 	            }
-	            if ($result == null || $result == Null || $result == ' ') {
-	                $name = $dtlsId . "mresult";
-	                array_push($emptyField, $name);
-	                $myFieds .= $name . ",";
-	            }
+	            //if ($result == null || $result == Null || $result == ' ') {
+	                //$v = 1; 
+	                //$name = $dtlsId . "mresult";
+	                //array_push($emptyField, $name);
+	                //$myFieds .= "result ,";
+	            //}
 	        }
+	    } 
+	    if($wei != 100) {
+	        $v = 1; 
 	    }
-	    echo $myFieds;
-	    //exit;
-	    $v = 1;
-	    $m = $myFieds;
-	    return array();
+	    if($v == 0) { 
+	        $udt = array(
+	           'id'           => $pmsMstId,
+	           'Emp_Edit'     => 0,
+	           'Sup_Approval' => 0,
+	           'Hod_Approval' => 0,
+	        ); 
+	        $this->pmsFormMapper->update($udt); 
+	        // Emp_Edit = 0
+	        // submit to supervisor 
+	    }
+	    return array($v,$myFieds);
 	}   
 	
 }   

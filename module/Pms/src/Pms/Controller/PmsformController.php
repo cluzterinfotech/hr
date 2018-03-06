@@ -70,7 +70,18 @@ class PmsformController extends AbstractActionController {
 			$this->redirect ()->toRoute('pmsform',array ( 
 					'action' => 'status'
 			));  
-		} 
+		}
+		
+		// check if IPC is Submitted
+		$isIpcSubmitted = $this->getService()->isIpcSubmitted($employeeId,$pmsId);
+		if($isIpcSubmitted) {
+		    $this->flashMessenger()
+		         ->setNamespace('info')
+		         ->addMessage('IPC is already submitted to supervisor');
+		    $this->redirect ()->toRoute('pmsform',array (
+		        'action' => 'status'
+		    )); 
+		}
 		// check is have ipc 
 		if(!$id) { 
 			$service->prepareNewIpc($employeeId,$pmsId); 
@@ -174,14 +185,13 @@ class PmsformController extends AbstractActionController {
 	
 	public function submittosupAction() {  
 	    $checkIsIpcValid = $this->getService()->isIpcValid($this->getUser());  
-	    if(!$checkIsIpcValid) {
-	        $a = array('s' => 11,'m' => $m);
+	    if(!$checkIsIpcValid[0]) { 
+	        $a = array('s' => 11,'m' => $checkIsIpcValid[1]);
 	    } else {
 	        //$m = "Weightage is not 100";
-	        $m .= "Form is incomplete, please fill "." , "."performance indicator"
-	            ." , "."Objective"
+	        $m .= "Form is incomplete, please check weightage and other values"
 	        ;
-	        $a = array('s' => 12,'m' => $m);
+	        $a = array('s' => 12,'m' => $checkIsIpcValid[1]);  
 	    }
 	    return $this->jsonResponse($a); 
 	}

@@ -87,6 +87,11 @@ class PmsFormMapper extends AbstractDataMapper {
 		return $this->update($data);
 	}
 	
+	/*public function updatePmsMst($data) {
+	    $this->setEntityTable($this->dtlsTable);
+	    return $this->update($data);
+	}*/ 
+	
 	public function updateSubObjective($data) {
 		$this->setEntityTable($this->dtlsDtlsTable);
 		return $this->update($data);
@@ -147,6 +152,24 @@ class PmsFormMapper extends AbstractDataMapper {
 			return $results;
 		}
 		return array();
+	}
+	
+	public function isIpcSubmitted($employeeId,$pmsId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array ('Emp_Edit'))
+	           ->where(array('id' => $pmsId ))
+	           ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	    ; 
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    $results = $this->adapter->query($sqlString)->execute()->current();
+	    if($results['Emp_Edit'] == 0) {
+	        return true;
+	    }
+	    return false;  
 	}
 	
 	public function isIpcOpened($pmsId) {
