@@ -253,7 +253,7 @@ class Module {
 				    		$sm->get('userInfoService'),$sm->get('transactionDatabase'),
 				    		$sm->get('mailService'),$sm->get('positionService'),
 				    		$sm->get('nonWorkingDays'),$sm->get('dateMethods'),
-                			$sm->get('travelingFormMapper'),$sm); 
+					        $sm->get('travelingFormMapper'),$sm->get('pmsFormMapper'),$sm); 
 				 },'otmealMapper' => function ($sm) {
                      return new OtmealMapper($sm->get('sqlServerAdapter'), 
                          $sm->get('entityCollection')); 

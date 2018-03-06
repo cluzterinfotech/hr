@@ -80,14 +80,14 @@ class PmsformController extends AbstractActionController {
 		         ->addMessage('IPC is already submitted to supervisor');
 		    $this->redirect ()->toRoute('pmsform',array (
 		        'action' => 'status'
-		    )); 
+		    ));  
 		}
 		// check is have ipc 
 		if(!$id) { 
 			$service->prepareNewIpc($employeeId,$pmsId); 
 			$this->redirect ()->toRoute('pmsform',array (
 					'action' => 'ipc'
-			));
+			)); 
 		} 
 		$isNonEx = $service->isNonExecutive($employeeId); 
 		$form = $this->getForm();   
