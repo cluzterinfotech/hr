@@ -42,6 +42,16 @@ class MyrformController extends AbstractActionController {
 					'action' => 'status'
 			)); 
 		} 
+		// check if MYR is Submitted
+		$isMyrSubmitted = $this->getService()->isIpcSubmitted($employeeId,$id);
+		if($isMyrSubmitted) {
+		    $this->flashMessenger()
+		         ->setNamespace('info')
+		         ->addMessage('MYR is already submitted to supervisor');
+		    $this->redirect ()->toRoute('pmsform',array (
+		        'action' => 'status'
+		    ));
+		}
 		// check is have MYR 
 		if(!$id) {  
 			//$service->prepareNewIpc($employeeId,$pmsId); 
@@ -180,6 +190,19 @@ class MyrformController extends AbstractActionController {
 		$service->insertNewSubObjective($data);  
 		exit;  
 	}*/
+	
+	public function submittosupAction() {
+	    $checkIsIpcValid = $this->getService()->isIpcValid($this->getUser());
+	    if(!$checkIsIpcValid[0]) {
+	        $a = array('s' => 11,'m' => $checkIsIpcValid[1]);
+	    } else {
+	        //$m = "Weightage is not 100";
+	        $m .= "Form is incomplete, please check weightage and other values"
+	            ;
+	        $a = array('s' => 12,'m' => $checkIsIpcValid[1]);
+	    }
+	    return $this->jsonResponse($a);
+	} 
 	
 	public function updateobjectiveAction() {
 		$formValues = $this->params()->fromPost('formVal',0);
@@ -381,5 +404,16 @@ class MyrformController extends AbstractActionController {
 	private function getUserInfoService() {
 		return $this->getServiceLocator()->get('userInfoService');
 	} 
+	
+	public function jsonResponse($data)
+	{
+	    if(!is_array($data)){
+	        throw new \Exception('$data param must be array');
+	    }
+	    $response = $this->getResponse();
+	    $response->setStatusCode(200);
+	    $response->setContent(json_encode($data));
+	    return $response;
+	}
 	
 }   

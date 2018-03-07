@@ -3740,7 +3740,7 @@ return array (
 			     			),  
 	     		        ) 
 	     	        ),
-	     			array(
+	     			/*array(
 	     				'label'      => 'PMS FORMS AND REPORTS',
 	     				'route'      => 'pmsform',
 	     				'module'     => 'pms',
@@ -3748,7 +3748,7 @@ return array (
 	     				'action'     => 'report',
 	     				'resource'	 => 'Pms\Controller\Pmsform',
 	     				'privilege'	 => 'report',
-	     				'pages'      => array(
+	     				'pages'      => array(*/
 	     					array(
 	     						'label'      => 'IPC',
 	     						'route'      => 'pmsform',
@@ -3872,8 +3872,9 @@ return array (
 	     						'resource'	 => 'Pms\Controller\Pmsform',
 	     						'privilege'	 => 'status',
 	     					),
-	     				),
-	     			),array(
+	     				//),
+	     			//),
+	     		    array(
 			     		'label'      => 'POLICY AND MANUAL',
 			     		'route'      => 'policymanual',
 			     		'module'     => 'application',

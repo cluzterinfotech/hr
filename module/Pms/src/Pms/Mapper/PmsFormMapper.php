@@ -212,6 +212,24 @@ class PmsFormMapper extends AbstractDataMapper {
 		return array();
 	}
 	
+	/*public function isMyrSubmitted($employeeId,$pmsId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array ('Emp_Edit'))
+	           ->where(array('id' => $pmsId ))
+	           ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
+	    ;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    $results = $this->adapter->query($sqlString)->execute()->current();
+	    if($results['Emp_Edit'] == 0) {
+	        return true;
+	    }
+	    return false;
+	}*/
+	
 	public function isIpcSubmitted($employeeId,$pmsId) {
 	    $sql = $this->getSql();
 	    $select = $sql->select();
@@ -450,7 +468,7 @@ class PmsFormMapper extends AbstractDataMapper {
 	    if($results) {
 	        return $results;
 	    }
-	    return 0;
-	}
+	    return 0; 
+	} 
 	
-}
+} 

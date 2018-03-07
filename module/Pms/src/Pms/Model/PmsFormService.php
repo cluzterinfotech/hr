@@ -63,6 +63,10 @@ class PmsFormService extends Approvals {
 	    return $this->pmsFormMapper->isIpcSubmitted($employeeId,$id);
 	}
 	
+	/*public function isMyrSubmitted($employeeId,$id) {
+	    return $this->pmsFormMapper->isMyrSubmitted($employeeId,$id);
+	}*/
+	
 	public function isMyrOpened($pmsId) {
 		return $this->pmsFormMapper->isMyrOpened($pmsId);
 	}
@@ -828,11 +832,7 @@ class PmsFormService extends Approvals {
 	    $empName = $this->pmsFormMapper->getUserName($empId);   
 	    $r = $this->pmsFormMapper->getPmsRowByYear($currentFyYear);
 	    $output = "<table width='700px' border='0'cellspacing='0px' cellpadding='5px'>
-					  <tr>
-					  	<th><b>Employee Name</b></th>
-					    <th><b>PMS Year</b></th>
-					    <th><b>Status</b></th>
-					  </tr>"; 	    
+					  <tr><th><b>Employee Name</b></th><th><b>PMS Year</b></th><th><b>Status</b></th></tr>"; 	    
 	    if ($r) {
 	        $fyId = $r['id']; 
 	        $fyYear = $r['Year']; 
@@ -1032,6 +1032,98 @@ class PmsFormService extends Approvals {
 	    return array($v,$myFieds);
 	}   
 	
+	public function isMyrValid($userId) {
+	    $v = 0;
+	    $year = date('Y');
+	    $pmsId = $this->pmsFormMapper->getPmsIdByYear($year);
+	    $pmsMstId = $this->pmsFormMapper->getPmsIdByEmployee($userId,$pmsId);
+	    $wei = $this->pmsFormMapper->getTotWeightage($pmsMstId);
+	    $resultDtls = $this->pmsFormMapper->getDtlsByMstId($pmsMstId);
+	    $emptyField = array();
+	    $myFieds = "";
+	    foreach ($resultDtls as $dtls) {
+	        $name = '';
+	        $dtlsId = $dtls['id'];
+	        $dtlsDesc = $dtls['Obj_Desc'];
+	        $dtlsWeig = $dtls['Obj_Weightage'];
+	        $dtlsPi = $dtls['Obj_PI'];
+	        $dtlsBase = $dtls['Obj_Base'];
+	        $result = $dtls['Myr_Result'];
+	        $resultDtlsDtls = $this->pmsFormMapper->getDtlsDtlsByDtlsId($dtlsId);
+	        if ($dtlsDesc == Null || $dtlsDesc == null) {
+	            $v = 1;
+	            $name = $dtlsId . "mdesc";
+	            $myFieds .= "Main Obj Description ";
+	        }//if
+	        if ($resultDtlsDtls) {
+	            $totalSubWeig = 0;
+	            $weigList = '';
+	            foreach ($resultDtlsDtls as $dtlsdtls) {
+	                $ddtlsId = $dtlsdtls['id'];
+	                $ddtlsDesc = $dtlsdtls['S_Obj_Desc'];
+	                $ddtlsWeig = $dtlsdtls['S_Obj_Weightage'];
+	                $ddtlsPi = $dtlsdtls['S_Obj_PI'];
+	                $ddtlsBase = $dtlsdtls['S_Obj_Base'];
+	                $dtlsresult = $dtlsdtls['Myr_Result'];
+	                $totalSubWeig+=$ddtlsWeig;
+	                if ($ddtlsWeig == null || $ddtlsWeig == Null) {
+	                    $v = 1;
+	                    $myFieds .= ", objective weightage ";
+	                }//if
+	                if ($ddtlsPi == null || $ddtlsPi == Null) {
+	                    $v = 1;
+	                    $myFieds .= ", performance indicator ";
+	                }//if
+	                if ($ddtlsBase == null || $ddtlsBase == Null) {
+	                    $v = 1;
+	                    $myFieds .= ", base ";
+	                }
+	                // if ($dtlsresult == null || $dtlsresult == Null) {
+	                //$v = 1;
+	                //$name = $ddtlsId . "result";
+	                //array_push($emptyField, $name);
+	                // $myFieds .= "result ,";
+	                //}
+	            }//foreach
+	        }//if The Main objective have Sub-Objective no need to fill base / PI/Desc
+	        elseif (!$resultDtlsDtls) {
+	            if ($dtlsPi == null || $dtlsPi == Null || $dtlsPi == ' ') {
+	                $v = 1;
+	                //$name = $dtlsId . "mperi";
+	                array_push($emptyField, $name);
+	                $myFieds .= ", performance indicator ";
+	            }//if
+	            //Zend_Debug::dump($dtlsBase);
+	            if ($dtlsBase == null || $dtlsBase == Null || $dtlsBase == ' ') {
+	                $v = 1;
+	                //$name = $dtlsId . "mbase";
+	                array_push($emptyField, $name);
+	                $myFieds .= ", base";
+	            }
+	            //if ($result == null || $result == Null || $result == ' ') {
+	            //$v = 1;
+	            //$name = $dtlsId . "mresult";
+	            //array_push($emptyField, $name);
+	            //$myFieds .= "result ,";
+	            //}
+	        }
+	    }
+	    if($wei != 100) {
+	        $v = 1;
+	    }
+	    if($v == 0) {
+	        $udt = array(
+	            'id'           => $pmsMstId,
+	            'Emp_Edit'     => 0,
+	            'M_Imm_Sup_App' => 0,
+	            'M_Hod_App' => 0,
+	        );
+	        $this->pmsFormMapper->update($udt);
+	        // Emp_Edit = 0
+	        // submit to supervisor
+	    }
+	    return array($v,$myFieds);
+	}
 	
 	public function approveIpc($data,$type = 1) { 
 	    $isSupervisor = 0;
@@ -1068,6 +1160,7 @@ class PmsFormService extends Approvals {
     	    if(($row['Hod_Approval'] == 0) && $isHod) {
     	        $udt['Hod_Approval'] = 1; 
     	        $udt['HOD']  = $approver; 
+    	        $udt['Emp_Edit'] = 1; 
     	    } else {
     	        return "Not Valid Approver"; 
     	    }
