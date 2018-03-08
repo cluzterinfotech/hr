@@ -351,9 +351,7 @@ class PmsformController extends AbstractActionController {
 		exit;
 	}
 	
-	public function reportAction() {
-		
-	}
+	public function reportAction() { }
 	
 	public function ipcreportAction() { 
 	    $id = (int) $this->params()->fromRoute('id',0);
@@ -455,7 +453,7 @@ class PmsformController extends AbstractActionController {
 	}
 	
 	private function getGrid() {
-		return new PmsReportGrid(); 
+		return new PmsReportGrid();  
 	}
 	
 	private function getAppGrid() {

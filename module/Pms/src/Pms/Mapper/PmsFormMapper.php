@@ -60,6 +60,66 @@ class PmsFormMapper extends AbstractDataMapper {
 	    return array(); 
 	}
 	
+	public function getMyrFormApprovalList() {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+        	   ->columns(array ('*'))
+        	   //->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
+        	   // array('Year'))
+        	   //->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+        	   //array('employeeName'))
+        	   ->where->NEST
+        	   ->equalTo('e.M_Imm_Sup_App', 0)
+        	   ->or
+        	   ->equalTo('e.M_Hod_App', 0)
+        	   ->UNNEST
+        	   ->where->NEST
+        	   ->AND
+        	   ->equalTo('e.Emp_Edit', 0)
+        	   ->UNNEST
+	    ; 
+	    //return $select;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString; 
+	    //exit; 
+	    $results = $this->adapter->query($sqlString)->execute();
+	    if($results) {
+	        return $results;
+	    }
+	    return array();
+	} 
+	
+	public function getYendFormApprovalList() {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+        	    ->columns(array ('*'))
+        	    //->join(array('p' => $this->pmsFyear),'p.id = e.Pms_Fyear_Id',
+        	    // array('Year'))
+        	    //->join(array('m' => 'EmpEmployeeInfoMain'),'m.employeeNumber = e.Pmnt_Emp_Mst_Id',
+        	    //array('employeeName'))
+        	    ->where->NEST
+        	    ->equalTo('e.Y_Imm_Sup_App', 0)
+        	    ->or
+        	    ->equalTo('e.Y_Hod_App', 0)
+        	    ->UNNEST
+        	    ->where->NEST
+        	    ->AND
+        	    ->equalTo('e.Emp_Edit', 0)
+        	    ->UNNEST
+	    ; 
+	    //return $select;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    $results = $this->adapter->query($sqlString)->execute();
+	    if($results) {
+	        return $results;
+	    }
+	    return array();
+	} 
+	
 	public function getIpcAppFormSelect($ids) {
 	    $predicate = new Predicate(); 
     	$sql = $this->getSql();

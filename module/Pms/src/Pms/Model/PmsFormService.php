@@ -439,6 +439,12 @@ class PmsFormService extends Approvals {
 			'Immediate_Supervisor' => $immSuperior,
 			'Emp_Edit' => 1,
 			'HOD' => $hod,
+		    'Sup_Approval'  => 0,
+		    'Hod_Approval'  => 0,
+		    'M_Imm_Sup_App' => 0,
+		    'M_Hod_App'     => 0,
+		    'Y_Imm_Sup_App' => 0,
+		    'Y_Hod_App'     => 0,
 		); 
 		return $this->pmsFormMapper->insertPmsMst($data);
 	}
@@ -547,7 +553,7 @@ class PmsFormService extends Approvals {
             <tr >
             <td align='center' class='noBorder'>".$c."</td>
             <td align='left' >
-            <p><b><a href='#' id = '".$row['id']."' class = 'editMyr'>Edit</a></b></p>
+            <p class = 'noDisp'><b><a href='#' id = '".$row['id']."' class = 'editMyr'>Edit</a></b></p>
             <p><b>Main</b></p>
             </td>
             <td>".$row['Obj_Desc']."</td>
@@ -626,7 +632,7 @@ class PmsFormService extends Approvals {
             <tr ".$formType.">
 	            <td align='center' class='noBorder'>".$i."</td>
 	            <td align='left' >
-	            <p><b><a href='#' id = '".$row['id']."' class = 'editMyrDtls'>Edit</a></b></p>
+	            <p class = 'noDisp'><b><a href='#' id = '".$row['id']."' class = 'editMyrDtls'>Edit</a></b></p>
 	            <p><b>Sub</b></p>
 	            
 	            </td>
@@ -1078,12 +1084,12 @@ class PmsFormService extends Approvals {
 	                    $v = 1;
 	                    $myFieds .= ", base ";
 	                }
-	                // if ($dtlsresult == null || $dtlsresult == Null) {
-	                //$v = 1;
-	                //$name = $ddtlsId . "result";
-	                //array_push($emptyField, $name);
-	                // $myFieds .= "result ,";
-	                //}
+	                if ($dtlsresult == null || $dtlsresult == Null) {
+	                $v = 1;
+	                $name = $ddtlsId . "result";
+	                array_push($emptyField, $name);
+	                $myFieds .= "result ,";
+	                }
 	            }//foreach
 	        }//if The Main objective have Sub-Objective no need to fill base / PI/Desc
 	        elseif (!$resultDtlsDtls) {
@@ -1100,12 +1106,12 @@ class PmsFormService extends Approvals {
 	                array_push($emptyField, $name);
 	                $myFieds .= ", base";
 	            }
-	            //if ($result == null || $result == Null || $result == ' ') {
-	            //$v = 1;
-	            //$name = $dtlsId . "mresult";
-	            //array_push($emptyField, $name);
-	            //$myFieds .= "result ,";
-	            //}
+	            if ($result == null || $result == Null || $result == ' ') {
+	                $v = 1;
+	                $name = $dtlsId . "mresult";
+	                array_push($emptyField, $name);
+	                $myFieds .= "result ,";
+	            }
 	        }
 	    }
 	    if($wei != 100) {
@@ -1113,18 +1119,18 @@ class PmsFormService extends Approvals {
 	    }
 	    if($v == 0) {
 	        $udt = array(
-	            'id'           => $pmsMstId,
-	            'Emp_Edit'     => 0,
+	            'id'            => $pmsMstId,
+	            'Emp_Edit'      => 0,
 	            'M_Imm_Sup_App' => 0,
-	            'M_Hod_App' => 0,
-	        );
+	            'M_Hod_App'     => 0,
+	        ); 
 	        $this->pmsFormMapper->update($udt);
 	        // Emp_Edit = 0
 	        // submit to supervisor
 	    }
 	    return array($v,$myFieds);
 	}
-	
+	 
 	public function approveIpc($data,$type = 1) { 
 	    $isSupervisor = 0;
 	    $isHod = 0; 
@@ -1200,6 +1206,35 @@ class PmsFormService extends Approvals {
 	        }
 	    }
 	    return $this->pmsFormMapper->getIpcAppFormSelect($totId); 
+	} 
+	
+	public function getMyrFormApprovalList($employeeId) {
+	    $ipcList = $this->pmsFormMapper->getMyrFormApprovalList();
+	    if($ipcList) {
+	        $totId = array();
+	        //$i = 1;
+	        foreach($ipcList as $lst) {
+	            $applicant = $lst['Pmnt_Emp_Mst_Id'];
+	            $isImmSupApproved = $lst['M_Imm_Sup_App'];
+	            $isHodApproved = $lst['M_Hod_App'];
+	            $immSup = $this->positionService->getImmediateSupervisorByEmployee($applicant);
+	            $hod = $this->positionService->getHodByEmployee($applicant);
+	            if(($immSup == $employeeId) && ($isImmSupApproved == 0)) {
+	                $totId[] = $lst['id'];
+	            } elseif(($hod == $employeeId) && ($isHodApproved == 0 && $isImmSupApproved == 1)) {
+	                $totId[] = $lst['id'];
+	            }
+	            //$isApprover = 1;//$this->checkIsApprover($applicant,$approver,$approvedLevel);
+	            //if($isApprover) {
+	            //$totId[] = $lst['id'];
+	            //}
+	            //$i++;
+	        }
+	        if(!$totId) {
+	            $totId[] = 0;
+	        }
+	    }
+	    return $this->pmsFormMapper->getIpcAppFormSelect($totId);
 	} 
 	
 }   

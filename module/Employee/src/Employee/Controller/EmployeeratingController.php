@@ -91,11 +91,7 @@ class EmployeeratingController extends AbstractActionController {
 		// @todo
 		$id = (int) $this->params()->fromRoute('id',0);
 		$deductionService = $this->getService();
-		$deductionService->removeEmployeePhoneDeduction($id);
-		//$employeeService = $this->getEmployeeService();
-		//$employeeService->removeEmployeeConfirmation($id);
-		//echo json_encode($id);
-		
+		$deductionService->removeEmployeePhoneDeduction($id); 
 		exit; 
 	} 
 	

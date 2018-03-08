@@ -1,14 +1,17 @@
-<?php
+<?php 
 
 namespace Pms\Controller; 
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel; 
 use Zend\Http\PhpEnvironment\Response;
 use Pms\Form\ManageFormValidator;
 use Pms\Form\MyrForm; 
 use Pms\Grid\ManageGrid;
 //use Pms\Grid\ManageGrid;
 use Zend\View\Model\JsonModel;
+use Pms\Grid\MyrReportGrid; 
+use Pms\Grid\MyrAppGrid;
      
 class MyrformController extends AbstractActionController {
     
@@ -24,6 +27,32 @@ class MyrformController extends AbstractActionController {
 		     ->setSource($this->getService()->select())
 		     ->setParamAdapter($this->getRequest()->getPost());
 		return $this->htmlResponse($grid->render()); 
+	}
+	
+	public function reportAction() { }
+	
+	public function reportajaxlistAction() {
+	    $grid = $this->getGrid();
+	    $employeeId = $this->getUser();
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getService()->selectReport($employeeId))
+	    ->setParamAdapter($this->getRequest()->getPost());
+	    return $this->htmlResponse($grid->render());
+	} 
+	
+	public function myrapproveAction() { }
+	
+	public function ajaxapplistAction() {
+	    $grid = $this->getAppGrid();
+	    $employeeId = $this->getUser();
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getService()->getMyrFormApprovalList($employeeId))
+	         ->setParamAdapter($this->getRequest()->getPost());
+	    return $this->htmlResponse($grid->render()); 
+	}  
+	
+	private function getAppGrid() {
+	    return new MyrAppGrid(); 
 	}
 	
 	public function myrAction() { 
@@ -72,6 +101,32 @@ class MyrformController extends AbstractActionController {
 		); 
 	}
 	
+	public function myrreportAction() {
+	    $id = (int) $this->params()->fromRoute('id',0);
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    $output = $this->getService()->getMyrPmsById($id);
+	    //\Zend\Debug\Debug::dump($output) ;
+	    $viewmodel->setVariables(array(
+	        'report'     => $output,
+	    ));
+	    return $viewmodel;
+	} 
+	
+	public function submittosupAction() {
+	    $checkIsIpcValid = $this->getService()->isMyrValid($this->getUser());
+	    if(!$checkIsIpcValid[0]) {
+	        $a = array('s' => 11,'m' => $checkIsIpcValid[1]);
+	    } else {
+	        //$m = "Weightage is not 100";
+	        $m .= "Form is incomplete, please check weightage and other values"
+	            ;
+	            $a = array('s' => 12,'m' => $checkIsIpcValid[1]);
+	    }
+	    return $this->jsonResponse($a);
+	} 
 	
     
 	/*public function addAction() {
@@ -191,18 +246,7 @@ class MyrformController extends AbstractActionController {
 		exit;  
 	}*/
 	
-	public function submittosupAction() {
-	    $checkIsIpcValid = $this->getService()->isIpcValid($this->getUser());
-	    if(!$checkIsIpcValid[0]) {
-	        $a = array('s' => 11,'m' => $checkIsIpcValid[1]);
-	    } else {
-	        //$m = "Weightage is not 100";
-	        $m .= "Form is incomplete, please check weightage and other values"
-	            ;
-	        $a = array('s' => 12,'m' => $checkIsIpcValid[1]);
-	    }
-	    return $this->jsonResponse($a);
-	} 
+	 
 	
 	public function updateobjectiveAction() {
 		$formValues = $this->params()->fromPost('formVal',0);
@@ -304,8 +348,7 @@ class MyrformController extends AbstractActionController {
 	public function getdtlsdtlsbyidAction() {
 		$id = (int) $this->params()->fromPost('dtlsid',0);
 		//$id = '31310'; // @todo get
-		$res = $this->getService()->getDtlsDtlsById($id);
-		
+		$res = $this->getService()->getDtlsDtlsById($id); 
 		$data = array(
 				'id'                        => $res['id'],
 				'Obj_Id'                    => $res['S_Obj_Id'],
@@ -325,25 +368,20 @@ class MyrformController extends AbstractActionController {
 				'Myr_Result'                => $res['Myr_Result'],
 				'Myr_Gap'                   => $res['Myr_Gap'],
 				'Myr_Action_Plan'           => $res['Myr_Action_Plan'],
-				'Myr_Superior_Comments'     => $res['Myr_Superior_Comments'],
-	
+				'Myr_Superior_Comments'     => $res['Myr_Superior_Comments'], 
 		);
 		echo json_encode($data); 
 		exit; 
 	}
 	
-	public function reportAction() {
-		
-	}
 	
-	public function myrapproveAction() {
 	
-	} 
+	 
 	
-	public function statusAction() {
-		$status = "not opened";// $this->getService()->getPmsStatus($this->getUser());
-	    return array('status' => $status); 
-	}
+	//public function statusAction() {
+		//$status = "not opened";// $this->getService()->getPmsStatus($this->getUser());
+	    //return array('status' => $status); 
+	//}
     
 	public function htmlResponse($html) {
 		$response = $this->getResponse();
@@ -357,7 +395,7 @@ class MyrformController extends AbstractActionController {
 	}
 	
 	private function getGrid() {
-		return new ManageGrid();
+	    return new MyrReportGrid(); 
 	}
     
 	private function getDbAdapter() {
@@ -391,7 +429,6 @@ class MyrformController extends AbstractActionController {
 	private function getEmpTypeList() {
 		return $this->getLookupService()->getEmpTypeList();
 	} 
-	
 	
 	private function getLookupService() {
 		return $this->getServiceLocator()->get('lookupService');
