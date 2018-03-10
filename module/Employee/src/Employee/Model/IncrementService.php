@@ -156,6 +156,19 @@ class IncrementService extends Payment {
 	    return $this->incrementMapper->removePreviousCalculation(); 
 	}
 	
+	private function getTempPercentage($sg) {
+	    if($sg >= '4' && $sg <= '11') {
+	        return 25; 
+	    } elseif($sg >= '12' && $sg <= '13') {
+	        return 20;
+	    } elseif($sg >= '14' && $sg <= '16') {
+	        return 15; 
+	    } else {
+	        return 0; 
+	    }
+	    return 0;  
+	}
+	
 	public function calculateIncrement(Company $company,DateRange $dateRange) { 
 	    try {
 	        $this->transaction->beginTransaction(); 
@@ -163,16 +176,29 @@ class IncrementService extends Payment {
     	    $companyId = $company->getId(); 
     	    $result = $this->incrementMapper->getIncrementElegibleList($companyId); 
     	    foreach ($result as $r) {   
-    	        $employeeId = $r['employeeNumber']; 
-    	        $sg = $r['empSalaryGrade']; 
-    	        $midValue = $this->incrementMapper->getMidValue($sg);  
-    	        $percentage = 0;  
-    	        $empRating = $this->incrementMapper->getEmployeeRating($year,$employeeId);
-    	        $oldInitial = 0;  
-    	        $incrementedValue = 0;   
-    	        $specialCompensationDiff = 0;  
-    	        $meritLumpsum = 0; 
+    	        $specialCompensationDiff = 0; 
+    	        $meritLumpsum = 0;
     	        $specialCompensation = 0;  
+    	        $employeeId = $r['employeeNumber']; 
+    	        $employee = $this->getEmployeeById($employeeId); 
+    	        $sg = $r['empSalaryGrade']; 
+    	        $midValue = $this->incrementMapper->getMidValue($sg); 
+    	        $maxValue = $this->incrementMapper->getMaxQuartileOne($sg); 
+    	        $empRating = $this->incrementMapper->getEmployeeRating($year,$employeeId); 
+    	        if(($empRating == '4') || ($empRating == '0')) {
+    	            $percentage = 0; 
+    	        } else {
+    	            $percentage = $this->getTempPercentage($sg); 
+    	        } 
+    	        $service = $this->service->get('Initial'); 
+    	        $amount = $service->getAmount($employee,$dateRange);
+    	        $oldInitial = $this->twoDigit($this->getBasic($employee, $company, $dateRange));  
+    	        $incrementedValue = $this->twoDigit(($oldInitial * ($percentage/100)) + $oldInitial);  
+    	        if($incrementedValue > $maxValue) {
+    	            $specialCompensationDiff = $incrementedValue - $maxValue; 
+    	            $incrementedValue = $maxValue; 
+    	        }
+    	        
         	    $values = array( 
         	        'Year'                => $year, 
         	        'employeeNumber'      => $employeeId,
@@ -183,9 +209,9 @@ class IncrementService extends Payment {
             	    'quartileRange'       => 0,
         	        'oldInitial'          => $oldInitial,
         	        'incrementedValue'    => $incrementedValue,
-        	        'splCompensationDiff' => $specialCompensationDiff, 
+        	        'splCompensationDiff' => $specialCompensation, 
         	        'meritLumpsum'        => $meritLumpsum,
-        	        'splCompensation'     => $specialCompensation,
+        	        'splCompensation'     => $specialCompensationDiff,
             	    'applied'             => 0,
         	        'companyId'           => $companyId,
         	        'salaryGradeId'       => $sg
