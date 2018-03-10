@@ -63,9 +63,9 @@ class PmsFormService extends Approvals {
 	    return $this->pmsFormMapper->isIpcSubmitted($employeeId,$id);
 	}
 	
-	/*public function isMyrSubmitted($employeeId,$id) {
-	    return $this->pmsFormMapper->isMyrSubmitted($employeeId,$id);
-	}*/
+	public function isMyrSubmitted($employeeId,$id) {
+	    return $this->pmsFormMapper->isMyrSubmitted($employeeId,$id); 
+	}
 	
 	public function isMyrOpened($pmsId) {
 		return $this->pmsFormMapper->isMyrOpened($pmsId);
@@ -853,8 +853,8 @@ class PmsFormService extends Approvals {
 	            if ($openIpc == 1) { 
 	                $status = "IPC Open";
 	                if ($rEmp) {
-	                    //echo"------->".$rEmp['Emp_Edit'];
-	                    if ($rEmp['Emp_Edit'] == 1) {
+	                    //echo"------->".$rEmp['Emp_Edit']; 
+	                    if (($rEmp['Emp_Edit'] == 1) && ($rEmp['Sup_Approval'] == 0)) {
 	                        $status = "Your IPC to be Amend and Submit to your Immediate Supervisor";
 	                    } elseif ($rEmp['Emp_Edit'] == 0) {
 	                        if (($rEmp['Sup_Approval'] == 0)) {
@@ -873,9 +873,9 @@ class PmsFormService extends Approvals {
 	            } elseif ($openIpc == 0) {
 	                $status = "IPC Closed";
 	                if ($r['MYR_Open_Close'] == 1) {
-	                    $status = "MYR Open";
+	                    $status = "MYR Open"; 
 	                    if ($rEmp) {
-	                        if ($rEmp['Emp_Edit'] == 1) {
+	                        if (($rEmp['Emp_Edit'] == 1) && ($rEmp['M_Imm_Sup_App'] == 0)) {
 	                            $status = "Your MYR to be Amend and Submit to your Immediate Supervisor";
 	                        } elseif ($rEmp['Emp_Edit'] == 0) { 
 	                            if (($rEmp['M_Imm_Sup_App'] == 0)) {
@@ -894,13 +894,13 @@ class PmsFormService extends Approvals {
 	                } elseif ($r['MYR_Open_Close'] == 0) {
 	                    $status = "MYR is Closed";
 	                    if ($r['YED_Open_Close'] == 1) {
-	                        $status = "PPA Open";
+	                        $status = "PPA Open"; 
 	                        if ($rEmp) {
-	                            if ($rEmp['Emp_Edit'] == 1) {   
+	                            if (($rEmp['Emp_Edit'] == 1) && ($rEmp['Sup_Approval'] == 0)) {   
 	                                $status = "Your PPA to be Amend and Submit to your Immediate Supervisor";
 	                            } elseif ($rEmp['Emp_Edit'] == 0) {
 	                                if (($rEmp['Sup_Approval'] == 0)) {
-	                                    //$supName = "x";//$empModel->getEmpName($db, $rEmp['Immediate_Supervisor']);   
+	                                    //$supN ame = "x";//$empModel->getEmpName($db, $rEmp['Immediate_Supervisor']);   
 	                                    $status = "Your PPA is Waiting For Supervisor Approval ";
 	                                } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 0)) {
 	                                    //$hodName = "x";//$empModel->getEmpName($db, $rEmp['Y_Hod_Id']);
@@ -1164,6 +1164,7 @@ class PmsFormService extends Approvals {
 	            return "Not valid approver"; 
 	        }
     	    if(($row['Hod_Approval'] == 0) && $isHod) {
+    	        //$udt['Sup_Approval'] = 1; 
     	        $udt['Hod_Approval'] = 1; 
     	        $udt['HOD']  = $approver; 
     	        $udt['Emp_Edit'] = 1; 
@@ -1177,6 +1178,57 @@ class PmsFormService extends Approvals {
 	    } 
 	    $this->pmsFormMapper->update($udt);         
 	    return "approved successfully";   
+	} 
+	
+	public function approveMyr($data,$type = 1) { 
+	    $isSupervisor = 0; 
+	    $isHod = 0; 
+	    $id = $data->getId(); 
+	    $approvalType = $data->getApprovalType(); 
+	    $approver = $this->userInfoService->getEmployeeId();
+	    $approval = $approvalType;
+	    $udt = array();
+	    $udt['id'] = $id;
+	    $row = $this->pmsFormMapper->getPmsById($id);
+	    $employeeId = $row['Pmnt_Emp_Mst_Id'];
+	    $immSup = $this->positionService->getImmediateSupervisorByEmployee($employeeId);
+	    $hod = $this->positionService->getHodByEmployee($employeeId);
+	    if($immSup == $approver) {
+	        $isSupervisor = 1;
+	    }
+	    if($hod == $approver) {
+	        $isHod = 1;
+	    }
+	    if($row['M_Imm_Sup_App'] == 1 && $row['M_Hod_App'] == 1) {
+	        return "Form Already Approved!";
+	    }
+	    if(!$row) {
+	        return "This form is not valid for approval!";
+	    }
+	    
+	    
+	    if($approvalType == 1) {
+	        if(($row['M_Imm_Sup_App'] == 0) && $isSupervisor) {
+	            $udt['M_Imm_Sup_App'] = 1;
+	            $udt['Immediate_Supervisor']  = $approver;
+	        } else {
+	            return "Not valid approver";
+	        }
+	        if(($row['M_Hod_App'] == 0) && $isHod) {
+	            //$udt['M_Imm_Sup_App'] = 1;
+	            $udt['M_Hod_App'] = 1;
+	            $udt['HOD']  = $approver;
+	            $udt['Emp_Edit'] = 1;
+	        } else {
+	            return "Not Valid Approver";
+	        }
+	    } else {
+	        $udt['Emp_Edit'] = 1;
+	        $udt['M_Imm_Sup_App'] = 0;
+	        $udt['M_Hod_App'] = 0;
+	    }
+	    $this->pmsFormMapper->update($udt); 
+	    return "approved successfully"; 
 	} 
 	
 	public function getIpcFormApprovalList($employeeId) { 

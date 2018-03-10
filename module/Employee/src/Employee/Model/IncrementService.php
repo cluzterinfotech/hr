@@ -140,8 +140,8 @@ class IncrementService extends Payment {
 	}
 	
 	public function isHaveIncrement(Company $company,DateRange $dateRange) {
-		return 1; 
-		return $this->incrementMapper->isHaveAnnivIncrement($company,$dateRange);
+		// return 1; 
+	    return $this->incrementMapper->isHaveIncrement($company,$dateRange); 
 	}
     
 	public function isHaveAnnivIncrement(Company $company,DateRange $dateRange) {
@@ -152,7 +152,49 @@ class IncrementService extends Payment {
 	    
 	} 
 	
-	public function calculateIncrement(Company $company) {
+	public function removePreviousCalculation() {
+	    return $this->incrementMapper->removePreviousCalculation(); 
+	}
+	
+	public function calculateIncrement(Company $company,DateRange $dateRange) { 
+	    try {
+	        $this->transaction->beginTransaction(); 
+    	    $year = date('Y'); 
+    	    $companyId = $company->getId(); 
+    	    $result = $this->incrementMapper->getIncrementElegibleList($companyId); 
+    	    foreach ($result as $r) {   
+    	        $employeeId = $r['employeeNumber'];  
+    	        $percentage = 0;  
+    	        $empRating = 0;  
+    	        $oldInitial = 0;  
+    	        $incrementedValue = 0;   
+    	        $specialCompensationDiff = 0;  
+    	        $meritLumpsum = 0; 
+    	        $specialCompensation = 0;  
+        	    $values = array( 
+        	        'Year'                => $year, 
+        	        'employeeNumber'      => $employeeId,
+            	    'compRatio'           => 0,
+        	        'incPercentage'       => $percentage,
+        	        'empRating'           => $empRating,
+            	    'midValue'            => 0,
+            	    'quartileRange'       => 0,
+        	        'oldInitial'          => $oldInitial,
+        	        'incrementedValue'    => $incrementedValue,
+        	        'splCompensationDiff' => $specialCompensationDiff, 
+        	        'meritLumpsum'        => $meritLumpsum,
+        	        'splCompensation'     => $specialCompensation,
+            	    'applied'             => 0,
+        	        'companyId'           => $companyId
+        	    ); 
+        	    $this->incrementMapper->insert($values);  
+    	    }
+    	    $this->transaction->commit(); 
+	    } catch (\Exception $e) {
+	        $this->transaction->rollBack(); 
+	        throw $e;  
+	    }
+	    
 		// select all employee
 	    // $empInitial = $model->getEmpInitialSalary($db,$empId);
 	    // $compRatio = $model->getQuartileValue($db,$empId);

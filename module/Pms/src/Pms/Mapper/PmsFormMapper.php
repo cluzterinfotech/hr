@@ -272,11 +272,11 @@ class PmsFormMapper extends AbstractDataMapper {
 		return array();
 	}
 	
-	/*public function isMyrSubmitted($employeeId,$pmsId) {
+	public function isMyrSubmitted($employeeId,$pmsId) {
 	    $sql = $this->getSql();
 	    $select = $sql->select();
 	    $select->from(array('e' => $this->entityTable))
-	           ->columns(array ('Emp_Edit'))
+	           ->columns(array ('Emp_Edit','M_Imm_Sup_App'))
 	           ->where(array('id' => $pmsId ))
 	           ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
 	    ;
@@ -284,17 +284,17 @@ class PmsFormMapper extends AbstractDataMapper {
 	    //echo $sqlString;
 	    //exit;
 	    $results = $this->adapter->query($sqlString)->execute()->current();
-	    if($results['Emp_Edit'] == 0) {
-	        return true;
+	    if(($results['Emp_Edit'] == 1) && ($results['M_Imm_Sup_App'] == 0)) {
+	        return false;
 	    }
-	    return false;
-	}*/
+	    return true; 
+	}
 	
 	public function isIpcSubmitted($employeeId,$pmsId) {
 	    $sql = $this->getSql();
 	    $select = $sql->select();
 	    $select->from(array('e' => $this->entityTable))
-	           ->columns(array ('Emp_Edit'))
+	           ->columns(array ('Emp_Edit','Sup_Approval'))
 	           ->where(array('id' => $pmsId ))
 	           ->where(array('Pmnt_Emp_Mst_Id' => $employeeId ))
 	    ; 
@@ -302,10 +302,10 @@ class PmsFormMapper extends AbstractDataMapper {
 	    //echo $sqlString;
 	    //exit;
 	    $results = $this->adapter->query($sqlString)->execute()->current();
-	    if($results['Emp_Edit'] == 0) {
-	        return true;
+	    if(($results['Emp_Edit'] == 1) && ($results['Sup_Approval'] == 0)) {
+	        return false;
 	    }
-	    return false;  
+	    return true;   
 	}
 	
 	public function isIpcOpened($pmsId) {

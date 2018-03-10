@@ -82,7 +82,6 @@ class IncrementController extends AbstractActionController {
 		} elseif ($prg === false) { 
 			return array ( 
 				'form'           => $form, 
-				// 'promotionList'  => $promotionList  
 			);  
 		}  
 		//$dateRange = $this->getServiceLocator()->get('dateRange'); 
@@ -161,7 +160,7 @@ class IncrementController extends AbstractActionController {
 		); 
 	} 
 	
-	public function calculateAction() {
+	public function calculateAction() { 
 		$form = $this->getSubmitForm();
 		$form->get('submit')->setValue('Calculate Increment');
 		$prg = $this->prg('/increment/calculate', true);
@@ -179,7 +178,7 @@ class IncrementController extends AbstractActionController {
 		$formValidator = $this->getFormValidator();
 		$form->setInputFilter($formValidator->getInputFilter());
 		$form->setData($prg); 
-		if ($form->isValid()) {
+		if ($form->isValid()) { 
 			// @todo
 			$isEmployeeAvailable = $service->isHaveIncrement($company,$dateRange);
 			//\Zend\Debug\Debug::dump($isEmployeeAvailable);
@@ -193,8 +192,7 @@ class IncrementController extends AbstractActionController {
 			} else {
 				// @todo
 				$data = $form->getData();
-				//$colaPercentage = $data->getIncColaPercentage();
-				$effectiveDate = $data->getApplyeEfectiveDate();
+				$service->removePreviousCalculation(); 
 				$service->calculateIncrement($company,$dateRange);
 				$this->flashMessenger()->setNamespace('success')
 				     ->addMessage('Increment calculated successfully');
