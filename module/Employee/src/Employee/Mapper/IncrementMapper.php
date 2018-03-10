@@ -87,13 +87,15 @@ class IncrementMapper extends AbstractDataMapper {
     	       ->columns(array('*'))
     	       ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeNumber',
     	           array('employeeName')) 
+    	       ->join(array('s' => 'lkpSalaryGrade'),'e.salaryGradeId = s.id',
+    	              array('salaryGrade'),'left') 
     	       ->where(array('e.companyId' => $companyId))
     	       ->where(array('Year' => $year))
-	     ; 
-	     $sqlString = $sql->getSqlStringForSqlObject($select);
+	     ;  
+	     $sqlString = $sql->getSqlStringForSqlObject($select); 
 	        // echo $sqlString;
 	        // exit;
-	     return $this->adapter->query($sqlString)->execute();  
+	     return $this->adapter->query($sqlString)->execute();   
 	}  
 	
 	public function getIncrementElegibleList($companyId) {
@@ -105,7 +107,7 @@ class IncrementMapper extends AbstractDataMapper {
 	        return $adapter->driver->formatParameterName($name);
 	    };
 	    $statement = $adapter->query("
-	        select employeeNumber from ".$qi('EmpEmployeeInfoMain')." m 
+	        select employeeNumber,empSalaryGrade from ".$qi('EmpEmployeeInfoMain')." m 
             where isActive = 1 and companyId = '".$companyId."'	        
 		"); 
 	    $results = $statement->execute(); 
@@ -252,8 +254,7 @@ class IncrementMapper extends AbstractDataMapper {
 		return 0; 
 	}
 	
-	public function selectEmployeeRating(Company $company) {
-		 
+	public function selectEmployeeRating(Company $company) { 
 		$sql = $this->getSql();
 		$select = $sql->select();
 		$select->from(array('e' => $this->employeeRatingBuff))
@@ -263,6 +264,25 @@ class IncrementMapper extends AbstractDataMapper {
 				//->where(array('companyId' => $company->getId()))
 		;
 		return $select; 
+	}
+	
+	public function getEmployeeRating($year,$employeeId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->employeeRatingBuff))
+        	    ->columns(array('id','empRating'))
+        	    //->where(array('companyId' => $company->getId()))
+	            ->where(array('employeeId' => $employeeId))
+	    ; 
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    // echo $sqlString;
+	    // exit;
+	    $row = $this->adapter->query($sqlString)->execute()->current();
+	    
+	    if($row['empRating']) {
+	        return $row['empRating']; 
+	    }
+	    return 0; 
 	}
 	
 	public function selectSalaryStructure(Company $company) {

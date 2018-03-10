@@ -163,9 +163,11 @@ class IncrementService extends Payment {
     	    $companyId = $company->getId(); 
     	    $result = $this->incrementMapper->getIncrementElegibleList($companyId); 
     	    foreach ($result as $r) {   
-    	        $employeeId = $r['employeeNumber'];  
+    	        $employeeId = $r['employeeNumber']; 
+    	        $sg = $r['empSalaryGrade']; 
+    	        $midValue = $this->incrementMapper->getMidValue($sg);  
     	        $percentage = 0;  
-    	        $empRating = 0;  
+    	        $empRating = $this->incrementMapper->getEmployeeRating($year,$employeeId);
     	        $oldInitial = 0;  
     	        $incrementedValue = 0;   
     	        $specialCompensationDiff = 0;  
@@ -177,7 +179,7 @@ class IncrementService extends Payment {
             	    'compRatio'           => 0,
         	        'incPercentage'       => $percentage,
         	        'empRating'           => $empRating,
-            	    'midValue'            => 0,
+        	        'midValue'            => $midValue, 
             	    'quartileRange'       => 0,
         	        'oldInitial'          => $oldInitial,
         	        'incrementedValue'    => $incrementedValue,
@@ -185,7 +187,8 @@ class IncrementService extends Payment {
         	        'meritLumpsum'        => $meritLumpsum,
         	        'splCompensation'     => $specialCompensation,
             	    'applied'             => 0,
-        	        'companyId'           => $companyId
+        	        'companyId'           => $companyId,
+        	        'salaryGradeId'       => $sg
         	    ); 
         	    $this->incrementMapper->insert($values);  
     	    }
@@ -303,38 +306,45 @@ class IncrementService extends Payment {
         	        </thead>
 	        <tbody class="scrollingContent">'; 
 	        $c = 1; 
-	        
+	        $gTot = 0; 
+	        $gTotInc = 0; 
     	    foreach($results as $r) {
+    	        $oldInitial = 0; 
+    	        $newInitial = 0;  
+    	        $oldInitial = $r['oldInitial']; 
+    	        $newInitial = $r['incrementedValue']; 
+    	        $gTot += $oldInitial; 
+    	        $gTotInc += $newInitial; 
     	        $output .="<tr >
                 	        <td><p align='center'>".$c++."</td>
                 	        <td><p align='left'>".$r['employeeName']."</td>
-                	        <td><p align='left'>".$r['']."</td>
+                	        <td><p align='left'>".$r['salaryGrade']."</td>
                 	        <td><p align='center'>".$r['compRatio']."</td>
                 	        <td><p align='center'>".$r['incPercentage']."</td>
                 	        <td><p align='right'>".$r['empRating']."</td>
                 	        <td><p align='right'>".$r['midValue']."</td>
                 	        <td><p align='right'>".$r['quartileRange']."</td>
-                	        <td><p align='right'>".$r['oldInitial']."</td>
-                	        <td><p align='right'>".$r['incrementedValue']."</td>
+                	        <td><p align='right'>".$oldInitial."</td>
+                	        <td><p align='right'>".$newInitial."</td>
                 	        <td><p align='right'>".$r['splCompensation']."</td>
                 	      </tr>"; 
     	    } 
-            $output .= '</tbody><tfoot>
+            $output .= "</tbody><tfoot>
                 	    <tr>
-                            <td><p align="center">&nbsp;</td>
-                		    <td><p align="left"><b>Total</b></td>
-                		    <td><p align="center">&nbsp;</td>
-                		    <td><p align="center">&nbsp;</td>
-                		    <td><p align="center">&nbsp;</td>
-                		    <td><p align="center">&nbsp;</td>
-                		    <td><p align="center">&nbsp;</td>
-                		    <td><p align="center">&nbsp;</td>
-                		    <td><p align="right">712880.02</td>
-                		    <td><p align="right">859184</td>
-                		    <td><p align="center">&nbsp;</td>		    
+                            <td><p align='center'>&nbsp;</td>
+                		    <td><p align='left'><b>Total</b></td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='right'><b>".$gTot."</b></td>
+                		    <td><p align='right'><b>".$gTotInc."</b></td>
+                		    <td><p align='center'>&nbsp;</td>		    
                 	    </tr>	
                 	</tfoot>		
-                	</table>'; 
+                	</table>";  
             return $output; 
 	}
 	
