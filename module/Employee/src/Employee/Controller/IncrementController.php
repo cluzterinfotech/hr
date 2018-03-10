@@ -3,6 +3,7 @@
 namespace Employee\Controller; 
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 use Zend\Http\PhpEnvironment\Response; 
 use Employee\Form\AnnivIncrementForm;
 use Employee\Form\PromotionFormValidator;
@@ -12,6 +13,7 @@ use Application\Model\EmployeeAnniversaryIncrementGrid;
 use Employee\Form\ApplyIncrementFormValidator;
 use Employee\Form\AnnivIncrementFormValidator;
 use Application\Form\ApplyIncrementForm;
+use Application\Form\Year;
 
 class IncrementController extends AbstractActionController { 
 	
@@ -205,6 +207,52 @@ class IncrementController extends AbstractActionController {
 				'form' => $form,
 				$prg
 		);
+	} 
+	
+	public function reportAction() { 
+	    $form = $this->getReportForm();
+	    $request = $this->getRequest();
+	    if ($request->isPost()) {
+	        $form->setData($request->getPost());
+	        if ($form->isValid()) {
+	            return $this->redirect()->toRoute('increment');
+	        }
+	    }
+	    return array(
+	        'form' => $form,
+	    ); 
+	} 
+	
+	public function viewincreportAction() {
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    if($request->isPost()) {
+	        $values = $request->getPost();
+	        $year = $values['year']; 
+	        $company = $this->getCompanyService();
+	        $companyId = $company->getId(); 
+	        $output = $this->getIncrementService()
+	                       ->incReport($year,$companyId);
+	        $vm = array(
+	            'report'     => $output,
+	        );
+	    }
+	    //$output
+	    //\Zend\Debug\Debug::dump($output);
+	    $viewmodel->setVariables($vm);
+	    return $viewmodel;
+	}
+	
+	public function getReportForm() {
+	    $form = new Year(); 
+	    $form->get('submit')->setValue('View Increment Report');
+	    return $form;
+	} 
+	
+	private function getCompanyService() {
+	    return $this->getServiceLocator()->get('company');
 	} 
 	
 	public function applyannivincAction() { 

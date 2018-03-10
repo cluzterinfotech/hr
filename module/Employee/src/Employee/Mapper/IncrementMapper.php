@@ -80,6 +80,22 @@ class IncrementMapper extends AbstractDataMapper {
 	    
 	}
 	
+	public function incReport($year,$companyId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+    	       ->columns(array('*'))
+    	       ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeNumber',
+    	           array('employeeName')) 
+    	       ->where(array('e.companyId' => $companyId))
+    	       ->where(array('Year' => $year))
+	     ; 
+	     $sqlString = $sql->getSqlStringForSqlObject($select);
+	        // echo $sqlString;
+	        // exit;
+	     return $this->adapter->query($sqlString)->execute();  
+	}  
+	
 	public function getIncrementElegibleList($companyId) {
 	    $adapter = $this->adapter;
 	    $qi = function($name) use ($adapter) {

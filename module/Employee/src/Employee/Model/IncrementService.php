@@ -280,5 +280,63 @@ class IncrementService extends Payment {
 		return $this->incrementMapper->updateAnnivInc($entity);
 	} 
 	
+	public function incReport($year,$companyId) { 
+	    $results = $this->incrementMapper->incReport($year,$companyId); 
+	    $output = '<table  border="1" class="sortable" font-size="6px" 
+                   align="center" id="table1" width="100%" cellpadding="5px" 
+                   bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0" 
+                   style="border-collapse: collapse"> 
+        	        <thead >
+            	        <tr>
+                	        <th bgcolor="#F0F0F0">#</th>
+                	        <th bgcolor="#F0F0F0">Employee Name</th>
+                	        <th bgcolor="#F0F0F0">Salary Grade</th>
+                	        <th bgcolor="#F0F0F0">Comp Ratio</th>
+                	        <th bgcolor="#F0F0F0">Percentage</th>
+                	        <th bgcolor="#F0F0F0">Rating</th>
+                	        <th bgcolor="#F0F0F0">Mid Value</th>
+                	        <th bgcolor="#F0F0F0">Range</th>
+                	        <th bgcolor="#F0F0F0">Old Initial</th>
+                	        <th bgcolor="#F0F0F0">New Initial</th>
+                	        <th bgcolor="#F0F0F0">Spl Compensation</th>
+            	        </tr>
+        	        </thead>
+	        <tbody class="scrollingContent">'; 
+	        $c = 1; 
+	        
+    	    foreach($results as $r) {
+    	        $output .="<tr >
+                	        <td><p align='center'>".$c++."</td>
+                	        <td><p align='left'>".$r['employeeName']."</td>
+                	        <td><p align='left'>".$r['']."</td>
+                	        <td><p align='center'>".$r['compRatio']."</td>
+                	        <td><p align='center'>".$r['incPercentage']."</td>
+                	        <td><p align='right'>".$r['empRating']."</td>
+                	        <td><p align='right'>".$r['midValue']."</td>
+                	        <td><p align='right'>".$r['quartileRange']."</td>
+                	        <td><p align='right'>".$r['oldInitial']."</td>
+                	        <td><p align='right'>".$r['incrementedValue']."</td>
+                	        <td><p align='right'>".$r['splCompensation']."</td>
+                	      </tr>"; 
+    	    } 
+            $output .= '</tbody><tfoot>
+                	    <tr>
+                            <td><p align="center">&nbsp;</td>
+                		    <td><p align="left"><b>Total</b></td>
+                		    <td><p align="center">&nbsp;</td>
+                		    <td><p align="center">&nbsp;</td>
+                		    <td><p align="center">&nbsp;</td>
+                		    <td><p align="center">&nbsp;</td>
+                		    <td><p align="center">&nbsp;</td>
+                		    <td><p align="center">&nbsp;</td>
+                		    <td><p align="right">712880.02</td>
+                		    <td><p align="right">859184</td>
+                		    <td><p align="center">&nbsp;</td>		    
+                	    </tr>	
+                	</tfoot>		
+                	</table>'; 
+            return $output; 
+	}
+	
 	
 }

@@ -15,8 +15,6 @@ class FunctionBankMonthYear extends Form
 		$this->setAttribute('method', 'post'); 
 		$this->setAttribute('target','_blank'); 
 		
-		
-		
 		$this->add(array(
 			'name' => 'month',
 			'type' => 'Zend\Form\Element\Select',
@@ -44,7 +42,7 @@ class FunctionBankMonthYear extends Form
 					'12' => 'December',
 				),
 			),
-		));
+		)); 
 
 		$this->add(array(
 				'name' => 'year',
