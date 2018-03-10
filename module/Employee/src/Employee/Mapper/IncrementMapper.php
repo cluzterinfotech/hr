@@ -108,7 +108,8 @@ class IncrementMapper extends AbstractDataMapper {
 	    };
 	    $statement = $adapter->query("
 	        select employeeNumber,empSalaryGrade from ".$qi('EmpEmployeeInfoMain')." m 
-            where isActive = 1 and companyId = '".$companyId."'	        
+            where isActive = 1 and companyId = '".$companyId."'	  and
+            (confirmationDate <= '2017-12-31' and empJoinDate <= '2017-01-01')      
 		"); 
 	    $results = $statement->execute(); 
 	    if($results) {
