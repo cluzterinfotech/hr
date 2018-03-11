@@ -128,7 +128,7 @@ abstract class AbstractDataMapper implements DataMapperInterface {
 		$res = $this->adapter->query($sqlString)->execute();
 		$id = $res->getGeneratedValue();
 		$this->identityMap->set((int)$id, $entity);
-		return $id;
+		return $id; 
 	}
 	/*
 	 * calculateValue takes result argument amount fromdate todate 

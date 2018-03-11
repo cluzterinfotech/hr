@@ -494,7 +494,7 @@ class EmployeeService extends Payment  {
 			$this->addAllowanceToEmployee($employeeId,$allowanceId,$company,$effectiveDate);
 			$this->removeEmployeeInitialBuffer($id);
 			
-		}
+		} 
 		if($c == 0) { 
 			return "Sorry! no records found"; 
 		} 

@@ -36,9 +36,9 @@ class IncrementService extends Payment {
     	*/ 
     	// @todo pass cola as parameter
     	// @todo clear previous sg allowances buffer 
-        //$sgAllowance->existingSgAllowanceList($company,'6',$colaPercentage);
+        $sgAllowance->existingSgAllowanceList($company,'6',$colaPercentage);
     	
-    	//$sgAllowance->applyAllowance($company,$effectiveDate); 
+    	$sgAllowance->applyAllowance($company,$effectiveDate);  
     	
     	$incrementList = $this->getIncrementList($company);
     	//\Zend\Debug\Debug::dump($incrementList);
@@ -191,8 +191,8 @@ class IncrementService extends Payment {
     	            $percentage = $this->getTempPercentage($sg); 
     	        } 
     	        $service = $this->service->get('Initial'); 
-    	        $amount = $service->getAmount($employee,$dateRange);
-    	        $oldInitial = $this->twoDigit($this->getBasic($employee, $company, $dateRange));  
+    	        $amount = $service->getLastAmount($employee,$dateRange);
+    	        $oldInitial = $this->twoDigit($amount);  
     	        $incrementedValue = $this->twoDigit(($oldInitial * ($percentage/100)) + $oldInitial);  
     	        if($incrementedValue > $maxValue) {
     	            $specialCompensationDiff = $incrementedValue - $maxValue; 

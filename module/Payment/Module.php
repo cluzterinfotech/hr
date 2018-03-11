@@ -75,6 +75,8 @@ use Payment\Mapper\PfRefundMapper;
 use Payment\Mapper\OverPaymentMapper;
 use Payment\Mapper\CarAmortizationMapper;
 use Payment\Model\OverPayment;
+use Payment\Mapper\BonusMapper;
+use Payment\Model\BonusService;
 
 class Module {
     
@@ -307,7 +309,12 @@ class Module {
 				 },'overPaymentMapper' => function ($sm) { 
 					 return new OverPaymentMapper($sm->get('sqlServerAdapter'),
                  			    $sm->get('entityCollection'),$sm);  
-				 },     
+				 },'bonusMapper' => function($sm) {
+				     return new BonusMapper($sm->get('sqlServerAdapter'),
+				         $sm->get('entityCollection'),$sm);
+				 },'bonusService' => function ($sm) {
+				     return new BonusService($sm->get('ReferenceParameter'));
+				 }, 
             ) 
         );   
     } 

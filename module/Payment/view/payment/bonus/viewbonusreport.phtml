@@ -35,11 +35,10 @@ td { height: 40px;vertical-align: bottom;border-collapse: collapse; }
 </head>
 <body>
 <?php 
-$title = 'Report Paysheet';
+$title = 'Report Bonus';
 $this->headTitle($title); 
- 
-echo $this->reportHelper($this->name,$this->allowance,
-		$this->deduction,$this->companyDeduction,$this->report); 
+echo "<h3>".$title."</h3>" ;
+echo $report;  
 ?> 
 
 </body>

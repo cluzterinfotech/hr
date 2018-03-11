@@ -179,14 +179,6 @@ class BonusMapper extends AbstractDataMapper {
 			return $results;
 		}
 		return 0;
-	}
-	
-	/*public function closePaysheetPFDeduction(Company $company,DateRange $dateRange) { 
-	    	
-	} 
-	
-	public function closeAdvancePaymentDeduction(Company $company,DateRange $dateRange) { 
-	    	
-	}*/ 
+	}     
 	
 } 

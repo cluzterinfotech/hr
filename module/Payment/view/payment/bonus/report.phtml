@@ -10,8 +10,8 @@ $form = $this->form;
 
 $form->setAttribute('action', $this->url(
 	'bonus', array(
-		'action'     => 'viewreport',
-		'controller' => 'paysheet'
+		'action'     => 'viewbonusreport',
+		'controller' => 'bonus'
 	)
 )); 
 $form->setAttribute('target','_blank');
@@ -33,7 +33,7 @@ $form->prepare();
 <?php echo $this->form()->openTag($form); ?>
 <div>
     <fieldset style="padding:5px;" >
-        <legend>Year</legend>
+       
             <div style="float:left;width:320px;margin:-10px 0 0 0;">
             <?php 
                 echo $this->form()->openTag($form); 

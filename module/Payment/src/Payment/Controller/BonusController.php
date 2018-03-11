@@ -11,6 +11,7 @@ use Payment\Model\Paysheet;
 use Payment\Model\Person; 
 use Application\Form\SubmitButonForm;
 use Application\Form\MonthYear;
+use Application\Form\Year;
 
 class BonusController extends AbstractActionController
 {
@@ -104,8 +105,7 @@ class BonusController extends AbstractActionController
 		); 
 	} 
 	
-	public function reportAction() {
-		
+	public function reportAction() { 
 		$form = $this->getReportForm(); 
 		$request = $this->getRequest();
 		if ($request->isPost()) { 
@@ -131,32 +131,26 @@ class BonusController extends AbstractActionController
         return $this->getServiceLocator()->get('dateRange');
     } 
 	
-	public function viewreportAction() { 
-                                                                                
-        $viewmodel = new ViewModel();
-        $viewmodel->setTerminal(1);       
-        $request = $this->getRequest();
-        $output = " "; 
-        if($request->isPost()) { 
-            $values = $request->getPost(); 
-            $month = $values['month']; 
-            $year = $values['year']; 
-            $type = 1; 
-            $param = array('month' => $month,'year' => $year);
-            $company = $this->getCompanyService();
-            //$results = $this->getPaysheetService()->getPaysheetReport($param); 
-            $output = $this->getPaysheetService()->getPaysheetReport($company,$param); 
-            
-        }
-        // \Zend\Debug\Debug::dump($output) ;        
-        $viewmodel->setVariables(array(
-            'report'            => $output,
-        	'name'              => array('Employee Name' => 'employeeName'),
-         	'allowance'         => $this->getPaysheetAllowanceArray(),
-        	'deduction'         => $this->getPaysheetDeductionArray(),
-        	'companyDeduction'  => $this->companyDeductionArray() 
-        ));
-        return $viewmodel; 
+	public function viewbonusreportAction() {                                                                     
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    if($request->isPost()) {
+	        $values = $request->getPost();
+	        $year = $values['year'];
+	        $company = $this->getCompanyService();
+	        $companyId = $company->getId();
+	        $output = $this->getService()
+	        ->bonusReport($year,$companyId);
+	        $vm = array(
+	            'report'     => $output,
+	        );
+	    }
+	    //$output
+	    //\Zend\Debug\Debug::dump($output);
+	    $viewmodel->setVariables($vm);
+	    return $viewmodel;
 	} 
 	
 	public function successAction() {
@@ -172,13 +166,13 @@ class BonusController extends AbstractActionController
 	}
 	
 	public function getReportForm() {
-		$form = new MonthYear(); 
+		$form = new Year();  
 		$form->get('submit')->setValue('View Bonus Report');
 		return $form;
 	}
     
 	private function getService() {
-		return $this->getServiceLocator()->get('paysheet');
+		return $this->getServiceLocator()->get('bonusService');
 	} 
 	
 	private function getPaysheetAllowanceArray() {

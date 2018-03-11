@@ -91,8 +91,8 @@ class SalaryGradeService extends Payment {
 		                                ->existingSgAllowanceList($company,$allowanceId);   
 		foreach ($existingSgAllowanceList as $sgAllowance) {    
 			if($sgAllowance['isApplicableToAll']) {
-				// @todo enable below line
-				// $sgAllowance['amount'] += $sgAllowance['amount'] * ($colaPercentage/100);
+				// @todo enable below line 
+			    $sgAllowance['amount'] += $sgAllowance['amount'] * ($colaPercentage/100);
 			    $this->saveSgAllowanceBuffer($sgAllowance,$company);    		
 			} 
 	    } 
