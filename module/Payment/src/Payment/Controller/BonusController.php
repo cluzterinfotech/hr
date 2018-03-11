@@ -50,7 +50,7 @@ class BonusController extends AbstractActionController
 			//exit; 
 			$routeInfo = $this->getRouteInfo();   
 			
-			//$bonus->calculate($employeeList,$company,$dateRange,$routeInfo);  
+		    $bonus->calculate($company);  
 		    $this->flashMessenger()->setNamespace('success') 
 		         ->addMessage('bonus Calculated Successfully'); 
 		} 

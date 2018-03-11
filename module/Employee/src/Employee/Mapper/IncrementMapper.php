@@ -466,12 +466,12 @@ class IncrementMapper extends AbstractDataMapper {
 		$update->set($array);
 		$update->where(array(
 				'id' => $id
-		));
-		$sqlString = $update->getSqlString();
+		)); 
+		$sqlString = $update->getSqlString(); 
 		// echo $sqlString;
 		// exit;
-		$sqlString = $sql->getSqlStringForSqlObject($update);
-		return $this->adapter->query($sqlString)->execute()->count();
+		$sqlString = $sql->getSqlStringForSqlObject($update); 
+		return $this->adapter->query($sqlString)->execute()->count(); 
 		//return $this->update($entity);
 	}
 	

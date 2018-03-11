@@ -16,8 +16,49 @@ class BonusMapper extends AbstractDataMapper {
 		 $entity = new EmployeeAllowanceAmountEntity();
 		 return $this->arrayToEntity($row,$entity);
 	}
+	
+	public function bonusReport($year,$companyId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array('*'))
+	           ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                  array('employeeName'))
+	           ->join(array('s' => 'lkpSalaryGrade'),'e.salaryGradeId = s.id',
+	                  array('salaryGrade'),'left')
+	           ->where(array('e.companyId' => $companyId))
+	           ->where(array('Bonus_year' => $year))
+	     ;
+	      $sqlString = $sql->getSqlStringForSqlObject($select);
+	      //echo $sqlString;
+	      //exit;
+	      return $this->adapter->query($sqlString)->execute();
+	}
+	
+	public function getBonusElegibleList($companyId) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+	        select employeeNumber,empSalaryGrade from ".$qi('EmpEmployeeInfoMain')." m
+            where isActive = 1 and companyId = '".$companyId."'	  and
+            (confirmationDate <= '2017-12-31' and empJoinDate <= '2017-07-01')
+		");
+	    
+	    //echo $statement->getSql();
+	    //exit; 
+	    $results = $statement->execute();
+	    if($results) {
+	        return $results;
+	    }
+	    return array();
+	} 
     
-	public function getPaysheetReport(Company $company,array $param=array()) {
+	/*public function getPaysheetReport(Company $company,array $param=array()) {
 		$adapter = $this->adapter;
 		$qi = function($name) use ($adapter) { 
 			return $adapter->platform->quoteIdentifier($name); 
@@ -179,6 +220,6 @@ class BonusMapper extends AbstractDataMapper {
 			return $results;
 		}
 		return 0;
-	}     
+	}*/     
 	
 } 

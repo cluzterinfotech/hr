@@ -215,14 +215,14 @@ class IncrementService extends Payment {
             	    'applied'             => 0,
         	        'companyId'           => $companyId,
         	        'salaryGradeId'       => $sg
-        	    ); 
+        	    );  
         	    $this->incrementMapper->insert($values);  
     	    }
     	    $this->transaction->commit(); 
 	    } catch (\Exception $e) {
-	        $this->transaction->rollBack(); 
+	        $this->transaction->rollBack();  
 	        throw $e;  
-	    }
+	    }   
 	    
 		// select all employee
 	    // $empInitial = $model->getEmpInitialSalary($db,$empId);

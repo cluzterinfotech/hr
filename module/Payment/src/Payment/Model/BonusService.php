@@ -21,9 +21,36 @@ class BonusService extends Payment {
 	public function calculate(Company $company) {  
 	 	try { 
 	 	    $this->transaction->beginTransaction(); 
+	 	    $companyId = $company->getId(); 
 	 	    $bonusMapper = $this->getBonusMapper(); 
-		    
+	 	    $list = $bonusMapper->getBonusElegibleList($companyId);
 	 	    
+	 	    foreach($list as $r) {
+	 	        $empId = $r['employeeNumber'];
+	 	        $sg = $r['empSalaryGrade']; 
+    	 	    $bonus = array(
+    	 	        'Pmnt_Emp_Mst_Id'    => $empId,
+    	 	        'Bonus_Date'         => date('Y-m-d'),
+    	 	        'Bonus_year'         => '2018',
+    	 	        'Bonus_Func_Code'    =>0,
+    	 	        'Bonus_Dept_Id'      => 0,
+    	 	        'Bonus_Bnk_Id'       =>0,
+    	 	        'Bonus_Acct_No'      =>0,
+    	 	        'Emp_Rating'         =>0,
+    	 	        'Bonus_Percentage'   =>0,
+    	 	        'Initial'            =>0,
+    	 	        'Cola'               =>0,
+    	 	        'No_Of_Months'       =>0,
+    	 	        'Bonus_Amt'          =>0,
+    	 	        'Bonus_Tax'          =>0,
+    	 	        'Bonus_Net'          =>0,
+    	 	        'Bonus_Closed'       =>0,
+    	 	        'numberOfDays'       =>0,
+    	 	        'companyId'          => $companyId,
+    	 	        'salaryGradeId'      => $sg,
+    	 	    ); 
+    	 	    $bonusMapper->insert($bonus); 
+	 	    }
 		    $this->transaction->commit();  
 		} catch(\Exception $e) { 
 		 	$this->transaction->rollBack(); 
@@ -33,7 +60,7 @@ class BonusService extends Payment {
 	 } 
      	 
 	 public function bonusReport($year,$companyId) {
-	     //$results = $this->incrementMapper->incReport($year,$companyId);
+	     $results = $this->getBonusMapper()->bonusReport($year,$companyId); 
 	     $output = '<table  border="1" class="sortable" font-size="6px"
                    align="center" id="table1" width="100%" cellpadding="5px"
                    bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0"
@@ -57,28 +84,31 @@ class BonusService extends Payment {
 	     $c = 1;
 	     $gTot = 0;
 	     $gTotInc = 0;
-	    // foreach($results as $r) {
-	    $r = array(); 
-	         $oldInitial = 0;
-	         $newInitial = 0;
-	         $oldInitial = $r[''];
-	         $newInitial = $r[''];
-	         $gTot += $oldInitial;
-	         $gTotInc += $newInitial;
+	     $gNet = 0; 
+	     foreach($results as $r) {
+	         $bonus = 0;
+	         $tax = 0;
+	         $net = 0; 
+	         $bonus = $r['Bonus_Amt'];
+	         $tax = $r['Bonus_Tax'];
+	         $net = $r['Bonus_Net'];
+	         $gTot += $bonus;
+	         $gTotInc += $tax;
+	         $gNet += $net; 
 	         $output .="<tr >
                 	        <td><p align='center'>".$c++."</td>
-                	        <td><p align='left'>".$r['']."</td>
-                	        <td><p align='left'>".$r['']."</td>
-                	        <td><p align='center'>".$r['']."</td>
-                	        <td><p align='center'>".$r['']."</td>
-                	        <td><p align='right'>".$r['']."</td>
-                	        <td><p align='right'>".$r['']."</td>
-                	        <td><p align='right'>".$r['']."</td>
-                	        <td><p align='right'>".$oldInitial."</td>
-                	        <td><p align='right'>".$newInitial."</td>
-                	        <td><p align='right'>".$r['']."</td>
+                	        <td><p align='left'>".$r['employeeName']."</td>
+                	        <td><p align='left'>".$r['salaryGrade']."</td>
+                	        <td><p align='center'>".$r['Emp_Rating']."</td>
+                	        <td><p align='center'>".$r['No_Of_Months']."</td>
+                	        <td><p align='right'>".$r['numberOfDays']."</td>
+                	        <td><p align='right'>".$r['Initial']."</td>
+                	        <td><p align='right'>".$r['Cola']."</td> 
+                	        <td><p align='right'>".$bonus."</td>
+                	        <td><p align='right'>".$tax."</td> 
+                            <td><p align='right'>".$net."</td>
                 	      </tr>";
-	     //}
+	     }
 	     $output .= "</tbody><tfoot>
                 	    <tr>
                             <td><p align='center'>&nbsp;</td>
@@ -88,14 +118,14 @@ class BonusService extends Payment {
                 		    <td><p align='center'>&nbsp;</td>
                 		    <td><p align='center'>&nbsp;</td>
                 		    <td><p align='center'>&nbsp;</td>
-                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td> 
                 		    <td><p align='right'><b>".$gTot."</b></td>
-                		    <td><p align='right'><b>".$gTotInc."</b></td>
-                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='right'><b>".$gTotInc."</b></td> 
+                            <td><p align='center'>".$gNet."</td>
                 	    </tr>
                 	</tfoot>
-                	</table>";
-	     return $output;
+                	</table>"; 
+	     return $output; 
 	 } 
      
 } 
