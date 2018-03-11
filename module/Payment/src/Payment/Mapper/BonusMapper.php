@@ -49,14 +49,32 @@ class BonusMapper extends AbstractDataMapper {
             (confirmationDate <= '2017-12-31' and empJoinDate <= '2017-07-01')
 		");
 	    
-	    //echo $statement->getSql();
-	    //exit; 
-	    $results = $statement->execute();
-	    if($results) {
-	        return $results;
-	    }
-	    return array();
+	    //echo $statement->getSql(); 
+	    //exit;  
+	    $results = $statement->execute(); 
+	    if($results) { 
+	        return $results; 
+	    } 
+	    return array(); 
 	} 
+	
+	public function getCriteria($year,$companyId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'BonusCriteria'))
+	           ->columns(array('*'))
+	           //->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                  //array('employeeName'))
+	           //->join(array('s' => 'lkpSalaryGrade'),'e.salaryGradeId = s.id',
+	                  //array('salaryGrade'),'left')
+	           ->where(array('e.companyId' => $companyId))
+	           ->where(array('year' => $year))
+	     ;
+	     $sqlString = $sql->getSqlStringForSqlObject($select);
+	            //echo $sqlString;
+	            //exit;
+	     return $this->adapter->query($sqlString)->execute()->current();
+	}
     
 	/*public function getPaysheetReport(Company $company,array $param=array()) {
 		$adapter = $this->adapter;
