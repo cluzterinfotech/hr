@@ -272,12 +272,12 @@ class IncrementMapper extends AbstractDataMapper {
 	    $select = $sql->select();
 	    $select->from(array('e' => $this->employeeRatingBuff))
         	    ->columns(array('id','empRating'))
-        	    //->where(array('companyId' => $company->getId()))
+        	    //->where(array('year' => $year))
 	            ->where(array('employeeId' => $employeeId))
 	    ; 
 	    $sqlString = $sql->getSqlStringForSqlObject($select);
-	    // echo $sqlString;
-	    // exit;
+	     //echo $sqlString;
+	     //exit;
 	    $row = $this->adapter->query($sqlString)->execute()->current();
 	    
 	    if($row['empRating']) {

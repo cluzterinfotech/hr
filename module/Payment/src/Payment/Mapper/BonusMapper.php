@@ -35,7 +35,7 @@ class BonusMapper extends AbstractDataMapper {
 	      return $this->adapter->query($sqlString)->execute();
 	}
 	
-	public function getBonusElegibleList($companyId) {
+	public function getBonusElegibleList($companyId,$from,$to) {
 	    $adapter = $this->adapter;
 	    $qi = function($name) use ($adapter) {
 	        return $adapter->platform->quoteIdentifier($name);
@@ -44,18 +44,58 @@ class BonusMapper extends AbstractDataMapper {
 	        return $adapter->driver->formatParameterName($name);
 	    };
 	    $statement = $adapter->query("
-	        select employeeNumber,empSalaryGrade from ".$qi('EmpEmployeeInfoMain')." m
+	        select employeeNumber,empSalaryGrade,empBank,empJoinDate,accountNumber from ".$qi('EmpEmployeeInfoMain')." m
             where isActive = 1 and companyId = '".$companyId."'	  and
-            (confirmationDate <= '2017-12-31' and empJoinDate <= '2017-07-01')
+            (confirmationDate <= '".$to."' and empJoinDate <= '".$from."') 
 		");
 	    
 	    //echo $statement->getSql(); 
 	    //exit;  
-	    $results = $statement->execute(); 
+	    $results = $statement->execute();  
 	    if($results) { 
 	        return $results; 
 	    } 
 	    return array(); 
+	} 
+	
+	public function isHaveBonus($year,$companyId) {
+	    //$companyId = $company->getId();
+	    //$year = date('Y');
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	    ->columns(array('id'))
+	    //->where(array('companyId' => $company->getId()))
+	    ->where(array('Bonus_Closed' => 1))
+	    ->where(array('Bonus_year' => $year))
+	    ->where(array('companyId' => $companyId))
+	    ;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    // echo $sqlString;
+	    // exit;
+	    $row = $this->adapter->query($sqlString)->execute()->current();
+	    if($row['id']) {
+	        return 1;
+	    }
+	    return 0;
+	}
+	
+	public function deletePreviousBonus($year,$companyId) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+	        delete from ".$qi('Bonus')." 
+            where Bonus_Closed = 0 and companyId = '".$companyId."' and Bonus_year = '".$year."'
+		"); 
+	    
+	    //echo $statement->getSql();
+	    //exit;
+	    $statement->execute();
 	} 
 	
 	public function getCriteria($year,$companyId) {

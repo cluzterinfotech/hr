@@ -79,15 +79,15 @@ class Paysheet extends Payment {
 	 	    $fromDate = $dateRange->getFromDate();
 	 	    $toDate = $dateRange->getToDate(); 
 	 	    $companyId = $company->getId();
-	 	    //echo "from date".$fromDate;
-	 	    //echo "<br/>to date".$toDate;
-	 	    //exit; 
-	 	    $advancePaymentService = $this->getAdvancePaymentService();
-	 	    $advancePaymentService->removeThisMonthDue($company); 
-	 	    $daysInMonth = $dateMethods->numberOfDaysBetween($fromDate,$toDate); 
-	 	    $employeeList = $this->companyAllowance->getPaysheetEmployeeList($condition); 
+	 	    //echo "from date".$fromDate; 
+	 	    //echo "<br/>to date".$toDate; 
+	 	    //exit;  
+	 	    $advancePaymentService = $this->getAdvancePaymentService(); 
+	 	    $advancePaymentService->removeThisMonthDue($company);  
+	 	    $daysInMonth = $dateMethods->numberOfDaysBetween($fromDate,$toDate);  
+	 	    $employeeList = $this->companyAllowance->getPaysheetEmployeeList($condition);  
 	 	    
-	 	    foreach($employeeList as $employ) { 
+	 	    foreach($employeeList as $employ) {  
 	 	    	$amount = 0; 
 	 	    	$nonPayDays = 0;  
 	 	    	$paysheetSum = 0; 

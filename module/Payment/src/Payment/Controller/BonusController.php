@@ -38,7 +38,7 @@ class BonusController extends AbstractActionController
 		    $this->flashMessenger()->setNamespace('info')
 			     ->addMessage('bonus Already closed for current month'); 
 		} else { 
-			$employeeMapper = $this->getServiceLocator()->get('CompanyEmployeeMapper');
+			/*$employeeMapper = $this->getServiceLocator()->get('CompanyEmployeeMapper');
 			$condition = array( 
 					'isActive' => 1,
 					'companyId' => $company->getId(),
@@ -48,11 +48,17 @@ class BonusController extends AbstractActionController
 			$employeeList = $employeeMapper->fetchAll($condition);   
 			//\Zend\Debug\Debug::dump($employeeList); 
 			//exit; 
-			$routeInfo = $this->getRouteInfo();   
+			$routeInfo = $this->getRouteInfo(); */   
 			
-		    $bonus->calculate($company);  
-		    $this->flashMessenger()->setNamespace('success') 
-		         ->addMessage('bonus Calculated Successfully'); 
+		    $r = $bonus->calculate($company);  
+		    
+		    if($r == 0) {
+		        $this->flashMessenger()->setNamespace('info')
+		             ->addMessage('bonus already closed'); 
+		    } else {
+		        $this->flashMessenger()->setNamespace('success') 
+		             ->addMessage('bonus Calculated Successfully'); 
+		    }
 		} 
 		$this->redirect()->toRoute('bonus',array( 
 				'action' => 'calculate' 
