@@ -1613,11 +1613,11 @@ return array (
 	     				),
 	     			),*/array(
 			     		'label'      => 'OVERTIME', 
-			     		'route'      => 'overtimenew',
+			     		'route'      => 'overtimebyemp',
 			     		'module'     => 'payment',
-			     		'controller' => 'overtimenew',
+			     		'controller' => 'overtimebyemp',
 			     		'action'     => 'add',
-			     		'resource'	 => 'Payment\Controller\Overtimenew',
+			     		'resource'	 => 'Payment\Controller\Overtimebyemp',
 			     		'privilege'	 => 'add',
 			            'pages'      => array( 
 			            	/*array(
@@ -1631,29 +1631,29 @@ return array (
 			            	),*/
 			                array(
 			                 	'label'      => 'Add/Edit Employee Overtime', 
-			                	'route'      => 'overtimenew', 
+			                	'route'      => 'overtimebyemp', 
 			                	'module'     => 'payment', 
-			                	'controller' => 'overtimenew', 
+			                	'controller' => 'overtimebyemp', 
 			               		'action'     => 'add',
-			                	'resource'	 => 'Payment\Controller\Overtimenew',
+			                	'resource'	 => 'Payment\Controller\Overtimebyemp',
 			                	'privilege'	 => 'add',
 			               	),   
 			            	array(
-			            		'label'      => 'Approve By Supervisor', 
-			            		'route'      => 'overtimenew',
+			            		'label'      => 'Approval', 
+			            		'route'      => 'overtimebyemp',
 			            		'module'     => 'payment',
-			            		'controller' => 'overtimenew',
+			            		'controller' => 'overtimebyemp',
 			            		'action'     => 'approve', 
-			            		'resource'	 => 'Payment\Controller\Overtimenew',
+			            		'resource'	 => 'Payment\Controller\Overtimebyemp',
 			            		'privilege'	 => 'approve',
 			            	), 
 			               	array(
 			               		'label'      => 'HR Endorsement',  
-			               		'route'      => 'overtimenew',  
+			               		'route'      => 'overtimebyemp',  
 			               		'module'     => 'payment',  
-			               		'controller' => 'overtimenew',  
+			               		'controller' => 'overtimebyemp',  
 			               		'action'     => 'endorsehr', 
-			               		'resource'	 => 'Payment\Controller\Overtimenew',
+			               		'resource'	 => 'Payment\Controller\Overtimebyemp',
 			               		'privilege'	 => 'endorsehr',
 			               	),array(
 			               	    'label'      => 'Overtime Manual Entry',
@@ -1717,6 +1717,14 @@ return array (
 	     			    'action'     => 'report',
 	     			    'resource'	 => 'Leave\Controller\Annualleave',
 	     			    'privilege'	 => 'report',
+	     			),array(
+	     			    'label'      => 'LEAVE LOA',
+	     			    'route'      => 'annualleave',
+	     			    'module'     => 'leave',
+	     			    'controller' => 'annualleave',
+	     			    'action'     => 'loalist',
+	     			    'resource'	 => 'Leave\Controller\Annualleave',
+	     			    'privilege'	 => 'loalist',
 	     			),
 	     			array(
 	     				'label'      => 'ANNUAL LEAVE', 
@@ -2174,9 +2182,9 @@ return array (
 	     						'route'      => 'paysheet',
 	     						'module'     => 'payment',
 	     						'controller' => 'paysheet',
-	     						'action'     => 'report',
+	     						'action'     => 'compreport',
 	     						'resource'	 => 'Payment\Controller\Paysheet',
-	     						'privilege'	 => 'report',
+	     						'privilege'	 => 'compreport', 
 	     					),
 	     					array(
 	     						'label'      => 'Payslip Employee', 
@@ -2257,13 +2265,21 @@ return array (
 	     						'resource'	 => 'Payment\Controller\Leaveallowance',
 	     						'privilege'	 => 'close',
 	     					),array(
-	     						'label'      => 'Leave Allowance Report',
+	     						'label'      => 'Unclosed Batch Report',
 	     						'route'      => 'leaveallowance',
 	     						'module'     => 'payment',
 	     						'controller' => 'leaveallowance',
 	     						'action'     => 'report',
 	     						'resource'	 => 'Payment\Controller\Leaveallowance',
 	     						'privilege'	 => 'report',
+	     					),array(
+	     					    'label'      => 'Leave Allowance Report',
+	     					    'route'      => 'leaveallowance',
+	     					    'module'     => 'payment',
+	     					    'controller' => 'leaveallowance',
+	     					    'action'     => 'allreport',
+	     					    'resource'	 => 'Payment\Controller\Leaveallowance',
+	     					    'privilege'	 => 'allreport',
 	     					),array(
 			     				'label'      => 'POLICY AND MANUAL',
 			     				'route'      => 'policymanual',
@@ -3724,7 +3740,7 @@ return array (
 			     			),  
 	     		        ) 
 	     	        ),
-	     			array(
+	     			/*array(
 	     				'label'      => 'PMS FORMS AND REPORTS',
 	     				'route'      => 'pmsform',
 	     				'module'     => 'pms',
@@ -3732,7 +3748,7 @@ return array (
 	     				'action'     => 'report',
 	     				'resource'	 => 'Pms\Controller\Pmsform',
 	     				'privilege'	 => 'report',
-	     				'pages'      => array(
+	     				'pages'      => array(*/
 	     					array(
 	     						'label'      => 'IPC',
 	     						'route'      => 'pmsform',
@@ -3765,9 +3781,9 @@ return array (
 	     								'route'      => 'pmsform',
 	     								'module'     => 'pms',
 	     								'controller' => 'pmsform',
-	     								'action'     => 'report',
+	     								'action'     => 'reportlist',
 	     								'resource'	 => 'Pms\Controller\Pmsform',
-	     								'privilege'	 => 'report',
+	     								'privilege'	 => 'reportlist',
 	     							),
 	     					    ),
 	     					),
@@ -3856,8 +3872,9 @@ return array (
 	     						'resource'	 => 'Pms\Controller\Pmsform',
 	     						'privilege'	 => 'status',
 	     					),
-	     				),
-	     			),array(
+	     				//),
+	     			//),
+	     		    array(
 			     		'label'      => 'POLICY AND MANUAL',
 			     		'route'      => 'policymanual',
 			     		'module'     => 'application',

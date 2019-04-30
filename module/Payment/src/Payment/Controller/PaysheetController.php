@@ -15,6 +15,7 @@ use Application\Form\EmployeeMonthYear;
 use Application\Form\PaysheetOtherMonthYear;
 use Employee\Form\EmployeeAllowanceForm;
 use Employee\Form\EmployeeForm;
+use Application\Form\FromToDate;
 
 class PaysheetController extends AbstractActionController
 {
@@ -231,7 +232,45 @@ class PaysheetController extends AbstractActionController
 		return array(
 				'form' => $form,
 		);
-	}  
+	} 
+	
+	public function compreportAction() {
+	    
+	    $form = $this->getCompReportForm(); 
+	    $request = $this->getRequest();
+	    if ($request->isPost()) {
+	        $form->setData($request->getPost());
+	        if ($form->isValid()) {
+	            return $this->redirect()->toRoute('paysheet');
+	        }
+	    }
+	    return array(
+	        'form' => $form,
+	    );
+	}
+	
+	public function viewcompreportAction() { 
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    if($request->isPost()) {
+	        $values = $request->getPost();
+	        $from = $values['fromDate'];
+	        $to = $values['toDate'];
+	        $company = $this->getCompanyService();
+	        //$arr = $this->getBasedOnType($allowanceDeduction);
+	        $output = $this->getPaysheetService()
+	                       ->getPaysheetComparisonReport($company,$from,$to);
+	        $vm = array(
+	            'report'     => $output,    
+	        ); 
+	    }
+	    //$output
+	    //\Zend\Debug\Debug::dump($output);
+	    $viewmodel->setVariables($vm);
+	    return $viewmodel;
+	} 
 	
 	public function paysheettestAction() { 
 		$form = $this->getEmployeeForm(); 
@@ -547,6 +586,12 @@ class PaysheetController extends AbstractActionController
 		));
 		$form->get('submit')->setValue('View Paysheet Report');
 		return $form; 
+	} 
+	
+	public function getCompReportForm() {
+	    $form = new FromToDate(); 
+	    $form->get('submit')->setValue('View Paysheet Comparison Report');
+	    return $form; 
 	} 
 	
 	public function getOtherReportForm() {

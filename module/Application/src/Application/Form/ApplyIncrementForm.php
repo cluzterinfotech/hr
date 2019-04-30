@@ -17,7 +17,7 @@ class ApplyIncrementForm extends Form
 		$this->setHydrator(new ClassMethods(false))
 		     ->setObject(new IncrementColaPercentage());  
 		  
-		/*$this->add(array(
+		$this->add(array(
 				'name' => 'applyeEfectiveDate',
 				'type' => 'Zend\Form\Element\Text',
 				'attributes' => array(
@@ -31,7 +31,7 @@ class ApplyIncrementForm extends Form
 				),
 		));
 		
-		/*$this->add(array(
+		$this->add(array(
 			'name' => 'incColaPercentage', 
 			'type' => 'Zend\Form\Element\Text',
 			'attributes' => array(
@@ -44,7 +44,7 @@ class ApplyIncrementForm extends Form
 			'options' => array(
 				'label' => 'Cola Percentage*',
 			), 
-		)); */
+		)); 
         
 		$this->add ( array (
 			'name' => 'submit',

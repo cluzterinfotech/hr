@@ -1,5 +1,6 @@
 <?php
-$title = 'Approval List';
-$this->headTitle ( $title );
-echo "<h4>".$title."</h4>"; 
+$title = 'MYR Approval List';
+$this->headTitle($title);
 ?>
+<div id="tableContainer"></div>
+<script>$("#tableContainer").zfTable('/myrform/ajaxapplist');</script>  

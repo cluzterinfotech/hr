@@ -19,6 +19,158 @@ class OvertimeMapper extends AbstractDataMapper {
 		$entity = new OvertimeEntity(); 
 		return $this->arrayToEntity($row,$entity); 
 	} 
+	
+	public function saveot($values) {
+	    $this->setEntityTable('otByEmployee'); 
+	    $this->insert($values); 
+	}
+	
+	public function addOtToEndorsement($values) {
+	    $this->setEntityTable('OvertimeByEmployee'); 
+	    $this->insert($values); 
+	}
+	
+	public function insertOtBuff($buff) {
+	    $this->setEntityTable('otByEmployeeApproval');
+	    $this->insert($buff);
+	}
+	
+	public function updateot($values) {
+	    $this->setEntityTable('otByEmployee');
+	    $this->update($values); 
+	}
+	
+	public function reverseotApp($values,$refNumber) {
+	    $sql = $this->getSql();
+	    $update = $sql->Update('otByEmployeeApproval'); 
+	    //$array = $this->entityToArray($entity);
+	    //$ref = $values['approvalRefNumber'];
+	    //unset($values['approvalRefNumber']);
+	    $update->set($values);
+	    $update->where(array(
+	        'refNumber' => $refNumber
+	    ));
+	    //$sqlString = $update->getSqlString();
+	    $sqlString = $sql->getSqlStringForSqlObject($update);
+	    //echo $sqlString;
+	    //exit;
+	    return $this->adapter->query($sqlString)->execute()->count();
+	} 
+	
+	public function removeFromMapper($refNumber) {
+	    $sql = $this->getSql();
+	    $delete = $sql->delete('otByEmployeeApproval'); 
+	    //$array = $this->entityToArray($entity);
+	    //$ref = $values['approvalRefNumber'];
+	    //unset($values['approvalRefNumber']);
+	    //$update->set($values);
+	    $delete->where(array(
+	        'refNumber' => $refNumber
+	    ));
+	    //$sqlString = $update->getSqlString();
+	    $sqlString = $sql->getSqlStringForSqlObject($delete);
+	    //echo $sqlString;
+	    //exit;
+	    return $this->adapter->query($sqlString)->execute()->count(); 
+	}
+	
+	public function reverseot($values,$refNumber) { 
+	    $sql = $this->getSql();
+	    $update = $sql->Update('otByEmployee');
+	    //$array = $this->entityToArray($entity);
+	    //$ref = $values['approvalRefNumber'];
+	    //unset($values['approvalRefNumber']);
+	    $update->set($values); 
+	    $update->where(array(
+	        'approvalRefNumber' => $refNumber
+	    ));
+	    //$sqlString = $update->getSqlString();
+	    $sqlString = $sql->getSqlStringForSqlObject($update);
+	    //echo $sqlString;
+	    //exit;
+	    return $this->adapter->query($sqlString)->execute()->count(); 
+	}
+	
+	/*public function updateot($values) {
+	    $this->setEntityTable('otByEmployee');
+	    $this->update($values);
+	}*/ 
+	/*SELECT employeeOtId,
+         CONVERT(varchar(5),DATEADD(ms, SUM(DATEDIFF(ms, '00:00:00.000', overTimeHours)), '00:00:00.000'),108) as mt
+    FROM
+    otByEmployee
+  where otStatus = 2 
+  group by employeeOtId*/ 
+	
+	public function getEmpOtById($id) {
+	    //$this->setEntityTable('otByEmployee'); 
+	    //$entity = $this->fetchById($id);
+	    //return $this->entityToArray($entity); 
+	    
+	    //$predicate = new Predicate();
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployee'))
+	    ->columns(array('id','attendanceId','employeeOtId','dayStatus','numberOfMeals',
+	        'otDate' => new Expression('CONVERT(varchar(10),otDate,120)'),
+	        'inTime' => new Expression('CONVERT(varchar(5),inTime,108)'),
+	        'locWorkHours' => new Expression('CONVERT(varchar(5),locWorkHours,108)'),
+	        'overTimeHours' => new Expression('CONVERT(varchar(5),overTimeHours,108)'),
+	        'otElegibleHours' => new Expression('CONVERT(varchar(5),otElegibleHours,108)'),
+	        'outTime' => new Expression('CONVERT(varchar(5),outTime,108)')))
+	           //->where($predicate->lessThanOrEqualTo('otStatus',1))
+	          ->where(array('id' => $id))
+	          ->where(array('otStatus' => 1))
+	    //->where($predicate->lessThanOrEqualTo('approvedLevel','approvalLevel') )
+	    ;  
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    return $this->adapter->query($sqlString)->execute()->current(); 
+	}
+	
+	public function getAttendanceByDate($date,$emp) { 
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+                SELECT id,cardId,attendanceDate,startingTime,dayStatus
+                      ,locStartTime,endingTime,locEndTime,difference,locWorkHours
+                FROM EmployeeAttendance e
+                where id not in (
+                    select attendanceId from otByEmployee where otStatus != '9'
+                )
+                and attendanceDate = '".$date."' and cardId = '".$emp."' 
+		");
+	    //echo $statement->getSql(); 
+	    //exit; 
+	    return $statement->execute()->current(); 
+	    /*if($row) { 
+	        return $row;  
+	    } 
+	    return 0;*/    
+	    //$predicate = new Predicate(); 
+	    /*$sql = $this->getSql(); 
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->attendanceTable))
+        	   ->columns(array('id','cardId','startingTime','endingTime',
+        	        'difference','duration','noOfMeals',
+        	        'attendanceDate' => new Expression('CONVERT(varchar(12),attendanceDate,107)'),
+        	        'normalHour' => new Expression('CONVERT(varchar(5),normalHour,108)'),
+        	        'holidayHour' => new Expression('CONVERT(varchar(5),holidayHour,108)')
+        	   ))
+        	   //->where($predicate->greaterThanOrEqualTo('attendanceDate',$arr['from']))
+        	   //->where($predicate->lessThanOrEqualTo('attendanceDate',$arr['to']))
+        	   ->where(array('cardId' => $arr['emp']))
+        	   //->where($predicate->greaterThan('difference',0))
+        ; 
+        $sqlString = $sql->getSqlStringForSqlObject($select); 
+        return $this->adapter->query($sqlString)->execute(); */  
+	}
     // 
 	public function selectEmployeeOvertime($employeeNumber) { 
 		$sql = $this->getSql(); 
@@ -34,8 +186,74 @@ class OvertimeMapper extends AbstractDataMapper {
 			   ->where(array('empIdOvertime' => $employeeNumber));    
 			   //echo $select->getSqlString(); 
 			   //exit;   
-		return $select;     
-	}    
+		       return $select;      
+	}   
+	
+	public function selectEmpAppOvertime() {
+	    $predicate = new Predicate(); 
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployeeApproval'))
+        	   ->columns(array('id','normalHours','status','holidayHours','numberOfMeals'
+        	                  ,'employeeId','refNumber','totalHours'))
+        	   ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeId',
+        	           array('employeeName'))
+        	  // ->join(array('os' => 'otByEmployee'), 'os.approvalRefNumber = e.refNumber',
+        	         // array('otStatus'))       
+	           ->where($predicate->lessThan('status',5))
+        	    //->where(array('employeeOtId' => $employeeNumber))
+        	   // ->where(array('status' => 1))
+	    ;      
+	    //echo $select->getSqlString();
+	    //exit;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    return $this->adapter->query($sqlString)->execute();
+	} 
+	
+	public function selectEmpAppOvertimeByIds($ids) {
+	    $predicate = new Predicate();
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployeeApproval'))
+	           ->columns(array('id','normalHours','holidayHours','numberOfMeals'
+	                          ,'employeeId','refNumber','totalHours'))
+	           ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeId',
+	                  array('employeeName'))
+	            // ->join(array('os' => 'otByEmployee'), 'os.approvalRefNumber = e.refNumber',
+	    // array('otStat
+	          ->where($predicate->In('e.id',$ids)) 
+	    //->where($predicate->in('id',$ids)) // lessThan('status',5))
+	    //->where(array('employeeOtId' => $employeeNumber))
+	    // ->where(array('status' => 1))
+	    ;
+	    //echo $select->getSqlString();
+	    //exit;
+	    return $select;
+	} 
+	
+	public function selectEmpOvertime($employeeNumber) { 	    
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployee'))
+	           ->columns(array('id','numberOfMeals',
+	               'otDate' => new Expression('CONVERT(varchar(12),otDate,107)'),
+	               'inTime' => new Expression('CONVERT(varchar(5),inTime,108)'),
+	               'outTime' => new Expression('CONVERT(varchar(5),outTime,108)'),
+	               'locWorkHours' => new Expression('CONVERT(varchar(5),locWorkHours,108)'),
+	               'otElegibleHours' => new Expression('CONVERT(varchar(5),otElegibleHours,108)'),
+	               'overTimeHours' => new Expression('CONVERT(varchar(5),overTimeHours,108)')
+	           ))
+	           ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeOtId',
+	                  array('employeeName'))
+	           //->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
+	                  //array('overtimeStatus'))
+	           ->where(array('employeeOtId' => $employeeNumber))
+	           ->where(array('otStatus' => 1))
+	    ;
+	    //echo $select->getSqlString(); 
+	    //exit; 
+	    return $select;  
+	} 
 	
 	public function selectEmployeeAttendance($arr,$ids) { 
 		$predicate = new Predicate();
@@ -98,7 +316,18 @@ class OvertimeMapper extends AbstractDataMapper {
 	    return $this->adapter->query($sqlString)->execute()->count();
 	}
 	
-	public function getSubmittedOtIds($arr) { 
+	public function removeEmpOvertime($id) {
+	    $sql = $this->getSql();
+	    $delete = $sql->delete('otByEmployee'); 
+	    $delete->where(array(
+	        'id' => $id
+	    ));
+	    //$sqlString = $delete->getSqlString();
+	    $sqlString = $sql->getSqlStringForSqlObject($delete);
+	    return $this->adapter->query($sqlString)->execute()->count();
+	}
+	
+	/*public function getSubmittedOtIds($arr) { 
 		$adapter = $this->adapter; 
 		$qi = function($name) use ($adapter) { 
 			return $adapter->platform->quoteIdentifier($name); 
@@ -125,8 +354,34 @@ class OvertimeMapper extends AbstractDataMapper {
 			    return $i;    
 			}  
 		}
-		return 0;
-     
+		return 0; 
+	}*/
+	
+	public function getSubmittedOtIds() {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+				select id from otByEmployee where
+		otStatus = 2 
+		");
+	    //echo $statement->getSql();
+	    //exit;
+	    $row = $statement->execute();
+	    if($row) {
+	        $i = array();
+	        foreach ($row as $r) {
+	            $i[] = $r['id'];
+	        }
+	        if($i) {
+	            return $i;
+	        }
+	    }
+	    return 0;
 	}
 	//->join(array('ec' => 'EmployeeIdCard'), 'ec.idCard = e.cardId',
 	//array('idCard'))
@@ -182,22 +437,71 @@ class OvertimeMapper extends AbstractDataMapper {
 		return $this->adapter->query($sqlString)->execute(); 
 	}  
 	
-	public function getAttenDetails($id) { 
+	public function isNotApproved($id) { 
+	    $predicate = new Predicate(); 
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployeeApproval'))
+	           ->columns(array('totalHours','refNumber'))
+	           ->join(array('ep' => 'otByEmployee'),'e.refNumber = ep.approvalRefNumber',
+	                  array('id','otStatus'))
+	           ->where($predicate->lessThan('otStatus',5))
+	           ->where(array('e.id' => $id))
+	    //->where(array('isApproved' => 0))
+	    //->where($predicate->lessThanOrEqualTo('approvedLevel','approvalLevel') )
+	    ;  
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    $row = $this->adapter->query($sqlString)->execute()->current(); 
+	    if($row['otStatus']) {
+	        return $row; 
+	    }
+	    return 0; 
+	}
+	
+	public function empAppliedOtById($refNumber) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'otByEmployee'))
+	    ->columns(array('id','attendanceId','employeeOtId',
+	        'numberOfMeals','otStatus','dayStatus','approvalRefNumber',
+	        'otDate' => new Expression('CONVERT(varchar(10),otDate,120)'),
+	        'outTime' => new Expression('CONVERT(varchar(5),outTime,108)'),
+	        'locWorkHours' => new Expression('CONVERT(varchar(5),locWorkHours,108)'),
+	        'otElegibleHours' => new Expression('CONVERT(varchar(5),otElegibleHours,108)'),
+	        'overTimeHours' => new Expression('CONVERT(varchar(5),overTimeHours,108)'),
+	        'inTime' => new Expression('CONVERT(varchar(5),inTime,108)')
+	    ))
+	    ->where(array('approvalRefNumber' => $refNumber))
+	    ->order('otDate asc')
+	    ;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    return $this->adapter->query($sqlString)->execute();
+	}  
+	
+	public function getAttenDetails($refNumber) { 
 		$sql = $this->getSql();
 		$select = $sql->select();
-		$select->from(array('e' => $this->attendanceTable))
-		       ->columns(array('id','cardId','startingTime','endingTime',
-		      		'difference','duration','noOfMeals',
-		      		'attendanceDate' => new Expression('CONVERT(varchar(12),attendanceDate,107)'),
-		      		'normalHour' => new Expression('CONVERT(varchar(5),normalHour,108)'), 
-		      		'holidayHour' => new Expression('CONVERT(varchar(5),holidayHour,108)')))
-		       ->where(array('empOtId' => $id)) 
-		       ->order('attendanceDate asc')
+		$select->from(array('e' => 'otByEmployee'))
+		       ->columns(array('id','attendanceId','employeeOtId',
+                               'numberOfMeals','otStatus','dayStatus','approvalRefNumber',
+                   'otDate' => new Expression('CONVERT(varchar(12),otDate,107)'),
+		           'outTime' => new Expression('CONVERT(varchar(5),outTime,108)'),
+		           'locWorkHours' => new Expression('CONVERT(varchar(5),locWorkHours,108)'),
+		           'otElegibleHours' => new Expression('CONVERT(varchar(5),otElegibleHours,108)'),
+		           'overTimeHours' => new Expression('CONVERT(varchar(5),overTimeHours,108)'),
+		           'inTime' => new Expression('CONVERT(varchar(5),inTime,108)')
+		       ))
+               ->where(array('approvalRefNumber' => $refNumber)) 
+		       ->order('otDate asc')
 		;  
 		$sqlString = $sql->getSqlStringForSqlObject($select); 
 		//echo $sqlString;
 		//exit;
-		return $this->adapter->query($sqlString)->execute();
+		return $this->adapter->query($sqlString)->execute(); 
 	}
 	
 	public function fetchAllEndorsedOt() {
@@ -216,19 +520,19 @@ class OvertimeMapper extends AbstractDataMapper {
 		return $this->adapter->query($sqlString)->execute();  
 	}
 	
-	public function getOvertimeFormWaitingAppList() {
+	public function getOvertimeFormWaitingAppList($lvl) {
 		$predicate = new Predicate();
 		$sql = $this->getSql();
 		$select = $sql->select();
-		$select->from(array('e' => $this->entityTable))
+		$select->from(array('e' => 'otByEmployeeApproval'))
 		       ->columns(array('*'))
-		       ->where($predicate->greaterThan('otStatus',1))
-		       ->where($predicate->lessThan('otStatus',5))
+		       ->where($predicate->greaterThan('status',1))
+		       ->where($predicate->lessThan('status',$lvl))
 		       
 		//->where(array('isCanceled' => 0))
 		//->where(array('isApproved' => 0))
 		//->where($predicate->lessThanOrEqualTo('approvedLevel','approvalLevel') )
-		;
+		; 
 		$sqlString = $sql->getSqlStringForSqlObject($select);
 		//echo $sqlString;
 		//exit;
@@ -251,13 +555,40 @@ class OvertimeMapper extends AbstractDataMapper {
 				      array('employeeName'))
 			   ->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
 				      array('overtimeStatus'))
-			   ->where(array('e.otStatus' => 2))
+			   //->where(array('e.otStatus' => 2))
+			   //->where(array('e.otStatus' => 3))
 		; 
+	    $select->where($predicate->lessThan('e.otStatus',4));  
 		$select->where($predicate->In('e.id',$ids)); 
 		//echo $select->getSqlString(); 
 		//exit;
 		return $select; 
 	}
+	
+	public function getOvertimeFormEndorseList($ids) {
+	    $predicate = new Predicate();
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	    ->columns(array('id','empIdOvertime','numberOfMeals',
+	        'startingDate' => new Expression('CONVERT(varchar(12),startingDate,107)'),
+	        'endingDate' => new Expression('CONVERT(varchar(12),endingDate,107)'),
+	        'employeeNoNOHours' => new Expression('CONVERT(varchar(5),employeeNoNOHours,108)'),
+	        'employeeNoHOHours' => new Expression('CONVERT(varchar(5),employeeNoHOHours,108)'),
+	        'otStatus','endorsedDate','supervisorComments','hrComments'))
+	        ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.empIdOvertime',
+	            array('employeeName'))
+	            ->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
+	                array('overtimeStatus'))
+	                ->where(array('e.otStatus' => 3))
+	                 //->where(array('e.otStatus' => 3))
+	    ;
+	            //$select->where($predicate->lessThan('e.otStatus',4));
+	            $select->where($predicate->In('e.id',$ids));
+	           //echo $select->getSqlString();
+	          //exit;
+	            return $select; 
+	} 
 	
 	public function endorseAllByHr() {
 	    $select = $this->getOvertimeFormApprovalListHr('1'); 
@@ -308,25 +639,23 @@ class OvertimeMapper extends AbstractDataMapper {
 		// $predicate = new Predicate();
 		$sql = $this->getSql();
 		$select = $sql->select();
-		$select->from(array('e' => $this->entityTable))
-		       ->columns(array('id','empIdOvertime','numberOfMeals',
-				   'startingDate' => new Expression('CONVERT(varchar(12),startingDate,107)'),
-				   'endingDate' => new Expression('CONVERT(varchar(12),endingDate,107)'),
-				   'employeeNoNOHours' => new Expression('CONVERT(varchar(5),employeeNoNOHours,108)'),
-				   'employeeNoHOHours' => new Expression('CONVERT(varchar(5),employeeNoHOHours,108)'),
-				   'otStatus','endorsedDate','supervisorComments','hrComments'))
-			   ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.empIdOvertime',
+		$select->from(array('e' => 'otByEmployeeApproval'))
+		       ->columns(array('id','normalHours','holidayHours','numberOfMeals',
+		                       'employeeId','refNumber','totalHours'))
+			   ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeId',
 					  array('employeeName'))
-			   ->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
-					  array('overtimeStatus'))
-		;
+			   ->join(array('em' => 'otByEmployee'),'em.approvalRefNumber = e.refNumber',
+					  array('approvalRefNumber'))
+			   //->join(array('os' => 'OvertimeStatus'), 'os.id = e.otStatus',
+					  //array('overtimeStatus'))
+		; 
 		$select->where(array('e.id' => $id));  
 		$sqlString = $sql->getSqlStringForSqlObject($select);
-		//echo $sqlString;
-		//exit;
-		return $this->adapter->query($sqlString)->execute()->current(); 
-		// return $results;
-	}
+		//echo $sqlString; 
+		//exit; 
+		return $this->adapter->query($sqlString)->execute()->current();  
+		// return $results; 
+	} 
 	
 	/*public function fetchOtById($id) {
 		$this->setEntityTable($this->entityTable); 
@@ -342,6 +671,60 @@ class OvertimeMapper extends AbstractDataMapper {
 	public function selectEndorseOvertime() { 
 	        
 	} 
+	
+	public function updateOtStatus($empId,$plusOne) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+				update otByEmployee set otStatus = 2 where employeeOtId = '".$empId."' and otStatus = '1'
+                and approvalRefNumber = '".$plusOne."' 
+		");
+	    //echo $statement->getSql();
+	    //exit;
+	    return $statement->execute();
+	}
+	
+	public function updateRef($empId,$plusOne) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+				update otByEmployee set approvalRefNumber = '".$plusOne."'
+                where employeeOtId = '".$empId."' and otStatus = '1'
+		");
+	    //echo $statement->getSql();
+	    //exit;
+	    return $statement->execute();
+	}
+	
+	public function getMaxRef() {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+				select MAX(approvalRefNumber) as num from otByEmployee
+		");
+	    //echo $statement->getSql();
+	    //exit;
+	    $row = $statement->execute()->current();
+	    if($row['num']) {
+	        return $row['num']; 
+	    }
+	    return 0;
+	}
 	
 	public function getEmployeeOvertimeHours($employeeNumber) {
 		$adapter = $this->adapter; 
@@ -440,7 +823,7 @@ class OvertimeMapper extends AbstractDataMapper {
 		return 0; 
 	} 
 	
-	public function getAttendanceOtSum($arr,$ids) {
+	public function getAttendanceOtSum($ids) {
 		//\Zend\Debug\Debug::dump($ids);
 		//exit; 
 		$adapter = $this->adapter;
@@ -477,6 +860,32 @@ class OvertimeMapper extends AbstractDataMapper {
 		}
 		return array(); 
 	} 
+	
+	
+	public function getEmpOtSum($empId,$day) { 
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+				select
+				convert(varchar(5),cast(DATEADD(ms, SUM(DATEDIFF(ms, '00:00', overTimeHours)), '00:00') as time),108) as hour,
+				sum(numberOfMeals) as noOfMeals from otByEmployee where
+                employeeOtId = '".$empId."' and otStatus = '1' and approvalRefNumber = 0
+				and dayStatus = '".$day."'  
+		"); 
+	    //echo $statement->getSql();
+	    //exit; 
+	    $row = $statement->execute()->current(); 
+	    //\Zend\Debug\Debug::dump($row); 
+	    if($row) {
+	        return $row;
+	    }
+	    return array();
+	}
 	
 	public function saveEmpOt($empOt) {
 		$sql = $this->getSql(); 

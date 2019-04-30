@@ -3,6 +3,7 @@
 namespace Employee\Controller; 
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 use Zend\Http\PhpEnvironment\Response; 
 use Employee\Form\AnnivIncrementForm;
 use Employee\Form\PromotionFormValidator;
@@ -12,6 +13,7 @@ use Application\Model\EmployeeAnniversaryIncrementGrid;
 use Employee\Form\ApplyIncrementFormValidator;
 use Employee\Form\AnnivIncrementFormValidator;
 use Application\Form\ApplyIncrementForm;
+use Application\Form\Year;
 
 class IncrementController extends AbstractActionController { 
 	
@@ -82,7 +84,6 @@ class IncrementController extends AbstractActionController {
 		} elseif ($prg === false) { 
 			return array ( 
 				'form'           => $form, 
-				// 'promotionList'  => $promotionList  
 			);  
 		}  
 		//$dateRange = $this->getServiceLocator()->get('dateRange'); 
@@ -161,7 +162,7 @@ class IncrementController extends AbstractActionController {
 		); 
 	} 
 	
-	public function calculateAction() {
+	public function calculateAction() { 
 		$form = $this->getSubmitForm();
 		$form->get('submit')->setValue('Calculate Increment');
 		$prg = $this->prg('/increment/calculate', true);
@@ -179,7 +180,7 @@ class IncrementController extends AbstractActionController {
 		$formValidator = $this->getFormValidator();
 		$form->setInputFilter($formValidator->getInputFilter());
 		$form->setData($prg); 
-		if ($form->isValid()) {
+		if ($form->isValid()) { 
 			// @todo
 			$isEmployeeAvailable = $service->isHaveIncrement($company,$dateRange);
 			//\Zend\Debug\Debug::dump($isEmployeeAvailable);
@@ -193,8 +194,7 @@ class IncrementController extends AbstractActionController {
 			} else {
 				// @todo
 				$data = $form->getData();
-				//$colaPercentage = $data->getIncColaPercentage();
-				$effectiveDate = $data->getApplyeEfectiveDate();
+				$service->removePreviousCalculation(); 
 				$service->calculateIncrement($company,$dateRange);
 				$this->flashMessenger()->setNamespace('success')
 				     ->addMessage('Increment calculated successfully');
@@ -207,6 +207,52 @@ class IncrementController extends AbstractActionController {
 				'form' => $form,
 				$prg
 		);
+	} 
+	
+	public function reportAction() { 
+	    $form = $this->getReportForm();
+	    $request = $this->getRequest();
+	    if ($request->isPost()) {
+	        $form->setData($request->getPost());
+	        if ($form->isValid()) {
+	            return $this->redirect()->toRoute('increment');
+	        }
+	    }
+	    return array(
+	        'form' => $form,
+	    ); 
+	} 
+	
+	public function viewincreportAction() {
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    if($request->isPost()) {
+	        $values = $request->getPost();
+	        $year = $values['year']; 
+	        $company = $this->getCompanyService();
+	        $companyId = $company->getId(); 
+	        $output = $this->getIncrementService()
+	                       ->incReport($year,$companyId);
+	        $vm = array(
+	            'report'     => $output,
+	        );
+	    }
+	    //$output
+	    //\Zend\Debug\Debug::dump($output);
+	    $viewmodel->setVariables($vm);
+	    return $viewmodel;
+	}
+	
+	public function getReportForm() {
+	    $form = new Year(); 
+	    $form->get('submit')->setValue('View Increment Report');
+	    return $form;
+	} 
+	
+	private function getCompanyService() {
+	    return $this->getServiceLocator()->get('company');
 	} 
 	
 	public function applyannivincAction() { 

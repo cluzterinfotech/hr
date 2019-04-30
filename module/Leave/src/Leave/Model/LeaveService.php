@@ -32,6 +32,14 @@ class LeaveService extends Approvals {
     	return $this->leaveFormMapper->insertAdminLeave($entity);
     }
     
+    public function isHaveHajjLeave($employeeId) {
+        return $this->leaveFormMapper->isHaveHajjLeave($employeeId);
+    }
+    
+    public function isHaveHajjLeaveId($employeeId,$id) {
+        return $this->leaveFormMapper->isHaveHajjLeaveId($employeeId,$id);
+    }
+    
     public function updateAdminLeave($entity) {
     	return $this->leaveFormMapper->updateAdminLeave($entity);
     }
@@ -46,6 +54,10 @@ class LeaveService extends Approvals {
     
     public function fetchLeaveById($id) {
     	return $this->leaveFormMapper->fetchLeaveById($id); 
+    }
+    
+    public function getLeaveFormLoaList() {
+        return $this->leaveFormMapper->getLeaveFormLoaList();
     }
     
     public function getLeaveFormApprovalList() {   

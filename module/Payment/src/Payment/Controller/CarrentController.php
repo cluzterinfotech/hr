@@ -175,8 +175,8 @@ class CarrentController extends AbstractActionController
 						'type'              => $type,
 						'param'             => $param,
 				);
-			} else {
-				$output = $this->getcarrentService()->getCarRentReport($param); 
+			} elseif($type == 4) {
+			    $output = $this->getcarrentService()->getCarRentReportDtls($param); 
 				$vm = array(
 						'report'            => $output,
 						//'name'              => array('Employee Name' => 'employeeName'),
@@ -185,6 +185,16 @@ class CarrentController extends AbstractActionController
 						//'companyDeduction'  => $this->companyDeductionArray(),
 						'type'              => $type,
 				);
+			} else {
+			    $output = $this->getcarrentService()->getCarRentReport($param);
+			    $vm = array(
+			        'report'            => $output,
+			        //'name'              => array('Employee Name' => 'employeeName'),
+			        //'allowance'         => $this->getPaysheetAllowanceArray(),
+			        //'deduction'         => $this->getPaysheetDeductionArray(),
+			        //'companyDeduction'  => $this->companyDeductionArray(),
+			        'type'              => $type,
+			    );
 			}
 		}
 		// \Zend\Debug\Debug::dump($output);

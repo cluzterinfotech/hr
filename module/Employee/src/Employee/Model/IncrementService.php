@@ -36,9 +36,9 @@ class IncrementService extends Payment {
     	*/ 
     	// @todo pass cola as parameter
     	// @todo clear previous sg allowances buffer 
-        //$sgAllowance->existingSgAllowanceList($company,'6',$colaPercentage);
+        $sgAllowance->existingSgAllowanceList($company,'6',$colaPercentage);
     	
-    	//$sgAllowance->applyAllowance($company,$effectiveDate); 
+    	$sgAllowance->applyAllowance($company,$effectiveDate);  
     	
     	$incrementList = $this->getIncrementList($company);
     	//\Zend\Debug\Debug::dump($incrementList);
@@ -140,8 +140,8 @@ class IncrementService extends Payment {
 	}
 	
 	public function isHaveIncrement(Company $company,DateRange $dateRange) {
-		return 1; 
-		return $this->incrementMapper->isHaveAnnivIncrement($company,$dateRange);
+		// return 1; 
+	    return $this->incrementMapper->isHaveIncrement($company,$dateRange); 
 	}
     
 	public function isHaveAnnivIncrement(Company $company,DateRange $dateRange) {
@@ -152,7 +152,78 @@ class IncrementService extends Payment {
 	    
 	} 
 	
-	public function calculateIncrement(Company $company) {
+	public function removePreviousCalculation() {
+	    return $this->incrementMapper->removePreviousCalculation(); 
+	}
+	
+	private function getTempPercentage($sg) {
+	    if($sg >= '4' && $sg <= '11') {
+	        return 25; 
+	    } elseif($sg >= '12' && $sg <= '13') {
+	        return 20;
+	    } elseif($sg >= '14' && $sg <= '16') {
+	        return 15; 
+	    } else {
+	        return 0; 
+	    }
+	    return 0;  
+	}
+	
+	public function calculateIncrement(Company $company,DateRange $dateRange) { 
+	    try {
+	        $this->transaction->beginTransaction(); 
+    	    $year = date('Y'); 
+    	    $companyId = $company->getId(); 
+    	    $result = $this->incrementMapper->getIncrementElegibleList($companyId); 
+    	    foreach ($result as $r) {   
+    	        $specialCompensationDiff = 0; 
+    	        $meritLumpsum = 0;
+    	        $specialCompensation = 0;  
+    	        $employeeId = $r['employeeNumber']; 
+    	        $employee = $this->getEmployeeById($employeeId); 
+    	        $sg = $r['empSalaryGrade']; 
+    	        $midValue = $this->incrementMapper->getMidValue($sg); 
+    	        $maxValue = $this->incrementMapper->getMaxQuartileOne($sg); 
+    	        $empRating = $this->incrementMapper->getEmployeeRating($year,$employeeId); 
+    	        if(($empRating == '4') || ($empRating == '0')) {
+    	            $percentage = 0; 
+    	        } else {
+    	            $percentage = $this->getTempPercentage($sg); 
+    	        } 
+    	        $service = $this->service->get('Initial'); 
+    	        $amount = $service->getLastAmount($employee,$dateRange);
+    	        $oldInitial = $this->twoDigit($amount);  
+    	        $incrementedValue = $this->twoDigit(($oldInitial * ($percentage/100)) + $oldInitial);  
+    	        if($incrementedValue > $maxValue) {
+    	            $specialCompensationDiff = $incrementedValue - $maxValue; 
+    	            $incrementedValue = $maxValue; 
+    	        }
+    	        
+        	    $values = array( 
+        	        'Year'                => $year, 
+        	        'employeeNumber'      => $employeeId,
+            	    'compRatio'           => 0,
+        	        'incPercentage'       => $percentage,
+        	        'empRating'           => $empRating,
+        	        'midValue'            => $midValue, 
+            	    'quartileRange'       => 0,
+        	        'oldInitial'          => $oldInitial,
+        	        'incrementedValue'    => $incrementedValue,
+        	        'splCompensationDiff' => $specialCompensation, 
+        	        'meritLumpsum'        => $meritLumpsum,
+        	        'splCompensation'     => $specialCompensationDiff,
+            	    'applied'             => 0,
+        	        'companyId'           => $companyId,
+        	        'salaryGradeId'       => $sg
+        	    );  
+        	    $this->incrementMapper->insert($values);  
+    	    }
+    	    $this->transaction->commit(); 
+	    } catch (\Exception $e) {
+	        $this->transaction->rollBack();  
+	        throw $e;  
+	    }   
+	    
 		// select all employee
 	    // $empInitial = $model->getEmpInitialSalary($db,$empId);
 	    // $compRatio = $model->getQuartileValue($db,$empId);
@@ -237,6 +308,71 @@ class IncrementService extends Payment {
 	public function updateAnnivInc($entity) {
 		return $this->incrementMapper->updateAnnivInc($entity);
 	} 
+	
+	public function incReport($year,$companyId) { 
+	    $results = $this->incrementMapper->incReport($year,$companyId); 
+	    $output = '<table  border="1" class="sortable" font-size="6px" 
+                   align="center" id="table1" width="100%" cellpadding="5px" 
+                   bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0" 
+                   style="border-collapse: collapse"> 
+        	        <thead >
+            	        <tr>
+                	        <th bgcolor="#F0F0F0">#</th>
+                	        <th bgcolor="#F0F0F0">Employee Name</th>
+                	        <th bgcolor="#F0F0F0">Salary Grade</th>
+                	        <th bgcolor="#F0F0F0">Comp Ratio</th>
+                	        <th bgcolor="#F0F0F0">Percentage</th>
+                	        <th bgcolor="#F0F0F0">Rating</th>
+                	        <th bgcolor="#F0F0F0">Mid Value</th>
+                	        <th bgcolor="#F0F0F0">Range</th>
+                	        <th bgcolor="#F0F0F0">Old Initial</th>
+                	        <th bgcolor="#F0F0F0">New Initial</th>
+                	        <th bgcolor="#F0F0F0">Spl Compensation</th>
+            	        </tr>
+        	        </thead>
+	        <tbody class="scrollingContent">'; 
+	        $c = 1; 
+	        $gTot = 0; 
+	        $gTotInc = 0; 
+    	    foreach($results as $r) {
+    	        $oldInitial = 0; 
+    	        $newInitial = 0;  
+    	        $oldInitial = $r['oldInitial']; 
+    	        $newInitial = $r['incrementedValue']; 
+    	        $gTot += $oldInitial; 
+    	        $gTotInc += $newInitial; 
+    	        $output .="<tr >
+                	        <td><p align='center'>".$c++."</td>
+                	        <td><p align='left'>".$r['employeeName']."</td>
+                	        <td><p align='left'>".$r['salaryGrade']."</td>
+                	        <td><p align='center'>".$r['compRatio']."</td>
+                	        <td><p align='center'>".$r['incPercentage']."</td>
+                	        <td><p align='right'>".$r['empRating']."</td>
+                	        <td><p align='right'>".$r['midValue']."</td>
+                	        <td><p align='right'>".$r['quartileRange']."</td>
+                	        <td><p align='right'>".$oldInitial."</td>
+                	        <td><p align='right'>".$newInitial."</td>
+                	        <td><p align='right'>".$r['splCompensation']."</td>
+                	      </tr>"; 
+    	    } 
+            $output .= "</tbody><tfoot>
+                	    <tr>
+                            <td><p align='center'>&nbsp;</td>
+                		    <td><p align='left'><b>Total</b></td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='right'><b>".$gTot."</b></td>
+                		    <td><p align='right'><b>".$gTotInc."</b></td>
+                		    <td><p align='center'>&nbsp;</td>		    
+                	    </tr>	
+                	</tfoot>		
+                	</table>";  
+            return $output; 
+	}
 	
 	
 }

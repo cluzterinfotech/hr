@@ -217,6 +217,10 @@ class LeaveAllowance extends Payment {
 	     // return false;    	
 	 }
 	 
+	 public function isLaNotClosed(Company $company,DateRange $dateRange) {
+	     return $this->getLaMapper()->isLaNotClosed($company,$dateRange);
+	 }
+	 
 	 public function getFunctionCode($employeeId) {
 	     // @todo 
 	 	//$employee = $this->getEmployeeById($employeeId);
@@ -232,8 +236,11 @@ class LeaveAllowance extends Payment {
 	 public function close(Company $company,DateRange $dateRange,$routeInfo) {
 	 	try { 
 	 		$this->transaction->beginTransaction(); 
+	 		$this->closeSpecialLoan($company); 
 	 		$this->removeAllFromBuffer($company); 
-	 		$this->closeLeaveAllowance($company);  
+	 		$this->closeLeaveAllowance($company);
+	 		// @todo close special loan 
+	 		
 	 	    $this->getCheckListService()->closeLog($routeInfo); 
 	 	    $this->transaction->commit();  
 	 	} catch(\Exception $e) {  
@@ -241,6 +248,18 @@ class LeaveAllowance extends Payment {
 	 		throw $e;  
 	 	} 
 	 } 
+	 
+	 public function getClosedBatch(Company $company) {
+	     return $this->getLaMapper()->getClosedBatch($company); 
+	 }
+	 
+	 public function getUnclosedBatch(Company $company) {
+	     return $this->getLaMapper()->getUnclosedBatch($company); 
+	 }
+	 
+	 public function closeSpecialLoan(Company $company) {
+	     $this->getLaMapper()->closeLeaveAllowance($company);  
+	 }
 	 
 	 public function closeLeaveAllowance(Company $company) { 
 	     $this->getLaMapper()->closeLeaveAllowance($company); 	
@@ -255,13 +274,22 @@ class LeaveAllowance extends Payment {
 	 }
 	 
 	 public function saveEmployeeLeaveAllowance($formValues) {
-	 	$leaveEmployeeInfo = array (
-	 			'employeeId'       => $formValues['employeeNumberLeaveAllowance'],
-	 			'companyId'        => $formValues['companyId']
-	 	);
-	 	$this->getLaMapper()
-	 	     ->saveEmployeeLeaveAllowance($leaveEmployeeInfo);
-	 }
+	     try {
+	         $this->transaction->beginTransaction(); 
+	         $company = $this->service->get('company'); 
+	         $this->removeLeaveAllowance($company); 
+    	 	 $leaveEmployeeInfo = array (
+    	 			'employeeId'       => $formValues['employeeNumberLeaveAllowance'],
+    	 			'companyId'        => $formValues['companyId']
+    	 	 );
+    	 	 $this->getLaMapper()
+    	 	      ->saveEmployeeLeaveAllowance($leaveEmployeeInfo); 
+    	 	 $this->transaction->commit(); 
+	     } catch (\Exception $e) {
+	         $this->transaction->rollBack(); 
+	         throw $e; 
+	     } 
+	 } 
 	 
 	 public function removeEmployeeLeaveAllowance($id) {
 	 	return $this->getLaMapper()
@@ -294,6 +322,258 @@ class LeaveAllowance extends Payment {
 	 public function getReportDtls($id) {
 	 	return $this->getLaMapper()
 	 	                     ->getReportDtls($id); 
+	 }
+	 
+	 public function reportByFunction($batch,$bank) {
+	     $result = $this->getLaMapper()->reportByFunction($batch,$bank);
+	     $i = 1; 
+	     $output = "<table  border='1' class='sortable' font-size='6px' align='center' id='table1' width='100%' bordercolorlight='#C0C0C0' bordercolordark='#C0C0C0' style='border-collapse: collapse'>
+	     <thead >
+	     <tr>
+	     <th bgcolor='#F0F0F0'>#</th>
+	     <th bgcolor='#F0F0F0'>Function Code</th>
+	     <th bgcolor='#F0F0F0'>Amount</th>
+	     <th bgcolor='#F0F0F0'>Tax</th>
+	     <th bgcolor='#F0F0F0'>Net Due</th>
+	     </tr>
+	     </thead>
+	     <tbody class='scrollingContent'>";
+	     foreach ($result as $r) {
+	         $amt = 0;
+	         $tax = 0;
+	         $net = 0; 
+	         $amt = $r['amt']; 
+	         $tax = $r['tax']; 
+	         $net = $r['net']; 
+	         $amtTot += $amt;
+	         $taxTot += $tax;
+	         $netTot += $net; 
+    	     $output .= "
+    	     <tr >
+    	     <td><p align='center'>".$i++."</td>
+    	     <td><p align='left'>".$r['sectionCode']."</td>
+    	     <td><p align='right'>".$amt."</td>
+    	     <td><p align='right'>".$tax."</td>
+    	     <td><p align='right'>".$net."</td>
+    	     </tr>";
+	     }
+	     $output .= "</tbody>
+	     <tfoot>
+	     <tr>
+	     <td><p align='center'>&nbsp;</td>
+	     <td><p align='left'><b>Total</b></td>
+	     <td><p align='right'>".$amtTot."</td>
+    	     <td><p align='right'>".$taxTot."</td>
+    	     <td><p align='right'>".$netTot."</td>
+	     </tr>
+	     </tfoot>
+	     </table>";
+	     return $output; 
+	 }
+	 
+	 public function reportByEmployee($employee) {
+	     $result = $this->getLaMapper()->reportByEmployee($employee);
+	     $i = 1;
+	     $output = "<table  border='1' class='sortable' font-size='6px' align='center' id='table1' width='100%' bordercolorlight='#C0C0C0' bordercolordark='#C0C0C0' style='border-collapse: collapse'>
+	     <thead >
+	     <tr>
+	     <th bgcolor='#F0F0F0'>#</th>
+	     <th bgcolor='#F0F0F0'>Employee Name</th>
+<th bgcolor='#F0F0F0'>Financial Year</th>
+<th bgcolor='#F0F0F0'>Issued Date</th>
+<th bgcolor='#F0F0F0'>Issued For</th>
+	     <th bgcolor='#F0F0F0'>Amount</th>
+	     <th bgcolor='#F0F0F0'>Tax</th>
+	     <th bgcolor='#F0F0F0'>Net Due</th>
+	     </tr>
+	     </thead>
+	     <tbody class='scrollingContent'>";
+	     foreach ($result as $r) {
+	         $amt = 0;
+	         $tax = 0;
+	         $net = 0;
+	         $amt = $r['Amount'];
+	         $tax = $r['Tax'];
+	         $net = $r['Net'];
+	         $amtTot += $amt;
+	         $taxTot += $tax;
+	         $netTot += $net;
+	         $output .= "
+    	     <tr >
+    	     <td><p align='center'>".$i++."</td>
+    	     <td><p align='left'>".$r['employeeName']."</td>
+<td><p align='left'>".$r['fyYear']."</td>
+<td><p align='left'>".$r['issueDate']."</td>
+<td><p align='left'>".$r['allowanceFrom']." - ".$r['allowanceTo']."</td>
+    	     <td><p align='right'>".$amt."</td>
+    	     <td><p align='right'>".$tax."</td>
+    	     <td><p align='right'>".$net."</td>
+    	     </tr>";
+	     }
+	     $output .= "</tbody>
+	     <tfoot>
+	     <tr>
+	     <td><p align='center'>&nbsp;</td>
+	     <td><p align='left'><b>Total</b></td>
+<td><p align='center'>&nbsp;</td>
+<td><p align='center'>&nbsp;</td>
+<td><p align='center'>&nbsp;</td>
+	     <td><p align='right'>".$amtTot."</td>
+    	     <td><p align='right'>".$taxTot."</td>
+    	     <td><p align='right'>".$netTot."</td>
+	     </tr>
+	     </tfoot>
+	     </table>";
+	     return $output;
+	 }
+	 
+	 public function reportByFrom($fromDate,$toDate) {
+	     $result = $this->getLaMapper()->reportByFrom($fromDate,$toDate); 
+	     $i = 1;
+	     $output = "<table  border='1' class='sortable' font-size='6px' align='center' id='table1' width='100%' bordercolorlight='#C0C0C0' bordercolordark='#C0C0C0' style='border-collapse: collapse'>
+	     <thead >
+	     <tr>
+	     <th bgcolor='#F0F0F0'>#</th>
+	     <th bgcolor='#F0F0F0'>Employee Name</th>
+<th bgcolor='#F0F0F0'>Financial Year</th>
+<th bgcolor='#F0F0F0'>Issued Date</th>
+<th bgcolor='#F0F0F0'>Issued For</th>
+	     <th bgcolor='#F0F0F0'>Amount</th>
+	     <th bgcolor='#F0F0F0'>Tax</th>
+	     <th bgcolor='#F0F0F0'>Net Due</th>
+	     </tr>
+	     </thead>
+	     <tbody class='scrollingContent'>";
+	     foreach ($result as $r) {
+	         $amt = 0;
+	         $tax = 0;
+	         $net = 0;
+	         $amt = $r['Amount'];
+	         $tax = $r['Tax'];
+	         $net = $r['Net'];
+	         $amtTot += $amt;
+	         $taxTot += $tax;
+	         $netTot += $net;
+	         $output .= "
+    	     <tr >
+    	     <td><p align='center'>".$i++."</td>
+    	     <td><p align='left'>".$r['employeeName']."</td>
+<td><p align='left'>".$r['fyYear']."</td>
+<td><p align='left'>".$r['issueDate']."</td>
+<td><p align='left'>".$r['allowanceFrom']." - ".$r['allowanceTo']."</td>
+    	     <td><p align='right'>".$amt."</td>
+    	     <td><p align='right'>".$tax."</td>
+    	     <td><p align='right'>".$net."</td>
+    	     </tr>";
+	     }
+	     $output .= "</tbody>
+	     <tfoot>
+	     <tr>
+	     <td><p align='center'>&nbsp;</td>
+	     <td><p align='left'><b>Total</b></td>
+<td><p align='center'>&nbsp;</td>
+<td><p align='center'>&nbsp;</td>
+<td><p align='center'>&nbsp;</td>
+	     <td><p align='right'>".$amtTot."</td>
+    	     <td><p align='right'>".$taxTot."</td>
+    	     <td><p align='right'>".$netTot."</td>
+	     </tr>
+	     </tfoot>
+	     </table>";
+	     return $output;
+	 }
+	 
+	 public function reportByDepartment($department) {
+	     $result = $this->getLaMapper()->reportByDepartment($department);
+	     $i = 1;
+	     $output = "<table  border='1' class='sortable' font-size='6px' align='center' id='table1' width='100%' bordercolorlight='#C0C0C0' bordercolordark='#C0C0C0' style='border-collapse: collapse'>
+	     <thead >
+	     <tr>
+	     <th bgcolor='#F0F0F0'>#</th>
+	     <th bgcolor='#F0F0F0'>Employee Name</th>
+<th bgcolor='#F0F0F0'>Financial Year</th>
+<th bgcolor='#F0F0F0'>Issued Date</th>
+<th bgcolor='#F0F0F0'>Issued For</th>
+	     <th bgcolor='#F0F0F0'>Amount</th>
+	     <th bgcolor='#F0F0F0'>Tax</th>
+	     <th bgcolor='#F0F0F0'>Net Due</th>
+	     </tr>
+	     </thead>
+	     <tbody class='scrollingContent'>";
+	     foreach ($result as $r) {
+	         $amt = 0;
+	         $tax = 0;
+	         $net = 0;
+	         $amt = $r['Amount'];
+	         $tax = $r['Tax'];
+	         $net = $r['Net'];
+	         $amtTot += $amt;
+	         $taxTot += $tax;
+	         $netTot += $net;
+	         $output .= "
+    	     <tr >
+    	     <td><p align='center'>".$i++."</td>
+    	     <td><p align='left'>".$r['employeeName']."</td>
+<td><p align='left'>".$r['fyYear']."</td>
+<td><p align='left'>".$r['issueDate']."</td>
+<td><p align='left'>".$r['allowanceFrom']." - ".$r['allowanceTo']."</td>
+    	     <td><p align='right'>".$amt."</td>
+    	     <td><p align='right'>".$tax."</td>
+    	     <td><p align='right'>".$net."</td>
+    	     </tr>";
+	     }
+	     $output .= "</tbody>
+	     <tfoot>
+	     <tr>
+	     <td><p align='center'>&nbsp;</td>
+	     <td><p align='left'><b>Total</b></td>
+<td><p align='center'>&nbsp;</td>
+<td><p align='center'>&nbsp;</td>
+<td><p align='center'>&nbsp;</td>
+	     <td><p align='right'>".$amtTot."</td>
+    	     <td><p align='right'>".$taxTot."</td>
+    	     <td><p align='right'>".$netTot."</td>
+	     </tr>
+	     </tfoot>
+	     </table>";
+	     return $output;
+	 } 
+	 
+	 public function reportByBank($batch,$bank) { 
+	     $result = $this->getLaMapper()->reportByBank($batch,$bank);
+	     $i = 1; 
+	     $output = "<table  border='1' class='sortable' font-size='6px' align='center' id='table1' width='100%' bordercolorlight='#C0C0C0' bordercolordark='#C0C0C0' style='border-collapse: collapse'>
+                	<thead >
+                	<tr>
+                		<th bgcolor='#F0F0F0'>#</th>
+                		<th bgcolor='#F0F0F0'>Employee name</th>
+                		<th bgcolor='#F0F0F0'>Net Due</th>
+                		<th bgcolor='#F0F0F0'>Account No</th>		
+                	</tr>	
+                	</thead>
+                    <tbody class='scrollingContent'>"; 
+	     foreach ($result as $r) {
+	         $net = 0;
+	         $net = $r['Net'];
+	         $netTot += $net;
+	         $output .= "<tr >
+                        <td><p align='center'>".$i++."</td>
+                		<td><p align='left'>".$r['employeeName']."</td>
+                		<td><p align='right'>".$net."</td>
+                		<td><p align='right'>".$r['accountNumber']."</td>
+                	</tr>"; 
+	     }
+	     $output .= "</tbody>
+                	<tfoot>
+                	    <tr>
+                            <td><p align='center'>&nbsp;</td>            
+                		    <td><p align='left'><b>Total</b></td>
+                		    <td><p align='right'>".$netTot."</td>
+                		    <td><p align='center'>&nbsp;</td>
+                	    </tr>	
+                	</tfoot>		
+                </table>"; 
+	     return $output;
 	 }
 	 
 	 public function  getLeaveAllowanceReport(array $param = array()) 

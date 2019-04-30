@@ -1,0 +1,22 @@
+<style>
+<!--
+.noDisp {
+	display: none;
+} 
+-->
+</style>
+<script>
+function myFunction() {
+    window.print();
+}
+</script>
+
+<?php
+$title = 'IPC Reports';
+$this->headTitle ( $title );
+echo "<h4>".$title."</h4>"; 
+echo $report;  
+?>
+<br/>
+<center><button onclick="myFunction()">Print</button></center>
+<br/> 

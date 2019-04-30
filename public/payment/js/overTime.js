@@ -1,6 +1,7 @@
 $(document).ready(function()
 {   
 	$("#empIdOvertime").combobox("option", "disabled", true); 
+	$("#employeeOtId").combobox("option", "disabled", true); 
 	$("#submitOtToSup").button(); 
 	$("#approveOt").button();
 	$("#endorseOt").button(); 
@@ -18,7 +19,7 @@ $(document).ready(function()
 		    buttons : {
 			    "Endorse" : function() {       
 			        var request = $.ajax({
-			            url: "/overtimenew/endorsehrall",
+			            url: "/overtimebyemp/endorsehrall",
 			            type: "POST",
 			        }).done(function(data) {    
 	                    // console.log("success"); 
@@ -47,7 +48,7 @@ $(document).ready(function()
 			// table(); 
 			targetUrl = $(this).attr('href');    
 			var request = $.ajax({
-	            url: '/overtimenew/savedinfo', 
+	            url: '/overtimebyemp/savedinfo', 
 	            type: "POST",
 	            data: {  
 	                from:f,
@@ -67,7 +68,7 @@ $(document).ready(function()
 	});
 	
 	function table() {
-        $("#overtimeContainer").zfTable('/overtimenew/ajaxlist', {
+        $("#overtimeContainer").zfTable('/overtimebyemp/ajaxlist', {
             sendAdditionalParams: function() {
                 var data = $('#OverTimeForm').serialize(); 
                 return '&' + data;
@@ -110,7 +111,7 @@ $(document).ready(function()
 	});*/
 	
 	// $(".rejectOvertime").on('click',function(e) { 
-	$(document.body).on('click','.rejectOvertime a',function(e) { 
+	/*$(document.body).on('click','.rejectOvertime a',function(e) { 
 		e.preventDefault(); 
 		//alert("individual reject"); 
 		targetUrl = $(this).attr('href'); 
@@ -135,7 +136,7 @@ $(document).ready(function()
 			      }
 			}); 
 			$("#dialogRej").dialog("open"); 
-	});  
+	});  */ 
 	
 	/*$("#approveOt").on('click',function(e) { 
 		e.preventDefault(); 
@@ -190,7 +191,7 @@ $(document).ready(function()
 		$("#dialog").dialog("open"); 
 	});
 	
-	$('#submitOtToSup').on('click',function(e) { 
+	/*$('#submitOtToSup').on('click',function(e) { 
 		e.preventDefault();
 	    // console.log("submitted the supervisor"); 
 		var f = $("#otFromDate").val();
@@ -240,13 +241,11 @@ $(document).ready(function()
 		        } 
 		      }
 		});  
-		$("#subToSupDialog").dialog("open");
-		
-		
-	}); 
+		$("#subToSupDialog").dialog("open"); 
+	}); */ 
 	
     //*********************************************************************************************************
-   $(document.body).on('click','.removeOvertime a',function(e) { 
+   /*$(document.body).on('click','.removeOvertime a',function(e) { 
 		e.preventDefault();
 		targetUrl = $(this).attr('href'); 
 		$("#dialog").dialog({
@@ -271,7 +270,7 @@ $(document).ready(function()
 		      }
 		}); 
 		$("#dialog").dialog("open"); 
-	});
+	});*/ 
     
     /*$('#OverTimeForm').validate({ 
     	rules: { 

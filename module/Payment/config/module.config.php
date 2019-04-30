@@ -6,7 +6,8 @@ return array (
 				'Payment\Controller\Paysheet' => 'Payment\Controller\PaysheetController',
 				'Payment\Controller\Advancehousing' => 'Payment\Controller\AdvancehousingController',
 				// 'Payment\Controller\Employeeallowance' => 'Payment\Controller\EmployeeallowanceController',
-				'Payment\Controller\Overtimenew' => 'Payment\Controller\OvertimenewController',
+				//'Payment\Controller\Overtimenew' => 'Payment\Controller\OvertimenewController',
+			    'Payment\Controller\Overtimebyemp' => 'Payment\Controller\OvertimebyempController',
 			    'Payment\Controller\Overtimemanual' => 'Payment\Controller\OvertimemanualController',
 				'Payment\Controller\Otmeal' => 'Payment\Controller\OtmealController', 
 				'Payment\Controller\Carrentposition' => 'Payment\Controller\CarrentpositionController',
@@ -332,16 +333,16 @@ return array (
 						)
 					)
 				), 
-				'overtimenew' => array (
+				'overtimebyemp' => array (
 					'type' => 'segment',
 					'options' => array (
-				        'route' => '/overtimenew[/][:action][/:id]',
+				        'route' => '/overtimebyemp[/][:action][/:id]',
 						'constraints' => array (
 					    	'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
 						    'id' => '[0-9]+' 
 						),
 						'defaults' => array (
-							'controller' => 'Payment\Controller\Overtimenew',
+							'controller' => 'Payment\Controller\Overtimebyemp',
 							'action' => 'index' 
 						) 
 					) 

@@ -35,11 +35,9 @@ td { height: 40px;vertical-align: bottom;border-collapse: collapse; }
 </head>
 <body>
 <?php 
-$title = 'Report Paysheet';
+$title = 'Report Final Entitlement';
 $this->headTitle($title); 
- 
-echo $this->reportHelper($this->name,$this->allowance,
-		$this->deduction,$this->companyDeduction,$this->report); 
+echo $this->report; 
 ?> 
 
 </body>

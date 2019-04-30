@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace Pms\Mapper;
 
@@ -29,8 +29,9 @@ class ManageMapper extends AbstractDataMapper {
 		return $this->toPmsFeList ( $results );
 	}
 	protected function toPmsFeList($results) {
-		$currAct = $results ['Curr_Activity'];
-		
+		$currAct = $results['Curr_Activity']; 
+		//\Zend\Debug\Debug::dump($currAct);
+		//exit; 
 		if ($currAct == 1) {
 			$arr = array (
 					'1' => 'IPC Open',
@@ -61,17 +62,14 @@ class ManageMapper extends AbstractDataMapper {
 	}
 	
 	public function updateRow($formVal) {
-		$values = $this->entityToArray ( $formVal );
-		// $db = $this->getDb();
-		// Zend_Debug::dump($id);
+		$values = $this->entityToArray($formVal);
+		//\Zend\Debug\Debug::dump($values); 
+		$id = $values ['id']; 
 		$notes = $values ['IPC_Notes'];
-		$currActivity = $values ['Current_Activity'];
+		$currActivity = $values ['Curr_Activity'];
 		$data = array ();
-		
-		$today = date ( "Y-m-d" );
-		
-		if ($currActivity == 0 || $currActivity == 1) {
-			//
+		$today = date ( "Y-m-d" ); 
+		if ($currActivity == 0 || $currActivity == 1) { 
 			$ipc = $currActivity;
 			$data ['IPC_Open_Date'] = $today;
 			$myr = 0;
@@ -80,9 +78,7 @@ class ManageMapper extends AbstractDataMapper {
 			$ca = 1;
 			$data ['IPC_Notes'] = $notes;
 		} elseif ($currActivity == 2 || $currActivity == 3) {
-			
-			$myr = 0;
-			
+			$myr = 0; 
 			if ($currActivity == 2) {
 				$myr = 1;
 				$data ['MYR_Open_Date'] = $today;
@@ -92,8 +88,6 @@ class ManageMapper extends AbstractDataMapper {
 			$yend = 0;
 			$hrpc = 0;
 			$ca = 2;
-			// $myrOpenDt = date('Y-m-d');
-			// $ipcCloseDt = date('Y-m-d');
 			$data ['MYR_Notes'] = $notes;
 		} elseif ($currActivity == 4 || $currActivity == 5) {
 			$yend = 0;
@@ -106,37 +100,30 @@ class ManageMapper extends AbstractDataMapper {
 			$myr = 0;
 			$hrpc = 0;
 			$ca = 3;
-			$data ['YED_Notes'] = $notes;
-		} elseif ($currActivity == 6 || $currActivity == 7) {
-			
+			$data['YED_Notes'] = $notes;
+		} elseif ($currActivity == 6 || $currActivity == 7) { 
 			if ($currActivity == 4) {
 				$hrpc = 1;
-				$data ['MYR_Close_Date'] = $today;
-				$data ['YED_Open_Date'] = $today;
+				$data['MYR_Close_Date'] = $today;
+				$data['YED_Open_Date'] = $today;
 			} else {
 				$hrpc = 0;
-				$data ['YED_Close_Date'] = $today;
+				$data['YED_Close_Date'] = $today;
 			}
 			$ipc = 0;
 			$myr = 0;
 			$yend = 0;
 			$ca = 4;
-		}
-		
-		$data ['IPC_Open_Close'] = $ipc;
-		$data ['MYR_Open_Close'] = $myr;
-		$data ['YED_Open_Close'] = $yend;
-		$data ['HRPC_Review_Open_Close'] = $hrpc;
-		$data ['Reports_Status'] = $values ['Reports_Status'];
-		
-		// $data['Close_Year'] = $notes;
-		$data ['Curr_Activity'] = $ca;
-		$data ['id'] = $id;
-		// Zend_Debug::dump($data);
-		// Zend_Debug::dump($id);
-		// exit;
-		
-		// $where = "id='".$id."'";
-		$this->update ( $data );
+		}  
+		$data['IPC_Open_Close'] = $ipc;
+		$data['MYR_Open_Close'] = $myr;
+		$data['YED_Open_Close'] = $yend;
+		$data['HRPC_Review_Open_Close'] = $hrpc;
+		$data['Reports_Status'] = $values ['Reports_Status']; 
+		$data['Curr_Activity'] = $ca; 
+		$data['id'] = $id; 
+		//\Zend\Debug\Debug::dump($data);  
+		//exit;  
+		$this->update($data); 
 	}
 }

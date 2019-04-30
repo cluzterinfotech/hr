@@ -1,14 +1,19 @@
-<?php
+<?php 
 
 namespace Pms\Controller; 
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel; 
 use Zend\Http\PhpEnvironment\Response;
 use Pms\Form\ManageFormValidator;
 use Pms\Form\MyrForm; 
 use Pms\Grid\ManageGrid;
 //use Pms\Grid\ManageGrid;
 use Zend\View\Model\JsonModel;
+use Pms\Grid\MyrReportGrid; 
+use Pms\Grid\MyrAppGrid;
+use Application\Form\LeaveApprovalForm;
+use Application\Form\LeaveApprovalFormValidator;
      
 class MyrformController extends AbstractActionController {
     
@@ -24,6 +29,77 @@ class MyrformController extends AbstractActionController {
 		     ->setSource($this->getService()->select())
 		     ->setParamAdapter($this->getRequest()->getPost());
 		return $this->htmlResponse($grid->render()); 
+	}
+	
+	public function reportAction() { }
+	
+	public function reportajaxlistAction() {
+	    $grid = $this->getGrid();
+	    $employeeId = $this->getUser();
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getService()->selectReport($employeeId))
+	    ->setParamAdapter($this->getRequest()->getPost());
+	    return $this->htmlResponse($grid->render());
+	} 
+	
+	public function myrapproveAction() { }
+	
+	public function approveAction() {
+	    $id = (int) $this->params()->fromRoute('id',0);
+	    if (!$id) {
+	        $this->flashMessenger()->setNamespace('info')
+	             ->addMessage('Form not found,Please Add');
+	        $this->redirect()->toRoute('pmsform', array(
+	            'action' => 'add'
+	        )); 
+	    }
+	    $service = $this->getService();
+	    $leaveInfo = $service->getMyrPmsById($id); 
+	    $form = $this->getApprovalForm();
+	    // $form->bind($leave);
+	    $form->get('id')->setValue($id);
+	    // $form->get('submit')->setAttribute('value','Approve Annual Leave');
+	    $prg = $this->prg('/myrform/approve/'.$id, true); 
+	    
+	    if ($prg instanceof Response ) {
+	        return $prg;
+	    } elseif ($prg === false) {
+	        return array ('form' => $form,'report' => $leaveInfo,);
+	    }
+	    $formValidator = $this->getApprovalFormValidator();
+	    $form->setInputFilter($formValidator->getInputFilter());
+	    $form->setData($prg);
+	    if ($form->isValid()) {
+	        $data = $form->getData();
+	        //\Zend\Debug\Debug::dump($data);
+	        //exit;
+	        $message = $service->approveMyr($data,'1');
+	        //$message = "From Submitted Successfully";//$service->approveIpc($data,'1');
+	        $this->flashMessenger()->setNamespace('info')
+	             ->addMessage($message);
+	        $this->redirect ()->toRoute('myrform',array (
+	            'action' => 'myrapprove'
+	        )); 
+	    }
+	    return array(
+	        'id'        => $id,
+	        'form'      => $form,
+	        'report' => $leaveInfo,
+	        $prg
+	    );
+	}
+	
+	public function ajaxapplistAction() {
+	    $grid = $this->getAppGrid();
+	    $employeeId = $this->getUser();
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getService()->getMyrFormApprovalList($employeeId))
+	         ->setParamAdapter($this->getRequest()->getPost());
+	    return $this->htmlResponse($grid->render()); 
+	}  
+	
+	private function getAppGrid() {
+	    return new MyrAppGrid(); 
 	}
 	
 	public function myrAction() { 
@@ -42,6 +118,16 @@ class MyrformController extends AbstractActionController {
 					'action' => 'status'
 			)); 
 		} 
+		// check if MYR is Submitted
+		$isMyrSubmitted = $this->getService()->isMyrSubmitted($employeeId,$id);
+		if($isMyrSubmitted) {
+		    $this->flashMessenger()
+		         ->setNamespace('info')
+		         ->addMessage('MYR is already submitted to supervisor');
+		    $this->redirect ()->toRoute('pmsform',array (
+		        'action' => 'status'
+		    ));
+		}
 		// check is have MYR 
 		if(!$id) {  
 			//$service->prepareNewIpc($employeeId,$pmsId); 
@@ -62,6 +148,32 @@ class MyrformController extends AbstractActionController {
 		); 
 	}
 	
+	public function myrreportAction() {
+	    $id = (int) $this->params()->fromRoute('id',0);
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    $output = $this->getService()->getMyrPmsById($id);
+	    //\Zend\Debug\Debug::dump($output) ;
+	    $viewmodel->setVariables(array(
+	        'report'     => $output,
+	    ));
+	    return $viewmodel;
+	} 
+	
+	public function submittosupAction() {
+	    $checkIsIpcValid = $this->getService()->isMyrValid($this->getUser()); 
+	    if(!$checkIsIpcValid[0]) {
+	        $a = array('s' => 11,'m' => $checkIsIpcValid[1]);
+	    } else {
+	        //$m = "Weightage is not 100";
+	        $m = "Form is incomplete, please check ";
+	        $m .= $checkIsIpcValid[1];
+	        $a = array('s' => 12,'m' => $m); 
+	    }
+	    return $this->jsonResponse($a);
+	} 
 	
     
 	/*public function addAction() {
@@ -181,6 +293,8 @@ class MyrformController extends AbstractActionController {
 		exit;  
 	}*/
 	
+	 
+	
 	public function updateobjectiveAction() {
 		$formValues = $this->params()->fromPost('formVal',0);
 		// need objective id (update based on id itself)
@@ -221,6 +335,15 @@ class MyrformController extends AbstractActionController {
 		$service = $this->getService();
 		$service->updateSubObjective($data);
 		exit; 
+	}
+	
+	private function getApprovalForm() {
+	    return new LeaveApprovalForm();
+	    // return $form;
+	}
+	
+	private function getApprovalFormValidator() {
+	    return new LeaveApprovalFormValidator(); 
 	}
 	
 	/*public function deleteobjectiveAction() {
@@ -281,8 +404,7 @@ class MyrformController extends AbstractActionController {
 	public function getdtlsdtlsbyidAction() {
 		$id = (int) $this->params()->fromPost('dtlsid',0);
 		//$id = '31310'; // @todo get
-		$res = $this->getService()->getDtlsDtlsById($id);
-		
+		$res = $this->getService()->getDtlsDtlsById($id); 
 		$data = array(
 				'id'                        => $res['id'],
 				'Obj_Id'                    => $res['S_Obj_Id'],
@@ -302,25 +424,20 @@ class MyrformController extends AbstractActionController {
 				'Myr_Result'                => $res['Myr_Result'],
 				'Myr_Gap'                   => $res['Myr_Gap'],
 				'Myr_Action_Plan'           => $res['Myr_Action_Plan'],
-				'Myr_Superior_Comments'     => $res['Myr_Superior_Comments'],
-	
+				'Myr_Superior_Comments'     => $res['Myr_Superior_Comments'], 
 		);
 		echo json_encode($data); 
 		exit; 
 	}
 	
-	public function reportAction() {
-		
-	}
 	
-	public function myrapproveAction() {
 	
-	} 
+	 
 	
-	public function statusAction() {
-		$status = "not opened";// $this->getService()->getPmsStatus($this->getUser());
-	    return array('status' => $status); 
-	}
+	//public function statusAction() {
+		//$status = "not opened";// $this->getService()->getPmsStatus($this->getUser());
+	    //return array('status' => $status); 
+	//}
     
 	public function htmlResponse($html) {
 		$response = $this->getResponse();
@@ -334,7 +451,7 @@ class MyrformController extends AbstractActionController {
 	}
 	
 	private function getGrid() {
-		return new ManageGrid();
+	    return new MyrReportGrid(); 
 	}
     
 	private function getDbAdapter() {
@@ -369,7 +486,6 @@ class MyrformController extends AbstractActionController {
 		return $this->getLookupService()->getEmpTypeList();
 	} 
 	
-	
 	private function getLookupService() {
 		return $this->getServiceLocator()->get('lookupService');
 	}
@@ -381,5 +497,16 @@ class MyrformController extends AbstractActionController {
 	private function getUserInfoService() {
 		return $this->getServiceLocator()->get('userInfoService');
 	} 
+	
+	public function jsonResponse($data)
+	{
+	    if(!is_array($data)){
+	        throw new \Exception('$data param must be array');
+	    }
+	    $response = $this->getResponse();
+	    $response->setStatusCode(200);
+	    $response->setContent(json_encode($data));
+	    return $response;
+	}
 	
 }   

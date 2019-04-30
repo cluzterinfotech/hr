@@ -369,10 +369,10 @@ class AttendanceController extends AbstractActionController {
 		// 'companyDeduction' => $this->companyDeductionArray()
 		); 
 		return $viewmodel; 
-	}  
+	}   
 	
 	public function getReportForm() {
-		$form = new AttendanceReport(); 
+		$form = new AttendanceReport();  
 		$form->get('empIdAttendance')
 		     ->setOptions(array('value_options' => $this->getEmployeeList()))
 		;

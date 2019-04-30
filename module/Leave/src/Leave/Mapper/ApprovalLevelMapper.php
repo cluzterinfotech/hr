@@ -57,7 +57,7 @@ class ApprovalLevelMapper extends AbstractDataMapper {
 		;      
 		$sqlString = $sql->getSqlStringForSqlObject($select);
 		$results = $this->adapter->query($sqlString)->execute()->current();
-		return $results;
+		return $results; 
 	}
 	
 	public function getOvertimeLevelRow($approvedLevel) {

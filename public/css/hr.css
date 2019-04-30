@@ -11,6 +11,8 @@
 -o-user-select: none;
 user-select: none;
 */
+
+
 .errorMessage {
 	background-color: #ffffd5;
 	border: 2px solid red;
@@ -316,6 +318,11 @@ div#footer a {
 	display: inline;
 	padding: 0;
 	color: #C6D5FD
+}
+
+.compdiff {
+	background: #333;
+	color: #FFF
 }
 
 div#header a {

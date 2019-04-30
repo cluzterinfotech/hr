@@ -164,7 +164,7 @@ $(document).ready(function()
 		$("#dialog").dialog("open"); 
 	});
 	
-	$('#submitOtToSup').on('click',function(e) { 
+	/*$('#submitOtToSup').on('click',function(e) { 
 		e.preventDefault();
 	    // console.log("submitted the supervisor"); 
 		var f = $("#otFromDate").val();
@@ -217,7 +217,7 @@ $(document).ready(function()
 		$("#subToSupDialog").dialog("open");
 		
 		
-	}); 
+	}); */
 	
     //*********************************************************************************************************
    $(document.body).on('click','.removeMOvertime a',function(e) { 

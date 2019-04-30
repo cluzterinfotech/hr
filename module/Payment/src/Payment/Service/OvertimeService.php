@@ -9,7 +9,7 @@ use Payment\Model\Company;
 
 class OvertimeService extends Approvals { 
 	
-	private $overtimeMapper;
+	private $overtimeMapper; 
 	
 	public $formType = 'OverTime';
 	
@@ -21,41 +21,105 @@ class OvertimeService extends Approvals {
 	    return $this->services->get('overtimeMapper'); 
 	} 
 	
+	public function getAttendanceByDate($date,$emp) { 
+	    $row = $this->getOvertimeMapper()->getAttendanceByDate($date,$emp);
+	    if($row) {
+	        $inT = $row['startingTime'];
+	        $out = $row['endingTime'];
+    	    $res = array(
+    	        'inTime'          => $inT,
+    	        'outTime'         => $out,
+    	        'locWorkHours'    => $row['locWorkHours'],
+    	        'otElegibleHours' => $row['difference'],
+    	        'attendanceId'    => $row['id'],
+    	        'dayStatus'       => $row['dayStatus']
+    	    ); 
+    	    return $res; 
+	    }
+	    return array('rec' => 0); 
+	} 
+	
+	public function getEmpOtById($id) {
+	    $row = $this->getOvertimeMapper()->getEmpOtById($id); 
+	    //\Zend\Debug\Debug::dump($row);
+	    if($row) {
+	        //$inT = $row['startingTime'];
+	        //$out = $row['endingTime'];
+	        $otHrs = $row['overTimeHours']; 
+	        $ot = explode(':', $otHrs); 
+	        $hr = $ot[0];
+	        $min = $ot[1];
+	        $res = array(
+	            'id'              => $row['id'], 
+	            'attendanceId'    => $row['attendanceId'],
+	            'employeeOtId'    => $row['employeeOtId'],
+	            'otDate'          => $row['otDate'],
+	            'inTime'          => $row['inTime'],
+	            'outTime'         => $row['outTime'],
+	            'locWorkHours'    => $row['locWorkHours'],
+	            'otElegibleHours' => $row['otElegibleHours'],
+	            'overTimeHours'   => $hr,
+	            'overTimeHoursMin'=> $min,
+	            'numberOfMeals'   => $row['numberOfMeals'],
+	            'otStatus'        => $row['otStatus'],
+	            'dayStatus'       => $row['dayStatus'],
+	            
+	            //'inTime'          => $inT,
+	            //'outTime'         => $out,
+	            //'locWorkHours'    => $row['locWorkHours'],
+	            //'otElegibleHours' => $row['difference'],
+	            //'attendanceId'    => $row['id'],
+	            //'dayStatus'       => $row['dayStatus']
+	        );
+	        return $res;
+	    }
+	    return array('rec' => 0);
+	}
+	
+	public function saveot($values) {
+	    return $this->getOvertimeMapper()->saveot($values); 
+	}
+	
+	public function updateot($values) {
+	    return $this->getOvertimeMapper()->updateot($values);
+	}
+	
 	public function selectEmployeeOvertime($employeeNumber) {
 		return $this->getOvertimeMapper()->selectEmployeeOvertime($employeeNumber);
 	} 
 	
-	public function selectEmployeeAttendance($arr) { 
-		if(!$arr['emp'] || !$arr['from'] || !$arr['to']) {
+	public function selectEmpOvertime($emp) { 
+	    if(!$emp) {
 			return array(); 
-			//$emp = $this->userInfoService->getEmployeeId();
-			//$dayMinus = date('d') - 10;
-			//$from = date('Y')."-".date('m')."-".$dayMinus;
-			//$arr = array('emp' => $emp,'from' => $from,'to' => $this->dateMethods->getToday());
 		}  
-		$ids = $this->getSubmittedOtIds($arr); 
-		return $this->getOvertimeMapper()->selectEmployeeAttendance($arr,$ids); 
+		return $this->getOvertimeMapper()->selectEmpOvertime($emp);   
 	}
+	
+	
 	
 	public function selectEmployeeManualAttendance() {
 	    return $this->getOvertimeMapper()->selectEmployeeManualAttendance();
+	}
+	
+	public function removeEmpOvertime($id) {
+	    return $this->getOvertimeMapper()->removeEmpOvertime($id);
 	}
 	
 	public function removeManualOt($id) {
 	    return $this->getOvertimeMapper()->removeManualOt($id);
 	}
 	
-	public function getSubmittedOtIds($arr) { 
-	    return $this->getOvertimeMapper()->getSubmittedOtIds($arr);      
+	public function getSubmittedOtIds() { 
+	    return $this->getOvertimeMapper()->getSubmittedOtIds();      
 	}      
     
 	public function updateAttendance($array) {
 		return $this->getOvertimeMapper()->updateAttendance($array);
 	}
 	
-	public function getAttendanceOtSum($arr) {
-		$ids = $this->getSubmittedOtIds($arr);
-		return $this->getOvertimeMapper()->getAttendanceOtSum($arr,$ids);
+	public function getAttendanceOtSum() {
+		$ids = $this->getSubmittedOtIds(); 
+		return $this->getOvertimeMapper()->getAttendanceOtSum($ids);
 	}
 	
 	/*public function isAllowedToSubmit($user,DateRange $dateRange) {
@@ -67,6 +131,45 @@ class OvertimeService extends Approvals {
 		} 
 		return 0;    
 	}*/        
+	
+	public function selectEmpAppOvertime($emp) {
+	    if(!$emp) {
+	        return array();
+	    }
+	    // get subordinate ids
+	    $ids = $this->getSubordinateIds($emp);
+	    // @todo condition
+	    return $this->getOvertimeMapper()->selectEmpAppOvertimeByIds($ids); 
+	} 
+	
+	public function getSubordinateIds($emp) {
+	    //$employeeNumber = $this->userInfoService->getEmployeeId(); 
+	    $otList = $this->getOvertimeMapper()->selectEmpAppOvertime(); 
+	    if($otList) {
+	        $totId = array(); 
+	        $i = 1;
+	        foreach($otList as $lst) {
+	            //\Zend\Debug\Debug::dump($lst); 
+	            //exit; 
+	            $applicant = $lst['employeeId'];
+	            $approvedLevel = $lst['status'] + 1;
+	            $approver = $emp;
+	            //echo "Employee Number <br/>".$employeeNumber;
+	            // @todo check is the current user approver for current level
+	            $isApprover = $this->checkIsApprover($applicant,$approver,$approvedLevel);
+	            if($isApprover) {
+	                $totId[] = $lst['id']; 
+	            } 
+	            $i++; 
+	        } 
+	        //\Zend\Debug\Debug::dump($totId); 
+	        //exit; 
+	        if(!$totId) { 
+	            $totId[] = 0; 
+	        } 
+	    } 
+	    return $totId; 
+	}  
 	
 	public function isHaveThisMonthOt($user,DateRange $dateRange) { 
 		return $this->getOvertimeMapper()->isHaveThisMonthOt($user,$dateRange);	 
@@ -100,10 +203,7 @@ class OvertimeService extends Approvals {
 		return $this->getOvertimeMapper()->update($entity); 
 	}
 	
-	public function getOvertimeFormApprovalList($userId) { 
-		return $this->getOvertimeMapper()
-		            ->getOvertimeFormApprovalList($this->getIdsList($userId,'1'));
-	}
+	
 	
 	public function endorseAllByHr(DateRange $dateRange) {
 	    try {
@@ -137,24 +237,28 @@ class OvertimeService extends Approvals {
 	    } 
 	}
 	
-	// @todo endorse approver check
-	public function getOvertimeFormEndorseList($userId) { 
+	public function getOvertimeFormApprovalList($userId) {
+	    return $this->getOvertimeMapper()
+	                ->getOvertimeFormApprovalList($this->getIdsList($userId,'4'));
+	} 
 	
-		return $this->getOvertimeMapper()
-		            ->getOvertimeFormApprovalListHr($this->getIdsList($userId,'3'));
+	// @todo endorse approver check
+	public function getOvertimeFormEndorseList($userId) {
+	    //echo "here";
+	    //exit; 
+	    return $this->getOvertimeMapper()
+	                ->getOvertimeFormEndorseList($this->getIdsList($userId,'5'));
 	} 
 	
 	public function getIdsList($userId,$lvl) {
 		$employeeNumber = $userId;// $this->userInfoService->getEmployeeId(); 
-		$otWaitingList = $this->getOvertimeMapper()->getOvertimeFormWaitingAppList();
+		$otWaitingList = $this->getOvertimeMapper()->getOvertimeFormWaitingAppList($lvl);
 		if($otWaitingList) {
 			$totId = array();
 			$i = 1;
-			foreach($otWaitingList as $lst) {
-				//\Zend\Debug\Debug::dump($lst);
-				//exit;
-				$applicant = $lst['empIdOvertime'];
-				$approvedLevel = $lst['otStatus'];
+			foreach($otWaitingList as $lst) { 
+				$applicant = $lst['employeeId'];
+				$approvedLevel = $lst['status'];
 				//\Zend\Debug\Debug::dump($approvedLevel);
 				//exit; 
 				/*if($lvl == 2) {
@@ -163,13 +267,13 @@ class OvertimeService extends Approvals {
 				$approver = $employeeNumber;
 				// @todo check is the current user approver for current level
 				$isApprover = $this->checkIsApprover($applicant,$approver,$approvedLevel);
-				if($isApprover) {
-					$totId[] = $lst['id'];
-				}
-				$i++;
+				if($isApprover) { 
+					$totId[] = $lst['id']; 
+				} 
+				$i++; 
 			}
-			 //\Zend\Debug\Debug::dump($totId); 
-			 //exit; 
+			 //\Zend\Debug\Debug::dump($totId);  
+			 //exit;  
 			if(!$totId) { 
 				$totId[] = 0; 
 			} 
@@ -185,53 +289,67 @@ class OvertimeService extends Approvals {
 		return $this->approvalService->isApprover($this->formType,$applicant,$approver,$approvedLevel);
 	}
 	
-	public function submittosup($array) { 		 
-		try {
-			$empId = $array['emp'];
-			$from = $array['from'];
-			$to = $array['to'];
-			$this->databaseTransaction->beginTransaction(); 
-			// get sum 
-			$sum = $this->getAttendanceOtSum($array);
-			//var_dump($array);
-			
-			//\Zend\Debug\Debug::dump($array);
-			//exit;
-			$norHr = $sum['normalHour'];
-			$holiHr = $sum['holidayHour'];
-			$norHrArr = explode(':', $norHr); 
-			$holiHrArr = explode(':', $holiHr); 
-			
-			$normalHr = (int)$norHrArr[0]+((int)$norHrArr[1]/60); 
-			$holidayHr = (int)$holiHrArr[0]+((int)$holiHrArr[1]/60); 
-			//$norHr = str_replace(':', '.', $norHr);
-			//$holiHr = str_replace(':', '.', $holiHr);
-			//$sum = $this->getAttendanceOtSum($array); 
-			$empOt = array(
-					'empIdOvertime'     => $empId,
-					'startingDate'      => $from,
-					'endingDate'        => $to,
-					'otStatus'          => 2,
-			    'employeeNoNOHours' => $normalHr,
-			    'employeeNoHOHours' => $holidayHr,
-					'numberOfMeals'     => $sum['noOfMeals'], 
-			); 
-			// add ot details
-			$empOtId = $this->getOvertimeMapper()->insert($empOt);  
-			//exit;
-			// update attendance flag in EmployeeAttendance
-			$updateAtten = array(
-					'isSubmitted'  => 1,
-					'empOtId'      => $empOtId,
-			);
-			$this->getOvertimeMapper()->updateEmployeeAttendance($updateAtten,$from,$to,$empId); 
-			$this->databaseTransaction->commit();  
-		} catch(\Exception $e) {
-			$this->databaseTransaction->rollBack();
-			throw  $e;
-		}
-		// send mail 
-		$this->mailService->overtimeFormSubmitAlert($empId);  
+	public function submittosup($empId) { 
+	    try { 
+	        $this->databaseTransaction->beginTransaction();
+	        // fetch maximum reference id 
+	        $tot = 0; 
+	        $maxRef = $this->getOvertimeMapper()->getMaxRef(); 
+	        $plusOne = $maxRef + 1; 
+	        // update reference number for current user 
+	        // get sum of normal
+	        $n = $this->getOvertimeMapper()->getEmpOtSum($empId,'N');
+	        //\Zend\Debug\Debug::dump($n);
+	        //exit; 
+	        if($n) {
+    	        $normalHr = $n['hour']; 
+    	        $nSplit = explode(':',$normalHr); 
+    	        $tot = $nSplit[0] + ($nSplit[0]/60); 
+    	        $meals =  $n['noOfMeals'];  
+    	        if(!$normalHr) {
+    	            $normalHr = 0; 
+    	        }
+	        }
+	        $h = $this->getOvertimeMapper()->getEmpOtSum($empId,'H');
+	        //\Zend\Debug\Debug::dump($h);
+	        //exit; 
+	        if($h) {
+	            $holidayHr = $h['hour'];
+	            $hSplit = explode(':',$holidayHr);
+	            $tot += $hSplit[0] + ($hSplit[0]/60); 
+	            $meals +=  $h['noOfMeals']; 
+	            if(!$holidayHr) {
+	                $holidayHr = 0;
+	            }
+	            if(!$meals) {
+	                $meals = 0;
+	            }
+	        }
+	        $this->getOvertimeMapper()->updateRef($empId,$plusOne);
+	        $this->getOvertimeMapper()->updateOtStatus($empId,$plusOne); 
+	        
+	        if($normalHr || $holidayHr || $meals) {
+    	        $buff = array(
+    	            'normalHours'   => $normalHr,
+    	            'holidayHours'  => $holidayHr,
+    	            'numberOfMeals' => $meals,
+    	            'employeeId'    => $empId,
+    	            'refNumber'     => $plusOne,
+    	            'totalHours'    => $tot,
+    	            'status'        => 2,
+    	        ); 
+    	        // insert into buffer  
+    	        $this->getOvertimeMapper()->insertOtBuff($buff); 
+    	        $this->databaseTransaction->commit();  
+	        }
+	        
+	    } catch(\Exception $e ) {
+	        $this->databaseTransaction->rollBack();
+	        throw $e; 
+	    } 
+	    // send mail 
+	    //$approver = $this->positionService->getImmediateSupervisorByEmployee($empId);  
+	    //$this->mailService->overtimeFormSubmitAlert($empId,$approver);    
 	}
 	
 	public function isAllowedToEdit($id) {
@@ -274,66 +392,153 @@ class OvertimeService extends Approvals {
 		$otInfoArray = $this->getOvertimeMapper()->getOvertimeById($id); 
 		if(!$otInfoArray) {
 			return "<p>No records found</p>";  
-		}
-		$details = $this->getOvertimeMapper()->getAttenDetails($id); 
+		} 
+		$refNum = $otInfoArray['refNumber']; 
+		$details = $this->getOvertimeMapper()->getAttenDetails($refNum);  
 		$output = "
             <table cellpadding='10px' cellspacing='10px'>
-                <tr><td>Name :</td><td><b>".$otInfoArray['employeeName']."</b></td>
-                <td>&nbsp;</td><td>Number Of Meal:</td>
-                <td><b>".$otInfoArray['numberOfMeals']."</b></td>
-                </tr><tr><td>OT From :</td><td>".$otInfoArray['startingDate']."</td>
-    			<td>&nbsp;</td><td>Normal Hours :</td>
-    			<td><b>".$otInfoArray['employeeNoNOHours']."</b></td>
-    			</tr><tr> <td>OT To :</td>
-                <td>".$otInfoArray['endingDate']."</td>
-    			<td>&nbsp;</td><td>Holiday Hour :</td>
-    			<td><b>".$otInfoArray['employeeNoHOHours']."</b></td> 
+                <tr>
+                    <td>Name :</td>
+                    <td><b>".$otInfoArray['employeeName']."</b></td>
+                    <td>&nbsp;</td>
+                    <td>Holiday Hour :</td>
+    			    <td><b>".$otInfoArray['holidayHours']."</b></td> 
+                </tr>
+                <tr>
+                    <td>Number Of Meal:</td>
+                    <td><b>".$otInfoArray['numberOfMeals']."</b></td>
+                    <td>&nbsp;</td>
+    			<td>Normal Hours :</td>
+    			<td><b>".$otInfoArray['normalHours']."</b></td>
     			</tr></table>
     			<br/>
-    			<p><b>Attendance Details</b></p>
+    			<p><b>Attendance Details (N:Normal,H:Holiday)</b></p>
     			<table id = 'myReport' cellpadding='5px' cellspacing='5px'>
 				  <thead><tr><th >Attendance Date</th>
 				  <th >In Time</th><th >Out Time</th>
-				  <th >Total Hrs</th><th >OT Hrs</th>
-				  <th >Actual OT</th><th >Actual Holiday OT</th>
-				  <th >No. Of Meal</th></tr></thead><tbody>";
+				  <th >Location Work Hrs</th><th >Elegible OT Hrs</th>
+				  <th >Actual OT</th><th >No. Of Meal</th>
+				  <th >Day Status</th></tr></thead><tbody>";
 		foreach ($details as $dtls) {
 	        $output .= "
-			<tr ><td>".$dtls['attendanceDate']."</td>
-			<td>".$dtls['startingTime']."</td><td>".$dtls['endingTime']."</td>
-			<td>".$dtls['duration']."</td><td>".$dtls['difference']."</td>
-			<td >".$dtls['normalHour']."</td><td >".$dtls['holidayHour']."</td>
-			<td >".$dtls['noOfMeals']."</td></tr>
+			<tr ><td>".$dtls['otDate']."</td>
+			<td>".$dtls['inTime']."</td><td>".$dtls['outTime']."</td>
+			<td>".$dtls['locWorkHours']."</td><td>".$dtls['otElegibleHours']."</td>
+			<td >".$dtls['overTimeHours']."</td><td >".$dtls['numberOfMeals']."</td>
+			<td >".$dtls['dayStatus']."</td></tr>
 		    "; 
 		} 
         $output .= "</tbody></table>"; 
 		return $output; 
 	} 
-	
-	
+		
 	public function approveOtBySup($data,$userId) { 
 		try {
+		    $inc = 0; 
 			$this->databaseTransaction->beginTransaction(); 
 			$id = $data->getId(); 
-			if(!$this->isWaitingForApproval($id)) { 
-				return 0; 
-			} 
 			$appType = $data->getApprovalType(); 
-			if($appType == 1) {
-				$this->getOvertimeMapper()->supervisorApproval($id);  
+			
+			$ref = $this->getOvertimeMapper()->isNotApproved($id); 
+			if(!$ref) {
+			    return 0;     
+			}   
+			$otId = $ref['id'];  
+			$status = $ref['otStatus'];  
+			$totHrs = $ref['totalHours']; 
+			$refNumber = $ref['refNumber']; 
+			//\Zend\Debug\Debug::dump($data); 
+			//\Zend\Debug\Debug::dump($appType); 
+			//exit;  
+			if($appType == 1) { 
+			    if(($totHrs > 50) && ($status == '2')) { 
+			        $inc = 3; 
+			    } else if(($totHrs < 50) && ($status == '2')) { 
+			        $inc = 4; 
+			    } else { 
+			        $inc = $status + 1; 
+			    } 
+			    if($inc == 4) {
+			       // @todo add to paysheet ot and ot meal 
+			        $result = $this->getOvertimeMapper()->empAppliedOtById($refNumber); 
+			        foreach ($result as $row) {
+			            //\Zend\Debug\Debug::dump($row);
+			            $hour = 0;
+			            $hHour = 0; 
+			            $day = $row['dayStatus'];
+			            $normalHr = $row['overTimeHours'];
+			            $nSplit = explode(':',$normalHr);
+			            $tot = $nSplit[0] + ($nSplit[1]/60);  
+			            if($day == 'N') {
+			                $hour = $tot;
+			            } else {
+			                $hHour = $tot;
+			            } 
+			           $endorse = array(
+    			           'empIdOvertime'       => $row['employeeOtId'],
+			               'employeeNoNOHours'   => $hour,
+			               'employeeNoHOHours'   => $hHour,
+    			           'numberOfMeals'       => $row['numberOfMeals'],
+    			           'startingDate'        => $row['otDate'],
+    			           'endingDate'          => $row['otDate'],
+    			           'otStatus'            => 3,
+    			           //'endorsedDate'        => $row[''],
+    			           //'supervisorComments'  => $row[''],
+    			           //'hrComments'          => $row[''],
+        			   );  
+			           //\Zend\Debug\Debug::dump($endorse);
+			           $this->getOvertimeMapper()->addOtToEndorsement($endorse);   
+			        }
+			        //exit; 
+			        $this->getOvertimeMapper()->removeFromMapper($refNumber);  
+			    } // else { 
+			    $update = array( 
+			        'otStatus' => $inc,
+			        //'approvalRefNumber'       => $refNumber,
+			    );
+			    $updateOne = array(
+			        'status' => $inc,
+			        //'approvalRefNumber'       => $refNumber,
+			    );
+			    $this->getOvertimeMapper()->reverseot($update,$refNumber);  
+			    $this->getOvertimeMapper()->reverseotApp($updateOne,$refNumber);  
+			    //} 
 			} else {
-				$this->getOvertimeMapper()->supervisorReject($id);
-				$this->getOvertimeMapper()->reverseAttendance($id); 
+			    $inc = 1; 
+			    $update = array(
+			        'otStatus' => $inc,
+			        'approvalRefNumber'    => 0,
+			    );
+			    
+			    $this->getOvertimeMapper()->reverseot($update,$refNumber);  
+			    $this->getOvertimeMapper()->removeFromMapper($refNumber); 
 			} 
+			
 			$this->databaseTransaction->commit(); 
-			return 1; 
+			//return 1; 
 		} catch (\Exception $e) { 
 			$this->databaseTransaction->rollBack(); 
 			throw $e; 
 		}
+		if($inc == 1) {
+		    // send cancel alert 
+		}
+		if($inc == 3) {
+		    // send mail to HOD
+		}
+		if($inc == 4) {
+		    // send mail to HR  
+		}
+		if($inc == 5) {
+		    // send approval alert 
+		}
 		return 0; 
 	} 
 	
+	// adds ot and meal 
+	//public function addOtToEndorsement($refNumber) {
+	    //return $this->getOvertimeMapper()->removeFromMapper($refNumber);  
+	//}
 	
 	public function attendanceReport($company,$values) { 
 		$i = 1; 

@@ -1,28 +1,30 @@
-<?php
+<?php 
 
-namespace Pms\Model;
+namespace Pms\Model; 
 
 use Pms\Mapper\PmsFormMapper;
-use Payment\Model\Company;
-use Payment\Model\DateRange; 
+//use Payment\Model\Company;
+//use Payment\Model\DateRange; 
 use Application\Persistence\TransactionDatabase;
+//use Leave\Model\ApprovalService;
+use Leave\Model\Approvals; 
 
-class PmsFormService {
+class PmsFormService extends Approvals {
     
-    private $pmsFormMapper; 
+    //private $pmsFormMapper; 
     
-    private $service;
+   // private $service;
     	
-	public function __construct(PmsFormMapper $pmsFormMapper,$sm) {
+	/*public function __construct(PmsFormMapper $pmsFormMapper,$sm) {
 		$this->pmsFormMapper = $pmsFormMapper; 
 		$this->service = $sm; 
 		$this->transaction = 
 		new TransactionDatabase($this->service->get('sqlServerAdapter'));
-	} 
+	} */
 	
 	public function isNonExecutive($employeeId) {
 		//return 1; 
-		$posService = $this->service->get('positionService');
+		$posService = $this->services->get('positionService');
 		return $posService->isNonExecutive($employeeId); 
 	}
 	
@@ -55,6 +57,14 @@ class PmsFormService {
 	
 	public function isIpcOpened($pmsId) {
 		return $this->pmsFormMapper->isIpcOpened($pmsId); 
+	}
+	
+	public function isIpcSubmitted($employeeId,$id) {
+	    return $this->pmsFormMapper->isIpcSubmitted($employeeId,$id);
+	}
+	
+	public function isMyrSubmitted($employeeId,$id) {
+	    return $this->pmsFormMapper->isMyrSubmitted($employeeId,$id); 
 	}
 	
 	public function isMyrOpened($pmsId) {
@@ -113,6 +123,38 @@ class PmsFormService {
 		return $this->getHeader($id); 
 	}
 	
+	 
+	
+	public function getIpcReport($id) {
+	    $row = $this->pmsFormMapper->getPmsHeaderId($id);
+	    $output = $this->getHeader($row); 
+	    $employeeId = $row['Pmnt_Emp_Mst_Id'];
+	    //$isNonEx = 1;//$this->isNonExecutive($employeeId);
+	    $output .= $this->getTotalWeightage($id);
+	    $output .= "<br/>
+          <table width='1050px' border='1' font-size='6px' align='center' id='table1' width='100%'
+	      bordercolor='#ccc' cellpadding = '6px'  style='border-collapse: collapse'> ";
+	    $dtls = $this->pmsFormMapper->getDtlsByMstId($id);
+	    foreach($dtls as $r) {
+	        $dtlsId = $r['id'];
+	        $objId = $r['Obj_Id'];
+	        if($objId != '21' && $objId != '22') {
+	            //\Zend\Debug\Debug::dump($objId);
+	            //exit;
+	            $output .= $this->getFormDtlsMain($r,$c,$isNonEx);
+	            $dtlsDtls = $this->pmsFormMapper->getDtlsDtlsByDtlsId($dtlsId);
+	            foreach($dtlsDtls as $subsub) {
+	                $output .= $this->getFormDtlsSub($subsub,$formType,$isNonEx);
+	            } 
+	        } else {
+	            $output .= $this->getFormDtlsMainWoEditDel($r,$c,$isNonEx);
+	        }
+	        $c++;
+	    }
+	    $output .= "</table><br/>"; 
+	    return $output;
+	}
+	
 	public function getIpcPmsById($id,$isNonEx) {
 		$formType = "IPC"; 
 		$c= 1; 
@@ -157,6 +199,19 @@ class PmsFormService {
 		return $this->pmsFormMapper->getDtlsDtlsById($id);
 	}
 	
+	public function selectStatus($employeeId) {
+	    //return array(); 
+	    return $this->pmsFormMapper->selectReport($employeeId); 
+	} 
+	
+	public function selectAppList($employeeId) {
+	    //return array();
+	    return $this->pmsFormMapper->selectAppList($employeeId);
+	}
+	
+	public function selectReport($employeeId) {
+	    return $this->pmsFormMapper->selectReport($employeeId);  
+	}
 	
 	public function getTotalWeightageById($id) { 
 		return $this->pmsFormMapper->getTotWeightage($id); 
@@ -180,15 +235,14 @@ class PmsFormService {
 	} 
 	
 	
-	public function getFormDtlsMain($row,$c,$isNonEx) {
+	public function getFormDtlsMain($row,$c,$isNonEx,$disp = 'class = "noDisp"') {
 		$r = array(); 
 		if($isNonEx) {
 		    $name = "Standard";
 		} else {
 			$name = "Base";
 		} 
-		$output = "
-		     
+		$output = " 	     
 		    <tr bgcolor='#ccc' ".$formType." style ='font-weight:bold;'>  
             <td width='9px' align='center' >&nbsp;</td>
             <td width='20px' align='center' >&nbsp;
@@ -200,16 +254,13 @@ class PmsFormService {
                 $output .="<td width='150px' align='center' <b>Stretch 2</b></td>
                            <td width='50px' align='center' <b>Stretch 1</b></td>";
             }		     
-           
-            
-            $output .="</tr>
-            		
+            $output .="</tr>	
             <tr >
             <td align='center' class='noBorder'>".$c."</td>
             <td align='left' > 
-            <p><b><a href='#' id = '".$row['id']."' class = 'editIpc'>Edit</a></b></p>
+            <p $disp><b><a href='#' id = '".$row['id']."' class = 'editIpc'>Edit</a></b></p>
             <p><b>Main</b></p>
-            <p><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpc'>Delete</a></b></p>
+            <p $disp><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpc'>Delete</a></b></p>
             </td> 
             <td>".$row['Obj_Desc']."</td>
             <td>".$row['Obj_Weightage']."</td>
@@ -221,9 +272,7 @@ class PmsFormService {
             }
            // $output .="<td>".$row['Obj_Stretch_02']."</td>
             //<td>".$row['Obj_Stretch_01']."</td>
-            
-            $output .="</tr>
-            		
+            $output .="</tr> 	
 		    ";
 		return $output;
 	}
@@ -235,8 +284,7 @@ class PmsFormService {
 		} else {
 			$name = "Base";
 		} 
-		$output = "
-		  
+		$output = " 
 		    <tr bgcolor='#ccc' ".$formType." style ='font-weight:bold;'>
             <td width='9px' align='center' >&nbsp;</td>
             <td width='20px' align='center' >&nbsp;
@@ -271,16 +319,16 @@ class PmsFormService {
 		return $output;
 	}
 	
-	public function getFormDtlsSub($row,$formType,$isNonEx) {
+	public function getFormDtlsSub($row,$formType,$isNonEx,$disp = 'class = "noDisp"') {
 		$r = array();
 		$name = "";
 		$output = " 
             <tr ".$formType.">
 	            <td align='center' class='noBorder'>".$i."</td>
 	            <td align='left' >
-	            <p><b><a href='#' id = '".$row['id']."' class = 'editIpcDtls'>Edit</a></b></p>
+	            <p $disp><b><a href='#' id = '".$row['id']."' class = 'editIpcDtls'>Edit</a></b></p>
 	            <p><b>Sub</b></p>
-	            <p><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpcDtls'>Delete</a></b></p>
+	            <p $disp><b><a href='#' id = '"."d".$row['id']."' class = 'deleteIpcDtls'>Delete</a></b></p>
 	            </td>
 	            <td>".$row['S_Obj_Desc']."</td>
 	            <td>".$row['S_Obj_Weightage']."</td>
@@ -316,9 +364,9 @@ class PmsFormService {
 		$output = "<tr  >
 		<td align='left' colspan='8'>&nbsp;
 		<p><b><a href='#' id = '".$mstid."' class = 'pmsMainNew'>Add Main Objective</a></b></p>		
-		</td>
+		</td> 
 		</tr>";
-		return $output;
+		return $output; 
 	}
 	
 	public function getHeader($row) {
@@ -360,30 +408,29 @@ class PmsFormService {
 				<td bgcolor='#ccc' width='20%'><font color='000000'><b>Location</b></font></td>
 				<td bgcolor='#fff'>".$row['locationName']."</td>
 				</tr>
-				</table>";
-		return $output;
+				</table>"; 
+		return $output; 
 	}
 	
 	
 	public function prepareNewIpc($employeeId,$pmsId) { 
 		try {
-			$this->transaction->beginTransaction();
-			$posService = $this->service->get('positionService');
+			$this->databaseTransaction->beginTransaction();
+			$posService = $this->services->get('positionService');
 			$immSuperior = $posService->getImmediateSupervisorByEmployee($employeeId);
 			$hod = $posService->getHodByEmployee($employeeId);
 			$mstId = $this->addMainInfo($employeeId,$pmsId,$immSuperior,$hod);
 			$isHaveSubordinates = $posService->isHaveSubordinatesByEmployee($employeeId); 
 			$this->preparegenerikkpi($mstId,$isHaveSubordinates); 
-			$this->transaction->commit();
+			$this->databaseTransaction->commit();
 			return $res;
 		} catch(\Exception $e) {
-			$this->transaction->rollBack();
-			throw $e;
+		    $this->databaseTransaction->rollBack(); 
+			throw $e; 
 		} 
 	} 
 	
 	public function addMainInfo($employeeId,$pmsId,$immSuperior,$hod) {
-		
 		$data = array(
 			'Pms_Fyear_Id' => $pmsId,
 			'Pmnt_Emp_Mst_Id' => $employeeId,
@@ -392,8 +439,13 @@ class PmsFormService {
 			'Immediate_Supervisor' => $immSuperior,
 			'Emp_Edit' => 1,
 			'HOD' => $hod,
-		);
-		
+		    'Sup_Approval'  => 0,
+		    'Hod_Approval'  => 0,
+		    'M_Imm_Sup_App' => 0,
+		    'M_Hod_App'     => 0,
+		    'Y_Imm_Sup_App' => 0,
+		    'Y_Hod_App'     => 0,
+		); 
 		return $this->pmsFormMapper->insertPmsMst($data);
 	}
 		
@@ -501,7 +553,7 @@ class PmsFormService {
             <tr >
             <td align='center' class='noBorder'>".$c."</td>
             <td align='left' >
-            <p><b><a href='#' id = '".$row['id']."' class = 'editMyr'>Edit</a></b></p>
+            <p class = 'noDisp'><b><a href='#' id = '".$row['id']."' class = 'editMyr'>Edit</a></b></p>
             <p><b>Main</b></p>
             </td>
             <td>".$row['Obj_Desc']."</td>
@@ -580,7 +632,7 @@ class PmsFormService {
             <tr ".$formType.">
 	            <td align='center' class='noBorder'>".$i."</td>
 	            <td align='left' >
-	            <p><b><a href='#' id = '".$row['id']."' class = 'editMyrDtls'>Edit</a></b></p>
+	            <p class = 'noDisp'><b><a href='#' id = '".$row['id']."' class = 'editMyrDtls'>Edit</a></b></p>
 	            <p><b>Sub</b></p>
 	            
 	            </td>
@@ -774,4 +826,467 @@ class PmsFormService {
 		    ";
 		return $output;
 	} 
+	
+	public function getApprovalService() {
+	    return $this->services->get('');     
+	}
+	
+	
+	public function getPmsStatus($empId) { 
+	    $currentFyYear = date('Y');
+	    $pmsId = $this->getPmsIdByYear($currentFyYear); 
+	    $empName = $this->pmsFormMapper->getUserName($empId);   
+	    $r = $this->pmsFormMapper->getPmsRowByYear($currentFyYear);
+	    $output = "<table width='700px' border='0'cellspacing='0px' cellpadding='5px'>
+					  <tr><th><b>Employee Name</b></th><th><b>PMS Year</b></th><th><b>Status</b></th></tr>"; 	    
+	    if ($r) {
+	        $fyId = $r['id']; 
+	        $fyYear = $r['Year']; 
+	        $currActivity = $r['Curr_Activity']; 
+	        $status = "";
+	        $rEmp = $this->pmsFormMapper->getPmsRowByEmployee($empId,$pmsId); 
+	        if ($r['Close_Year'] == 1) { 
+	            $status = "PMS Closed";
+	        } elseif ($r['Close_Year'] == 0) { 
+	            $status = "PMS Open"; 
+	            $openIpc = $r['IPC_Open_Close']; 
+	            if ($openIpc == 1) { 
+	                $status = "IPC Open";
+	                if ($rEmp) {
+	                    //echo"------->".$rEmp['Emp_Edit']; 
+	                    if (($rEmp['Emp_Edit'] == 1) && ($rEmp['Sup_Approval'] == 0)) {
+	                        $status = "Your IPC to be Amend and Submit to your Immediate Supervisor";
+	                    } elseif ($rEmp['Emp_Edit'] == 0) {
+	                        if (($rEmp['Sup_Approval'] == 0)) {
+	                            //$supName = "x";//$empModel->getEmpName($db, $rEmp['Immediate_Supervisor']);
+	                            $status = "Your IPC is Waiting For Supervisor Approval";
+	                        } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 0)) {
+	                            //$hodName = "x";//$empModel->getEmpName($db, $rEmp['HOD']);
+	                            $status = "Your IPC is Waiting For HOD Approval";
+	                        } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 1)) {  
+	                            $status = "Your IPC is Approved";
+	                        }
+	                    }
+	                } elseif (!$rEmp) {
+	                    $status = "You Didn't Add your IPC yet for current year";
+	                }
+	            } elseif ($openIpc == 0) {
+	                $status = "IPC Closed";
+	                if ($r['MYR_Open_Close'] == 1) {
+	                    $status = "MYR Open"; 
+	                    if ($rEmp) {
+	                        if (($rEmp['Emp_Edit'] == 1) && ($rEmp['M_Imm_Sup_App'] == 0)) {
+	                            $status = "Your MYR to be Amend and Submit to your Immediate Supervisor";
+	                        } elseif ($rEmp['Emp_Edit'] == 0) { 
+	                            if (($rEmp['M_Imm_Sup_App'] == 0)) {
+	                                //$supName = "x";//$empModel->getEmpName($db, $rEmp['M_Imm_Sup_Id']);
+	                                $status = "Your MYR is Witing For Supervisor Approval";
+	                            } elseif (($rEmp['M_Imm_Sup_App'] == 1) && ($rEmp['M_Hod_App'] == 0)) { 
+	                                //$hodName = "x";//$empModel->getEmpName($db, $rEmp['M_Hod_Id']);
+	                                $status = "Your MYR is  Witing For HOD Approval";
+	                            } elseif (($rEmp['M_Imm_Sup_App'] == 1) && ($rEmp['M_Hod_App'] == 1)) { 
+	                                $status = "Your MYR is Approved";
+	                            }
+	                        }
+	                    } elseif (!$rEmp) {
+	                        $status = "You Didn't Add your IPC yet for current year";
+	                    }
+	                } elseif ($r['MYR_Open_Close'] == 0) {
+	                    $status = "MYR is Closed";
+	                    if ($r['YED_Open_Close'] == 1) {
+	                        $status = "PPA Open"; 
+	                        if ($rEmp) {
+	                            if (($rEmp['Emp_Edit'] == 1) && ($rEmp['Sup_Approval'] == 0)) {   
+	                                $status = "Your PPA to be Amend and Submit to your Immediate Supervisor";
+	                            } elseif ($rEmp['Emp_Edit'] == 0) {
+	                                if (($rEmp['Sup_Approval'] == 0)) {
+	                                    //$supN ame = "x";//$empModel->getEmpName($db, $rEmp['Immediate_Supervisor']);   
+	                                    $status = "Your PPA is Waiting For Supervisor Approval ";
+	                                } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 0)) {
+	                                    //$hodName = "x";//$empModel->getEmpName($db, $rEmp['Y_Hod_Id']);
+	                                    $status = "Your PPA is Waiting For HOD Approval";
+	                                } elseif (($rEmp['Sup_Approval'] == 1) && ($rEmp['Hod_Approval'] == 1)) {
+	                                    $status = "Your PPA is Approved";
+	                                }
+	                            }
+	                        } elseif (!$rEmp) {
+	                            $status = "You Didn't Add your IPC yet for current year";
+	                        }
+	                    } elseif ($r['YED_Open_Close'] == 0) {
+	                        $currActivity = $r['Curr_Activity'];
+	                        if ($currActivity == 0) {
+	                            $status = "Nothing Open Yet in Pms wait for HR Announcement";
+	                        } elseif ($currActivity == 1 && $r['IPC_Open_Close'] == 0) {
+	                            $status = "IPC In Progress but temporarily closed by admin ";
+	                        } elseif ($currActivity == 2 && $r['MYR_Open_Close'] == 0) {
+	                            $status = "MYR In Progress but temporarily closed by admin ";
+	                        } elseif ($currActivity == 3) {
+	                            $status = "Year End In Progress but temporarily closed by admin ";
+	                        } elseif ($currActivity == 4) {
+	                            $status = "Everything was Closed";
+	                        }
+	                    }
+	                }
+	            }
+	        }   
+	        $output .= "<tr>
+                            <td>" . $empName . "</td>
+                            <td>" . $fyYear . "</td>
+                            <td><b>" . $status . "</b></td>
+                        </tr>";
+	    } else { 
+	        $status = "PMS Not Available Yet for This Year";
+	        $output .= "<tr>
+                            <td>" . $empName . "</td>
+                            <td>" . $currentFyYear . "</td>
+                            <td><b>" . $status . "</b></td>
+                        </tr>";
+	    } 
+	    return $output;
+	}
+	
+	public function isIpcValid($userId) { 
+	    $v = 0; 
+	    $year = date('Y'); 
+	    $pmsId = $this->pmsFormMapper->getPmsIdByYear($year); 
+	    $pmsMstId = $this->pmsFormMapper->getPmsIdByEmployee($userId,$pmsId); 
+	    $wei = $this->pmsFormMapper->getTotWeightage($pmsMstId); 
+	    $resultDtls = $this->pmsFormMapper->getDtlsByMstId($pmsMstId);
+	    $emptyField = array(); 
+	    $myFieds = ""; 
+	    foreach ($resultDtls as $dtls) { 
+	        $name = '';
+	        $dtlsId = $dtls['id'];
+	        $dtlsDesc = $dtls['Obj_Desc'];
+	        $dtlsWeig = $dtls['Obj_Weightage'];
+	        $dtlsPi = $dtls['Obj_PI'];
+	        $dtlsBase = $dtls['Obj_Base'];
+	        $result = $dtls['Myr_Result'];
+	        $resultDtlsDtls = $this->pmsFormMapper->getDtlsDtlsByDtlsId($dtlsId); 
+	        if ($dtlsDesc == Null || $dtlsDesc == null) {
+	            $v = 1; 
+	            $name = $dtlsId . "mdesc"; 
+	            $myFieds .= "Main Obj Description "; 
+	        }//if 
+	        if ($resultDtlsDtls) { 
+	            $totalSubWeig = 0; 
+	            $weigList = ''; 
+	            foreach ($resultDtlsDtls as $dtlsdtls) { 
+	                $ddtlsId = $dtlsdtls['id']; 
+	                $ddtlsDesc = $dtlsdtls['S_Obj_Desc']; 
+	                $ddtlsWeig = $dtlsdtls['S_Obj_Weightage'];  
+	                $ddtlsPi = $dtlsdtls['S_Obj_PI']; 
+	                $ddtlsBase = $dtlsdtls['S_Obj_Base']; 
+	                $dtlsresult = $dtlsdtls['Myr_Result']; 
+	                $totalSubWeig+=$ddtlsWeig;
+	                if ($ddtlsWeig == null || $ddtlsWeig == Null) {
+	                    $v = 1; 
+	                    $myFieds .= ", objective weightage ";
+	                }//if
+	                if ($ddtlsPi == null || $ddtlsPi == Null) {
+	                    $v = 1; 
+	                    $myFieds .= ", performance indicator ";
+	                }//if
+	                if ($ddtlsBase == null || $ddtlsBase == Null) {
+	                    $v = 1; 
+	                    $myFieds .= ", base ";
+	                }
+	               // if ($dtlsresult == null || $dtlsresult == Null) {
+	                    //$v = 1; 
+	                    //$name = $ddtlsId . "result";
+	                    //array_push($emptyField, $name);
+	                   // $myFieds .= "result ,";
+	                //}
+	            }//foreach
+	        }//if The Main objective have Sub-Objective no need to fill base / PI/Desc
+	        elseif (!$resultDtlsDtls) {
+	            if ($dtlsPi == null || $dtlsPi == Null || $dtlsPi == ' ') {
+	                $v = 1; 
+	                //$name = $dtlsId . "mperi";
+	                array_push($emptyField, $name);
+	                $myFieds .= ", performance indicator ";
+	            }//if
+	            //Zend_Debug::dump($dtlsBase);
+	            if ($dtlsBase == null || $dtlsBase == Null || $dtlsBase == ' ') {
+	                $v = 1; 
+	                //$name = $dtlsId . "mbase";
+	                array_push($emptyField, $name);
+	                $myFieds .= ", base";
+	            }
+	            //if ($result == null || $result == Null || $result == ' ') {
+	                //$v = 1; 
+	                //$name = $dtlsId . "mresult";
+	                //array_push($emptyField, $name);
+	                //$myFieds .= "result ,";
+	            //}
+	        }
+	    } 
+	    if($wei != 100) {
+	        $v = 1; 
+	    }
+	    if($v == 0) { 
+	        $udt = array(
+	           'id'           => $pmsMstId,
+	           'Emp_Edit'     => 0,
+	           'Sup_Approval' => 0,
+	           'Hod_Approval' => 0,
+	        ); 
+	        $this->pmsFormMapper->update($udt); 
+	        // Emp_Edit = 0
+	        // submit to supervisor 
+	    }
+	    return array($v,$myFieds);
+	}   
+	
+	public function isMyrValid($userId) {
+	    $v = 0;
+	    $year = date('Y');
+	    $pmsId = $this->pmsFormMapper->getPmsIdByYear($year);
+	    $pmsMstId = $this->pmsFormMapper->getPmsIdByEmployee($userId,$pmsId);
+	    $wei = $this->pmsFormMapper->getTotWeightage($pmsMstId);
+	    $resultDtls = $this->pmsFormMapper->getDtlsByMstId($pmsMstId);
+	    $emptyField = array();
+	    $myFieds = "";
+	    foreach ($resultDtls as $dtls) {
+	        $name = '';
+	        $dtlsId = $dtls['id'];
+	        $dtlsDesc = $dtls['Obj_Desc'];
+	        $dtlsWeig = $dtls['Obj_Weightage'];
+	        $dtlsPi = $dtls['Obj_PI'];
+	        $dtlsBase = $dtls['Obj_Base'];
+	        $result = $dtls['Myr_Result'];
+	        $resultDtlsDtls = $this->pmsFormMapper->getDtlsDtlsByDtlsId($dtlsId);
+	        if ($dtlsDesc == Null || $dtlsDesc == null) {
+	            $v = 1;
+	            $name = $dtlsId . "mdesc";
+	            $myFieds .= "Main Obj Description ";
+	        }//if
+	        if ($resultDtlsDtls) {
+	            $totalSubWeig = 0;
+	            $weigList = '';
+	            foreach ($resultDtlsDtls as $dtlsdtls) {
+	                $ddtlsId = $dtlsdtls['id'];
+	                $ddtlsDesc = $dtlsdtls['S_Obj_Desc'];
+	                $ddtlsWeig = $dtlsdtls['S_Obj_Weightage'];
+	                $ddtlsPi = $dtlsdtls['S_Obj_PI'];
+	                $ddtlsBase = $dtlsdtls['S_Obj_Base'];
+	                $dtlsresult = $dtlsdtls['Myr_Result'];
+	                $totalSubWeig+=$ddtlsWeig;
+	                if ($ddtlsWeig == null || $ddtlsWeig == Null) {
+	                    $v = 1;
+	                    $myFieds .= ", objective weightage ";
+	                }//if
+	                if ($ddtlsPi == null || $ddtlsPi == Null) {
+	                    $v = 1;
+	                    $myFieds .= ", performance indicator ";
+	                }//if
+	                if ($ddtlsBase == null || $ddtlsBase == Null) {
+	                    $v = 1;
+	                    $myFieds .= ", base ";
+	                }
+	                if ($dtlsresult == null || $dtlsresult == Null) {
+	                $v = 1;
+	                $name = $ddtlsId . "result";
+	                array_push($emptyField, $name);
+	                $myFieds .= "result ,";
+	                }
+	            }//foreach
+	        }//if The Main objective have Sub-Objective no need to fill base / PI/Desc
+	        elseif (!$resultDtlsDtls) {
+	            if ($dtlsPi == null || $dtlsPi == Null || $dtlsPi == ' ') {
+	                $v = 1;
+	                //$name = $dtlsId . "mperi";
+	                array_push($emptyField, $name);
+	                $myFieds .= ", performance indicator ";
+	            }//if
+	            //Zend_Debug::dump($dtlsBase);
+	            if ($dtlsBase == null || $dtlsBase == Null || $dtlsBase == ' ') {
+	                $v = 1;
+	                //$name = $dtlsId . "mbase";
+	                array_push($emptyField, $name);
+	                $myFieds .= ", base";
+	            }
+	            if ($result == null || $result == Null || $result == ' ') {
+	                $v = 1;
+	                $name = $dtlsId . "mresult";
+	                array_push($emptyField, $name);
+	                $myFieds .= "result ,";
+	            }
+	        }
+	    }
+	    if($wei != 100) {
+	        $v = 1;
+	    }
+	    if($v == 0) {
+	        $udt = array(
+	            'id'            => $pmsMstId,
+	            'Emp_Edit'      => 0,
+	            'M_Imm_Sup_App' => 0,
+	            'M_Hod_App'     => 0,
+	        ); 
+	        $this->pmsFormMapper->update($udt);
+	        // Emp_Edit = 0
+	        // submit to supervisor
+	    }
+	    return array($v,$myFieds);
+	}
+	 
+	public function approveIpc($data,$type = 1) { 
+	    $isSupervisor = 0;
+	    $isHod = 0; 
+	    $id = $data->getId(); 
+	    $approvalType = $data->getApprovalType();
+	    $approver = $this->userInfoService->getEmployeeId();
+	    $approval = $approvalType;  
+	    $udt = array(); 
+	    $udt['id'] = $id; 
+	    $row = $this->pmsFormMapper->getPmsById($id); 
+	    $employeeId = $row['Pmnt_Emp_Mst_Id']; 
+	    $immSup = $this->positionService->getImmediateSupervisorByEmployee($employeeId); 
+	    $hod = $this->positionService->getHodByEmployee($employeeId); 
+	    if($immSup == $approver) {
+	        $isSupervisor = 1;
+	    } 
+	    if($hod == $approver) {
+	        $isHod = 1;
+	    } 
+	    if($row['Sup_Approval'] == 1 && $row['Hod_Approval'] == 1) {
+	        return "Form Already Approved!"; 
+	    } 
+	    if(!$row) {
+	        return "This form is not valid for approval!";
+	    } 
+	    if($approvalType == 1) {
+	        if(($row['Sup_Approval'] == 0) && $isSupervisor) {
+    	        $udt['Sup_Approval'] = 1; 
+    	        $udt['Immediate_Supervisor']  = $approver; 
+	        } else {
+	            return "Not valid approver"; 
+	        }
+    	    if(($row['Hod_Approval'] == 0) && $isHod) {
+    	        //$udt['Sup_Approval'] = 1; 
+    	        $udt['Hod_Approval'] = 1; 
+    	        $udt['HOD']  = $approver; 
+    	        $udt['Emp_Edit'] = 1; 
+    	    } else {
+    	        return "Not Valid Approver"; 
+    	    }
+	    } else {
+	        $udt['Emp_Edit'] = 1;
+	        $udt['Sup_Approval'] = 0; 
+	        $udt['Hod_Approval'] = 0; 
+	    } 
+	    $this->pmsFormMapper->update($udt);         
+	    return "approved successfully";   
+	} 
+	
+	public function approveMyr($data,$type = 1) { 
+	    $isSupervisor = 0; 
+	    $isHod = 0; 
+	    $id = $data->getId(); 
+	    $approvalType = $data->getApprovalType(); 
+	    $approver = $this->userInfoService->getEmployeeId();
+	    $approval = $approvalType;
+	    $udt = array();
+	    $udt['id'] = $id;
+	    $row = $this->pmsFormMapper->getPmsById($id);
+	    $employeeId = $row['Pmnt_Emp_Mst_Id'];
+	    $immSup = $this->positionService->getImmediateSupervisorByEmployee($employeeId);
+	    $hod = $this->positionService->getHodByEmployee($employeeId);
+	    if($immSup == $approver) {
+	        $isSupervisor = 1;
+	    }
+	    if($hod == $approver) {
+	        $isHod = 1;
+	    }
+	    if($row['M_Imm_Sup_App'] == 1 && $row['M_Hod_App'] == 1) {
+	        return "Form Already Approved!";
+	    }
+	    if(!$row) {
+	        return "This form is not valid for approval!";
+	    }
+	    
+	    
+	    if($approvalType == 1) {
+	        if(($row['M_Imm_Sup_App'] == 0) && $isSupervisor) {
+	            $udt['M_Imm_Sup_App'] = 1;
+	            $udt['Immediate_Supervisor']  = $approver;
+	        } else {
+	            return "Not valid approver";
+	        }
+	        if(($row['M_Hod_App'] == 0) && $isHod) {
+	            //$udt['M_Imm_Sup_App'] = 1;
+	            $udt['M_Hod_App'] = 1;
+	            $udt['HOD']  = $approver;
+	            $udt['Emp_Edit'] = 1;
+	        } else {
+	            return "Not Valid Approver";
+	        }
+	    } else {
+	        $udt['Emp_Edit'] = 1;
+	        $udt['M_Imm_Sup_App'] = 0;
+	        $udt['M_Hod_App'] = 0;
+	    }
+	    $this->pmsFormMapper->update($udt); 
+	    return "approved successfully"; 
+	} 
+	
+	public function getIpcFormApprovalList($employeeId) { 
+	    $ipcList = $this->pmsFormMapper->getIpcFormApprovalList();
+	    if($ipcList) {
+	        $totId = array();
+	        //$i = 1;
+	        foreach($ipcList as $lst) { 
+	            $applicant = $lst['Pmnt_Emp_Mst_Id'];
+	            $isImmSupApproved = $lst['Sup_Approval'];
+	            $isHodApproved = $lst['Hod_Approval'];
+	            $immSup = $this->positionService->getImmediateSupervisorByEmployee($applicant); 
+	            $hod = $this->positionService->getHodByEmployee($applicant); 
+	            if(($immSup == $employeeId) && ($isImmSupApproved == 0)) {
+	                $totId[] = $lst['id'];
+	            } elseif(($hod == $employeeId) && ($isHodApproved == 0 && $isImmSupApproved == 1)) {
+	                $totId[] = $lst['id']; 
+	            } 
+	            //$isApprover = 1;//$this->checkIsApprover($applicant,$approver,$approvedLevel);
+	            //if($isApprover) {
+	                //$totId[] = $lst['id'];
+	            //}
+	            //$i++;
+	        }
+	        if(!$totId) {
+	            $totId[] = 0; 
+	        }
+	    }
+	    return $this->pmsFormMapper->getIpcAppFormSelect($totId); 
+	} 
+	
+	public function getMyrFormApprovalList($employeeId) {
+	    $ipcList = $this->pmsFormMapper->getMyrFormApprovalList();
+	    if($ipcList) {
+	        $totId = array();
+	        //$i = 1;
+	        foreach($ipcList as $lst) {
+	            $applicant = $lst['Pmnt_Emp_Mst_Id'];
+	            $isImmSupApproved = $lst['M_Imm_Sup_App'];
+	            $isHodApproved = $lst['M_Hod_App'];
+	            $immSup = $this->positionService->getImmediateSupervisorByEmployee($applicant);
+	            $hod = $this->positionService->getHodByEmployee($applicant);
+	            if(($immSup == $employeeId) && ($isImmSupApproved == 0)) {
+	                $totId[] = $lst['id'];
+	            } elseif(($hod == $employeeId) && ($isHodApproved == 0 && $isImmSupApproved == 1)) {
+	                $totId[] = $lst['id'];
+	            }
+	            //$isApprover = 1;//$this->checkIsApprover($applicant,$approver,$approvedLevel);
+	            //if($isApprover) {
+	            //$totId[] = $lst['id'];
+	            //}
+	            //$i++;
+	        }
+	        if(!$totId) {
+	            $totId[] = 0;
+	        }
+	    }
+	    return $this->pmsFormMapper->getIpcAppFormSelect($totId);
+	} 
+	
 }   

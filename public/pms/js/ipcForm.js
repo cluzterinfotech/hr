@@ -1,6 +1,6 @@
 $(document).ready(function()
 {   
-	
+	$("#submitIpcToSup").button(); 
 	function getValues(formId) { 
     	var formValues = {};
     	var formArray = $(formId).serializeArray(); 
@@ -298,4 +298,42 @@ $(document).ready(function()
         });    
     	return true; 
     } 
+    
+    $('#submitIpcToSup').on('click',function(e) {  
+		e.preventDefault();     	
+		$("#subIpcToSupDialog").dialog({
+		      buttons : {
+		        "Yes" : function() {    
+		        	$.blockUI({ message: '<h4>Please Wait...while checking form</h4>' });
+		            var request = $.ajax({
+		                url: "/pmsform/submittosup", 
+		                type: "POST",
+		                /*data: { 
+	                    	from : f,
+	                    	to : t,
+	                    	employee:emp 
+	                    },*/  
+		            }).done(function(data) {  	            	
+		            	var obj = jQuery.parseJSON(data); 
+		            	if(obj.s == 12) {
+		            		$.unblockUI(); 
+		            		alert(obj.m); 
+		            	} else {
+		            		window.location.replace("/pmsform/status");
+		            	}
+		            	//$.unblockUI(); 
+		          }).fail(function() {
+		              alert("Error! Problem in submitting to supervisor"); 
+		          });     
+		              $(this).dialog("close"); 
+		              return true;   	          
+		        },  
+		        "No" : function() { 
+		        	$(this).dialog("close");    
+		        } 
+		      }
+		});  
+		$("#subToSupDialog").dialog("open"); 
+	}); 
+    
 }); 

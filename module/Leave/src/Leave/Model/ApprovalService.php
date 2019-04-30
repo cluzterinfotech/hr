@@ -19,11 +19,12 @@ class ApprovalService {
 	}
 	
     public function isApprover($formType,$applicant,$approver,$approvedLevel) {  
-    	//\Zend\Debug\Debug::dump($approvedLevel); 
-    	//$approvedLevel += 1;
-        $isApprover = 0; 
-		switch ($formType) { 
-		    case "Leave": 
+    	//\Zend\Debug\Debug::dump($approvedLevel);  
+    	//exit; 
+    	$approvedLevel += 1; 
+        $isApprover = 0;  
+		switch ($formType) {  
+		    case "Leave":  
 		    	$levelRow = $this->approvalLevelMapper->getLeaveLevelRow($approvedLevel);  
 		        $isApprover = $this->leaveForm($applicant,$approver,$levelRow); 
 		        break; 
@@ -62,14 +63,16 @@ class ApprovalService {
     		case "Hod":
     			$isApprover = $this->isHod($applicant,$approver);
     			break;
-    		case "HrManager":
-    			$isApprover = $this->isHrManager($applicant,$approver);
+    		case "HrService":
+    		    //echo "Is hr ser";
+    		    //exit; 
+    		    $isApprover = $this->isHrService($applicant,$approver); 
     			break;
     		default:
-    			$isApprover = 0;
+    			$isApprover = 0; 
     	}
-    	return $isApprover;
-    } 
+    	return $isApprover; 
+    }  
         
     public function leaveForm($applicant,$approver,$levelRow) {   
     	//return 1;  

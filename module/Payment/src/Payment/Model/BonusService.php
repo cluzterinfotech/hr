@@ -8,323 +8,242 @@ class BonusService extends Payment {
     
     protected $paysheet = array(); 
     
-    public function getPaysheetMapper() { 
-    	return $this->service->get('PaysheetMapper'); 
+    public function getBonusMapper() { 
+    	return $this->service->get('bonusMapper'); 
+    } 
+    
+    public function getIncrementMapper() {
+        return $this->service->get('incrementMapper');
     } 
     
     public function getNonPayDays($employeeId,$fromDate,$toDate) {
     	$service = $this->service->get('NonPaymentDaysService'); 
     	$days = $service->getEmployeePaysheetNonWorkingDays($employeeId,$fromDate,$toDate); 
-    	return $days;
+    	return $days; 
     }
+    
+    private function bonusLeaveDed($bonus,$months,$nonPayDays,$elegibleDays) { 
+        $BonusPerDay = 0;  
+        $actual = 0 ;  
+        $BonusPerDay = ((($bonus/12) * $months)/365);   
+        $actual = $BonusPerDay * ($elegibleDays - $nonPayDays);    
+        return $actual;  
+    } 
 	 
-	public function calculate($employeeList,Company $company,DateRange $dateRange,$routeInfo) { 
-	    	
+	public function calculate(Company $company) {   
 	 	try { 
 	 	    $this->transaction->beginTransaction(); 
-	 	    $this->getPaysheetMapper()->removepaysheet($company,$dateRange);  
-	 	    $allowanceList = $this->companyAllowance
-	 	                          ->getPaysheetAllowance($company,$dateRange); 
-	 	    $runtimeAllowanceList = $this->companyAllowance
-	 	                                 ->getRuntimeAllowance($company,$dateRange); 
-	 	    $compulsoryDeduction = $this->companyDeduction
-	 	                                ->getPaysheetCompulsoryDeduction($company, $dateRange);
-	 	    $normalDeduction = $this->companyDeduction
-	 	                            ->getPaysheetNormalDeduction($company,$dateRange);
-	 	    $advancePaymentDeduction = $this->companyDeduction
-	 	                            ->getAdvancePaymentDeduction($company,$dateRange);
-	 	    $companyContributionDeduction = $this->companyDeduction
-	 	                            ->getCompanyContributionDeduction($company,$dateRange);
-	 	    $paysheetMapper = $this->service->get('paysheetMapper'); 
-	 	    // @todo fetch from DB   
+	 	    $bonusMapper = $this->getBonusMapper(); 
+	 	    $year = date('Y'); 
+	 	    $companyId = $company->getId(); 
+	 	    
+	 	    if($bonusMapper->isHaveBonus($year,$companyId)) {
+	 	        return 0;     
+	 	    }
+	 	    
+	 	    $bonusMapper->deletePreviousBonus($year,$companyId);
+	 	    
+	 	    $criteria = $bonusMapper->getCriteria($year,$companyId);  
+	 	    
+	 	    $from = $criteria['joinDate']; 
+	 	    $to = $criteria['confirmationDate']; 
+	 	    
+	 	    $bonusFrom = $criteria['joinDate']; 
+	 	    
+	 	    $ratingOne = (float)$criteria['ratingOne']; 
+	 	    $ratingTwo = (float)$criteria['ratingTwo']; 
+	 	    $rh = (float)$criteria['ratingH3']; 
+	 	    $rs = (float)$criteria['ratingS3']; 
+	 	    $rm = (float)$criteria['ratingM3']; 
+	 	    $rf = (float)$criteria['ratingFour']; 
+	 	    
+	 	    
 	 	    $dateMethods = $this->service->get('dateMethods'); 
+	 	    $type = $criteria['bonusType']; 
+	 	    $dateRange = $this->service->get('dateRange'); 
 	 	    
-	 	    $fromDate = $dateRange->getFromDate();
-	 	    $toDate = $dateRange->getToDate(); 
-	 	    $companyId = $company->getId();
+	 	    $service = $this->service->get('Initial');
+	 	    $colaService = $this->service->get('ColaSalaryGrade');
 	 	    
-	 	    $advancePaymentService = $this->getAdvancePaymentService();
-	 	    $advancePaymentService->removeThisMonthDue($company); 
+	 	    $list = $bonusMapper->getBonusElegibleList($companyId,$from,$to);
 	 	    
-	 	    $daysInMonth = $dateMethods->numberOfDaysBetween($fromDate,$toDate); 
-            
-	 	    foreach($employeeList as $employee) { 
-	 	    	$amount = 0; 
-	 	    	$nonPayDays = 0;  
-	 	    	$paysheetSum = 0; 
-	 	    	$this->paysheet = '';  
-	 	    	
-	 	    	$employeeId = $employee->getEmployeeNumber(); 
-	 	    	$nonPayDays = $this->getNonPayDays($employeeId,$fromDate,$toDate);  
-	 	    	
-	 	    	$workDays = $daysInMonth - $nonPayDays; 
-	 	    	
-	 	    	//echo "days in month ".$daysInMonth."<br/>";
-	 	    	//echo "Emp No ".$employeeId." Non Pay Days ".$nonPayDays."<br/>";  
-	 	    	//\Zend\Debug\Debug::dump($allowanceList);
-		 	    foreach($allowanceList as $allowanceName => $typeName) { 
-		 	    	
-		 	        //\Zend\Debug\Debug::dump($allowanceName);
-		 	        //\Zend\Debug\Debug::dump($typeName);
-		 	        //exit; 
-		 	    	$amount = 0;
-		 	    	// @todo revise 
-		 	    	$n = $typeName; //$allowance['allowanceType'];
-		 	    	//echo "Type ".$typeName."<br/>"; 
-		 	    	$service = $this->service->get($n); 
-			 		$amount = $service->getAmount($employee,$dateRange);  
-			 		//echo "Amount ".$amount."<br/>"; 
-			 		//exit; 
-	 	    	    $a = $allowanceName; //$allowance['allowanceName'];
-	 	    	    $amount = $this->workingDaysPay($amount,$daysInMonth,$workDays);
-	 	    	    $paysheetSum += $amount;
-			 		$this->paysheet[$a] = $this->twoDigit($amount);
-		        }
-		        // exit; 
-		        // runtime calculation allowance  
-		        foreach($runtimeAllowanceList as $allowanceName => $typeName) { 
-		        	$amount = 0;
-		        	// @todo revise
-		        	$n = $typeName; //$allowance['allowanceType']; 
-		        	$service = $this->service->get($n); 
-		        	$amount = $service->calculateAmount($employee,$dateRange); 
-		        	$a = $allowanceName; //$allowance['allowanceName']; 
-		        	$amount = $this->workingDaysPay($amount,$daysInMonth,$workDays); 
-		        	$paysheetSum += $amount; 
-		        	$this->paysheet[$a] = $this->twoDigit($amount);  
-		        }  
-		        // echo "Paysheet Sum".$paysheetSum."<br/>"; 
-		        // echo "Compulsory <br/>"; 
-	 	        foreach($compulsoryDeduction as $key => $deductionName) {  
-	 	        	$amount = 0; 
-		 	    	$service = $this->service->get($deductionName);  
-		 	    	//echo $deductionName."<br/>"; 
-			 		$amount = $service->calculateDeductionAmount($employee,$dateRange);  
-			 		
-			 		// @todo if social insurance and first month  
-			 		$amount = $this->workingDaysPay($amount,$daysInMonth,$workDays); 
-			 		//\Zend\Debug\Debug::dump($paysheetSum); 
-			 		//\Zend\Debug\Debug::dump($amount); 
-			 		//exit; 
-			 		// Compulsory deduction is based on amount received, so never be negative
-			 		if($paysheetSum > $amount) {
-			 		    $paysheetSum -= $amount;
-			 		    $this->paysheet[$key] = $this->twoDigit($amount); 
-			 		} 
-		        }  
-		        //echo "Paysheet Sum".$paysheetSum."<br/>"; 
-		        //echo "Normal <br/>";  
-	 	        foreach($normalDeduction as $key => $deductionName) { 
-	 	        	$amount = 0; 
-		 	    	$service = $this->service->get($deductionName); 
-		 	    	//echo $deductionName."<br/>"; 
-			 		$amount = $service->getDeductionAmount($employee,$dateRange); 
-			 		$amount = $this->workingDaysPay($amount,$daysInMonth,$workDays); 
-			 		//echo "Amount".$amount."<br/>"; 
-			 		if($paysheetSum > $amount) { 
-			 			$paysheetSum -= $amount; 
-			 		    $this->paysheet[$key] = $this->twoDigit($amount); 
-			 		} 
-		        } 
-		        // Advance payments deduction 
-		        foreach($advancePaymentDeduction as $key => $deductionName) { 
-		        	$amount = 0;  
-		        	$info = $advancePaymentService->getThisMonthEmpAdvPaymentDue 
-		        	                        ($deductionName,$employeeId,$dateRange);  
-		        	if($info) { 
-		        		$dueId = $info['id']; 
-		        		$amount = $info['dueAmount'];  
-		        		if($paysheetSum > $amount) {
-		        			$paysheetSum -= $amount;
-		        			$advancePaymentService->addThisMonthDue($deductionName,
-		        					$dueId,$companyId,$dateRange);
-		        			$this->paysheet[$key] = $this->twoDigit($amount);
-		        		} else {
-		        			$this->paysheet[$key] = 0; 
-		        		}
-		        	}  else {
-		        		$this->paysheet[$key] = 0; 
-		        	}  
-		        }   
-		         
-		        // company contribution deduction 
-		        foreach($companyContributionDeduction as $key => $deductionName) { 
-		        	// @todo sync with employee contribution 
-		        	$amount = 0;  
-		        	$service = $this->service->get($deductionName); 
-		        	//echo $deductionName."<br/>"; 
-		        	$amount = $service->calculateDeductionAmount($employee,$dateRange); 
-		        	$amount = $this->workingDaysPay($amount,$daysInMonth,$workDays); 
-		        	//echo "Amount".$amount."<br/>"; 
-		        	//if($paysheetSum > $amount) { 
-		        		//$paysheetSum -= $amount; 
-		        	$this->paysheet[$key] = $this->twoDigit($amount);
-		        	//} 
-		        } 
-		        // \Zend\Debug\Debug::dump($this->paysheet);
-		        // \Zend\Debug\Debug::dump($this->paysheet['Housing']); 
+	 	    foreach($list as $r) {
+	 	        $basic = 0; 
+	 	        $initial = 0;
+	 	        $cola = 0; 
+	 	        $bonus = 0;
+	 	        $tax = 0;
+	 	        $net = 0; 
+	 	        $percentage = 0; 
+	 	        $months = 0;
+	 	        $nonPayDays = 0;  
+	 	        $elegibleDays = 0; 
+	 	        $empRating = 0; 
+	 	        //\Zend\Debug\Debug::dump($empRating);
+	 	        $empId = $r['employeeNumber'];
+	 	        $empjoinDate = $r['empJoinDate'];
+	 	        $empRating = $this->getIncrementMapper()->getEmployeeRating($year,$empId); 
+	 	        
+	 	        if($empRating === '1') { 
+	 	            $percentage = $ratingOne; 
+	 	        } else if ($empRating === '2') {
+	 	            $percentage = $ratingTwo; 
+	 	        } else if($empRating === 'h3') {
+	 	            $percentage = $rh;
+	 	        } else if($empRating === 's3') {
+	 	            $percentage = $rs;
+	 	        } else if($empRating === 'm3') {
+	 	            $percentage = $rm;
+	 	        } else if($empRating === '4') { 
+	 	            $percentage = $rf;
+	 	        } else {
+	 	            $percentage = 0;
+	 	        } 
                 
-		        // if have advance housing
-		        $advHous = $advancePaymentService->getThisMonthEmpAdvPaymentDue 
-		        	                        ('AdvanceHousing',$employeeId,$dateRange);
-		        if($advHous) {  
-		        	//echo $this->paysheet['Housing']."<br/>"; 
-		        	//echo "inside adv housing Deductable<br/>";
-		        	$this->paysheet['Housing'] = 0;  
-		        	$dueId = $advHous['id']; 
-		        	$amount = $advHous['dueAmount']; 
-		        	if($paysheetSum > $amount) { 
-		        		$advancePaymentService->addThisMonthDue($deductionName,
-		        				$dueId,$companyId,$dateRange); 
-		        	} else {
-		        		//echo "inside adv housing non deductable";
-		        		$housing = 0;
-		        		$zakat = 0;
-		        		$si = 0;
-		        		$coSi = 0;
-		        		$tax = 0;
-		        		$siAmt = 0;
-		        		$housing = $this->paysheet['Housing'];
-		        		// alter zakat
-		        		$zakat = $this->paysheet['Zakat'];
-		        		$zakat -= ($housing * .025);
-		        		$this->paysheet['Zakat'] = $zakat;
-		        		// alter social insurance
-		        		$si = $this->paysheet['SocialInsurance'];
-		        		$siAmt = ($housing * .08);
-		        		$si -= $siAmt;
-		        		$this->paysheet['SocialInsurance'] = $si;
-		        		// alter social insurance company
-		        		$coSi = $this->paysheet['SocialInsuranceCompany'];
-		        		$coSi -= ($housing * .17);
-		        		$this->paysheet['SocialInsuranceCompany'] = $coSi;
-		        		// alter tax
-		        		$tax = $this->paysheet['IncomeTax'];
-		        		$tax -= ($siAmt * .15);
-		        		$this->paysheet['SocialInsuranceCompany'] = $tax;
-		        	}
-		        } 
-		        
-		        // $isHaveAdvHous
-		        // check is more than net pay 
-		        // 
-		        
-                //echo $employee->getEmployeeNumber()."<br/>"; 
-                //exit;  
-		        $this->paysheet['employeeNumber'] = $employeeId;// $employee->getEmployeeNumber(); 
-		        $this->paysheet['company'] = $company->getId();
-		        $this->paysheet['PsheetClosed'] = 0; 
-		        $this->paysheet['paysheetDate'] = $dateRange->getFromDate(); 
-		        // \Zend\Debug\Debug::dump($this->paysheet);  
-		        // @todo add company contribution deduction  
-		        $paysheetMapper->insert($this->paysheet);  
-		        // exit;   
-	 	    }  
-	 	    // exit; 
-	 	    $this->getCheckListService()->checkListlog($routeInfo);  
-		    
+	 	        $startingDate = ($year-1).'-01-01';  
+	 	        $months = $dateMethods->numberOfMonthsBetween($empjoinDate,$to);
+	 	        if($months >= 12) {
+	 	            $months = 12; 
+	 	            $elegibleDays = 365; 
+	 	        } else { 
+	 	            $startingDate = $empjoinDate;
+	 	            $elegibleDays = $dateMethods->numberOfDaysBetween($startingDate,$to);   
+	 	        } 
+	 	        // 
+	 	        $nonPayDays = $this->getNonPayDays($employeeId,$startingDate,$to);    
+	 	        
+	 	        //$percentage = 0; 
+	 	        $employee = $this->getEmployeeById($empId); 
+	 	        
+	 	        //\Zend\Debug\Debug::dump($employee);
+	 	        //exit; 
+	 	        //$dateRange->setFromDate(); 
+	 	        //$dateRange->setToDate(); 
+	 	        $amount = $service->getLastAmount($employee,$dateRange);
+	 	        //echo "here";
+	 	        //exit;
+	 	        $cola = $colaService->getLastAmount($employee,$dateRange);
+	 	        
+	 	        $initial = $this->twoDigit($amount); 
+	 	        $cola =  $this->twoDigit($cola);  
+                
+	 	        if($type == 1) {  
+	 	            $bonus = ($initial + $cola) * $percentage;  
+	 	        } elseif($type == 2) {  
+	 	            $bonus = (($initial + $cola) * 12) * ($percentage/100);   
+	 	        } else {  
+	 	            $bonus = 0;  
+	 	        }  
+                
+	 	        $bonus = $this->bonusLeaveDed($bonus,$months,$nonPayDays,$elegibleDays);   
+	 	        
+	 	        $tax = $bonus * .1;  
+	 	        $net = $bonus - $tax;   
+	 	        
+	 	        $sg = $r['empSalaryGrade']; 
+    	 	    $bonus = array(
+    	 	        'Pmnt_Emp_Mst_Id'    => $empId,
+    	 	        'Bonus_Date'         => date('Y-m-d'),
+    	 	        'Bonus_year'         => '2018',
+    	 	        'Bonus_Func_Code'    => 0,
+    	 	        'Bonus_Dept_Id'      => 0,
+    	 	        'Bonus_Bnk_Id'       => $r['empBank'],
+    	 	        'Bonus_Acct_No'      => $r['accountNumber'], 
+    	 	        'Emp_Rating'         => $empRating,
+    	 	        'Bonus_Percentage'   => $percentage,
+    	 	        'Initial'            => $initial,
+    	 	        'Cola'               => $cola,
+    	 	        'No_Of_Months'       => $months,
+    	 	        'Bonus_Amt'          => $bonus, 
+    	 	        'Bonus_Tax'          => $tax,
+    	 	        'Bonus_Net'          => $net,
+    	 	        'Bonus_Closed'       => 0,
+    	 	        'numberOfDays'       => $elegibleDays,
+    	 	        'companyId'          => $companyId,
+    	 	        'salaryGradeId'      => $sg,
+    	 	    ); 
+    	 	    $bonusMapper->insert($bonus); 
+	 	    }
+	 	    //exit; 
 		    $this->transaction->commit();  
 		} catch(\Exception $e) { 
 		 	$this->transaction->rollBack(); 
 		 	throw $e; 
 		} 
 		// return $this->paysheet;   
+		return 1; 
 	 } 
-	  
-	 /*protected function workingDaysPay($amount,$daysInMonth,$workDays) {
-	     return ($amount/$daysInMonth) * $workDays;
-	 }*/ 
-	 
-	 public function isPaysheetClosed(Company $company,DateRange $dateRange) { 
-	     return $this->getPaysheetMapper()->isPaysheetClosed($company,$dateRange); 
-	     // return false;    	
-	 }
-	 
-	 public function fetchPaysheetEmployee(Company $company,DateRange $dateRange) { 
-	 	return $this->getPaysheetMapper()->fetchPaysheetEmployee($company,$dateRange); 
-	 } 
-	  
-	 public function close(Company $company,DateRange $dateRange,$routeInfo) {
-	 	try { 
-	 		$this->transaction->beginTransaction(); 
-	 		// @todo close 
-	 		$this->closePaysheetPFDeduction($company,$dateRange); 
-	 		// done but need to test 
-	 		$this->closeAdvancePaymentDeduction($company,$dateRange); 
-	 		$this->getPaysheetMapper()->closeThisPaysheet($company,$dateRange);  
-	 	    $this->getCheckListService()->closeLog($routeInfo); 
-	 	    $this->transaction->commit();  
-	 	} catch(\Exception $e) {  
-	 		$this->transaction->rollBack(); 
-	 		throw $e;  
-	 	} 
-	 }  
-	 
-	 // update PF deduction 
-	 public function closePaysheetPFDeduction(Company $company,DateRange $dateRange) {
-	     // @todo 
-	     // get pf deduction 
-	 } 
-	 
-	 // update Advance Payment Deductions 
-	 public function closeAdvancePaymentDeduction(Company $company,DateRange $dateRange) {
-	     // @todo  
-         $advPaymentService = $this->getAdvancePaymentService(); 
-         $advPaymentService->closeAdvancePaymentDeduction($company,$dateRange); 
-	 } 
-	 
-	 public function getPaysheetReport(Company $company,$param) {
-	 	return $this->getPaysheetMapper()->getPaysheetReport($company,$param);
-	 } 
-
-	 public function fetchPaysheetView(Company $company,$param) {
-	 	return $this->getPaysheetMapper()->fetchPaysheetView($company,$param);
-	 }
-	 
-	 public function getAdvancePaymentService() {
-	     return $this->service->get('advancePaymentService');
-	 }
-	 
-	 public function getLastMonthPendingToEmployee(Employee $employee,$relievingDate) {
-	     list($year,$month,$day) = explode('-', $relievingDate); 
-	     $firstDay = $this->dateMethods->getFirstDayOfDate($relievingDate);
-	     $dateRange = $this->prepareDateRange($firstDay); 
-	     $paysheetMapper = $this->getPaysheetMapper(); 
-	 	 $employeeId = $employee->getEmployeeNumber(); 
-	 	 $isLastPayTaken = $paysheetMapper->isTakenThisMonthSal($employeeId,$dateRange); 
-	 	 
-	 	 if(!$isLastPayTaken) { 
-	 	     $fromDate = $dateRange->getFromDate(); 
-	 		 $numberOfDays = $this->dateMethods->numberOfDaysBetween($fromDate,$relievingDate);  
-	 		 //$dateRange = $this->prepareDateRange($firstDay);
-	 		 $company = $this->service->get('company');
-	 		 
-	 		 $gross = $this->getGross($employee,$company,$dateRange); 
-	 		 $per = ($gross)/30;
-	 		 return $numberOfDays * $per;
-	 	}
-	 	return 0;
-	 }
-	 
-	 public function getLastMonthPendingToCompany(Employee $employee,$relievingDate) {
-	 	list($year,$month,$day) = explode('-', $relievingDate);
-	 	$firstDay = $this->dateMethods->getFirstDayOfDate($relievingDate);
-	 	$dateRange = $this->prepareDateRange($firstDay);
-	 	$paysheetMapper = $this->getPaysheetMapper();
-	 	$employeeId = $employee->getEmployeeNumber();
-	 	$isLastPayTaken = $paysheetMapper->isTakenThisMonthSal($employeeId,$dateRange);
-	 
-	 	if($isLastPayTaken) {
-	 		$toDate = $dateRange->getToDate();
-	 		$numberOfDays = $this->dateMethods->numberOfDaysBetween($relievingDate,$toDate);
-	 		//$dateRange = $this->prepareDateRange($firstDay);
-	 		$company = $this->service->get('company');
-	 	 	
-	 		$gross = $this->getGross($employee,$company,$dateRange);
-	 		$per = ($gross)/30;
-	 		return $numberOfDays * $per;
-	 	}
-	 	return 0;
+     	 
+	 public function bonusReport($year,$companyId) {
+	     $results = $this->getBonusMapper()->bonusReport($year,$companyId); 
+	     $output = '<table  border="1" class="sortable" font-size="6px"
+                   align="center" id="table1" width="100%" cellpadding="5px"
+                   bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0"
+                   style="border-collapse: collapse">
+        	        <thead >
+            	        <tr>  	 	 	 	 	 	 	
+                	        <th bgcolor="#F0F0F0">#</th>
+                	        <th bgcolor="#F0F0F0">Employee Name</th>
+                	        <th bgcolor="#F0F0F0">Salary Grade</th>
+                	        <th bgcolor="#F0F0F0">Rating</th>
+                            <th bgcolor="#F0F0F0">Percentage</th>
+                	        <th bgcolor="#F0F0F0">No Of Months</th>
+                	        <th bgcolor="#F0F0F0">No Of Days</th>
+                	        <th bgcolor="#F0F0F0">Initial</th>
+                	        <th bgcolor="#F0F0F0">Cola</th>
+                	        <th bgcolor="#F0F0F0">Bonus</th>
+                	        <th bgcolor="#F0F0F0">Tax</th>
+                	        <th bgcolor="#F0F0F0">Net Due</th>
+            	        </tr>
+        	        </thead>
+	        <tbody class="scrollingContent">';
+	     $c = 1;
+	     $gTot = 0;
+	     $gTotInc = 0;
+	     $gNet = 0; 
+	     foreach($results as $r) {
+	         $bonus = 0;
+	         $tax = 0;
+	         $net = 0; 
+	         $bonus = $r['Bonus_Amt'];
+	         $tax = $r['Bonus_Tax'];
+	         $net = $r['Bonus_Net'];
+	         $gTot += $bonus;
+	         $gTotInc += $tax;
+	         $gNet += $net; 
+	         $output .="<tr >
+                	        <td><p align='center'>".$c++."</td>
+                	        <td><p align='left'>".$r['employeeName']."</td>
+                	        <td><p align='left'>".$r['salaryGrade']."</td>
+                	        <td><p align='center'>".$r['Emp_Rating']."</td>
+                            <td><p align='center'>".$r['Bonus_Percentage']."</td>
+                	        <td><p align='center'>".$r['No_Of_Months']."</td>
+                	        <td><p align='right'>".$r['numberOfDays']."</td>
+                	        <td><p align='right'>".$r['Initial']."</td>
+                	        <td><p align='right'>".$r['Cola']."</td> 
+                	        <td><p align='right'>".$bonus."</td>
+                	        <td><p align='right'>".$tax."</td> 
+                            <td><p align='right'>".$net."</td>
+                	      </tr>";
+	     }
+	     $output .= "</tbody><tfoot>
+                	    <tr>
+                            <td><p align='center'>&nbsp;</td>
+                		    <td><p align='left'><b>Total</b></td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                            <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td>
+                		    <td><p align='center'>&nbsp;</td> 
+                		    <td><p align='right'><b>".$gTot."</b></td>
+                		    <td><p align='right'><b>".$gTotInc."</b></td> 
+                            <td><p align='center'>".$gNet."</td>
+                	    </tr>
+                	</tfoot>
+                	</table>"; 
+	     return $output; 
 	 } 
      
 } 

@@ -13,6 +13,7 @@ use Allowance\Model\SalaryStructure;
 use Employee\Model\AnnivInc;
 use Zend\Db\Sql\Predicate\Predicate;
 use Payment\Model\DateRange;
+use Zend\Db\Sql\Where;
 
 class IncrementMapper extends AbstractDataMapper {
 	
@@ -62,6 +63,61 @@ class IncrementMapper extends AbstractDataMapper {
 		
 	} 
 	
+	public function removePreviousCalculation() {
+	    $sql = $this->getSql();
+	    $delete = $sql->delete($this->entityTable); 
+	    //$array = $this->entityToArray($entity);
+	    //$id = $array['id'];
+	    //unset($array['id']);
+	    $delete->where(array(
+	        'applied' => 0
+	    ));
+	    //$sqlString = $delete->getSqlString();
+	    $sqlString = $sql->getSqlStringForSqlObject($delete);
+	    //echo $sqlString; 
+	    //exit; 
+	    return $this->adapter->query($sqlString)->execute()->count(); 
+	    
+	}
+	
+	public function incReport($year,$companyId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+    	       ->columns(array('*'))
+    	       ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.employeeNumber',
+    	           array('employeeName')) 
+    	       ->join(array('s' => 'lkpSalaryGrade'),'e.salaryGradeId = s.id',
+    	              array('salaryGrade'),'left') 
+    	       ->where(array('e.companyId' => $companyId))
+    	       ->where(array('Year' => $year))
+	     ;  
+	     $sqlString = $sql->getSqlStringForSqlObject($select); 
+	        // echo $sqlString;
+	        // exit;
+	     return $this->adapter->query($sqlString)->execute();   
+	}  
+	
+	public function getIncrementElegibleList($companyId) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+	        select employeeNumber,empSalaryGrade from ".$qi('EmpEmployeeInfoMain')." m 
+            where isActive = 1 and companyId = '".$companyId."'	  and
+            (confirmationDate <= '2017-12-31' and empJoinDate <= '2017-01-01')      
+		"); 
+	    $results = $statement->execute(); 
+	    if($results) {
+	        return $results;
+	    }
+	    return array();   
+	} 
+	
 	public function getMaxQuartileOne($sgId) {
 		 
 		$sql = $this->getSql();
@@ -80,8 +136,29 @@ class IncrementMapper extends AbstractDataMapper {
 			return $row['maxValue']; 
 		}
 		return 0; 
-	
 	}
+	
+	public function isHaveIncrement(Company $company,DateRange $dateRange) {  
+	    $companyId = $company->getId(); 
+	    $year = date('Y'); 
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array('id'))
+	         //->where(array('companyId' => $company->getId()))
+	           ->where(array('applied' => 1))
+	           ->where(array('year' => $year))
+	           ->where(array('companyId' => $companyId))
+	    ; 
+	    $sqlString = $sql->getSqlStringForSqlObject($select); 
+	    // echo $sqlString; 
+	    // exit; 
+	    $row = $this->adapter->query($sqlString)->execute()->current(); 
+	    if($row['id']) { 
+	        return 1;  
+	    } 
+	    return 0;   
+	}  
 	
 	public function isHaveAnnivIncrement(Company $company,DateRange $dateRange) { 
 		$res = $this->getAnnivIncrementEmployeeList($company,$dateRange); 
@@ -178,8 +255,7 @@ class IncrementMapper extends AbstractDataMapper {
 		return 0; 
 	}
 	
-	public function selectEmployeeRating(Company $company) {
-		 
+	public function selectEmployeeRating(Company $company) { 
 		$sql = $this->getSql();
 		$select = $sql->select();
 		$select->from(array('e' => $this->employeeRatingBuff))
@@ -189,6 +265,25 @@ class IncrementMapper extends AbstractDataMapper {
 				//->where(array('companyId' => $company->getId()))
 		;
 		return $select; 
+	}
+	
+	public function getEmployeeRating($year,$employeeId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->employeeRatingBuff))
+        	    ->columns(array('id','empRating'))
+        	    //->where(array('year' => $year))
+	            ->where(array('employeeId' => $employeeId))
+	    ; 
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	     //echo $sqlString;
+	     //exit;
+	    $row = $this->adapter->query($sqlString)->execute()->current();
+	    
+	    if($row['empRating']) {
+	        return $row['empRating']; 
+	    }
+	    return 0; 
 	}
 	
 	public function selectSalaryStructure(Company $company) {
@@ -371,12 +466,12 @@ class IncrementMapper extends AbstractDataMapper {
 		$update->set($array);
 		$update->where(array(
 				'id' => $id
-		));
-		$sqlString = $update->getSqlString();
+		)); 
+		$sqlString = $update->getSqlString(); 
 		// echo $sqlString;
 		// exit;
-		$sqlString = $sql->getSqlStringForSqlObject($update);
-		return $this->adapter->query($sqlString)->execute()->count();
+		$sqlString = $sql->getSqlStringForSqlObject($update); 
+		return $this->adapter->query($sqlString)->execute()->count(); 
 		//return $this->update($entity);
 	}
 	

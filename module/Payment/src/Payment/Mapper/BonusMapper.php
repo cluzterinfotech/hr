@@ -16,8 +16,107 @@ class BonusMapper extends AbstractDataMapper {
 		 $entity = new EmployeeAllowanceAmountEntity();
 		 return $this->arrayToEntity($row,$entity);
 	}
+	
+	public function bonusReport($year,$companyId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	           ->columns(array('*'))
+	           ->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                  array('employeeName'))
+	           ->join(array('s' => 'lkpSalaryGrade'),'e.salaryGradeId = s.id',
+	                  array('salaryGrade'),'left')
+	           ->where(array('e.companyId' => $companyId))
+	           ->where(array('Bonus_year' => $year))
+	     ;
+	      $sqlString = $sql->getSqlStringForSqlObject($select);
+	      //echo $sqlString;
+	      //exit;
+	      return $this->adapter->query($sqlString)->execute();
+	}
+	
+	public function getBonusElegibleList($companyId,$from,$to) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+	        select employeeNumber,empSalaryGrade,empBank,empJoinDate,accountNumber from ".$qi('EmpEmployeeInfoMain')." m
+            where isActive = 1 and companyId = '".$companyId."'	  and
+            (confirmationDate <= '".$to."' and empJoinDate <= '".$from."') 
+		");
+	    
+	    //echo $statement->getSql(); 
+	    //exit;  
+	    $results = $statement->execute();  
+	    if($results) { 
+	        return $results; 
+	    } 
+	    return array(); 
+	} 
+	
+	public function isHaveBonus($year,$companyId) {
+	    //$companyId = $company->getId();
+	    //$year = date('Y');
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => $this->entityTable))
+	    ->columns(array('id'))
+	    //->where(array('companyId' => $company->getId()))
+	    ->where(array('Bonus_Closed' => 1))
+	    ->where(array('Bonus_year' => $year))
+	    ->where(array('companyId' => $companyId))
+	    ;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    // echo $sqlString;
+	    // exit;
+	    $row = $this->adapter->query($sqlString)->execute()->current();
+	    if($row['id']) {
+	        return 1;
+	    }
+	    return 0;
+	}
+	
+	public function deletePreviousBonus($year,$companyId) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("
+	        delete from ".$qi('Bonus')." 
+            where Bonus_Closed = 0 and companyId = '".$companyId."' and Bonus_year = '".$year."'
+		"); 
+	    
+	    //echo $statement->getSql();
+	    //exit;
+	    $statement->execute();
+	} 
+	
+	public function getCriteria($year,$companyId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'BonusCriteria'))
+	           ->columns(array('*'))
+	           //->join(array('ep' => 'EmpEmployeeInfoMain'),'ep.employeeNumber = e.Pmnt_Emp_Mst_Id',
+	                  //array('employeeName'))
+	           //->join(array('s' => 'lkpSalaryGrade'),'e.salaryGradeId = s.id',
+	                  //array('salaryGrade'),'left')
+	           ->where(array('e.companyId' => $companyId))
+	           ->where(array('year' => $year))
+	     ;
+	     $sqlString = $sql->getSqlStringForSqlObject($select);
+	            //echo $sqlString;
+	            //exit;
+	     return $this->adapter->query($sqlString)->execute()->current();
+	}
     
-	public function getPaysheetReport(Company $company,array $param=array()) {
+	/*public function getPaysheetReport(Company $company,array $param=array()) {
 		$adapter = $this->adapter;
 		$qi = function($name) use ($adapter) { 
 			return $adapter->platform->quoteIdentifier($name); 
@@ -179,14 +278,6 @@ class BonusMapper extends AbstractDataMapper {
 			return $results;
 		}
 		return 0;
-	}
-	
-	/*public function closePaysheetPFDeduction(Company $company,DateRange $dateRange) { 
-	    	
-	} 
-	
-	public function closeAdvancePaymentDeduction(Company $company,DateRange $dateRange) { 
-	    	
-	}*/ 
+	}*/     
 	
 } 

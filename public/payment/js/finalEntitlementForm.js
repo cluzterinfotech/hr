@@ -191,7 +191,7 @@ $(document).ready(function()
     // loads table on page load 
     // table();
     
-    function table(){
+    function table() { 
         $("#advanceHousingContainer").zfTable('/advancehousing/ajaxlist', {
             sendAdditionalParams: function() {
                 var data = $('#advanceHousingForm').serialize(); 

@@ -50,8 +50,6 @@ use Employee\Model\TravelingService;
 use Employee\Model\AffiliationService;
 use Employee\Model\AffiliationMapper;
 
-
-
 class Module {
 	
 	public function getAutoloaderConfig() {
@@ -116,7 +114,7 @@ class Module {
                     $sm->get('entityCollection'),$sm); 
                 },'affiliationService' => function($sm) {  
                  	return new AffiliationService($sm->get('ReferenceParameter'),
-                 			$sm->get('affiliationMapper'));    
+                 			$sm->get('affiliationMapper'));     
                 },'affiliationMapper' => function($sm) { 
                  	return new AffiliationMapper($sm->get('sqlServerAdapter'), 
                     $sm->get('entityCollection'),$sm);  
@@ -126,7 +124,7 @@ class Module {
 				    		$sm->get('userInfoService'),$sm->get('transactionDatabase'),
 				    		$sm->get('mailService'),$sm->get('positionService'),
 				    		$sm->get('nonWorkingDays'),$sm->get('dateMethods'),
-                			$sm->get('travelingFormMapper'),$sm);  
+                	    $sm->get('travelingFormMapper'),$sm->get('pmsFormMapper'),$sm);  
                  	// return new AffiliationService();    
                 },'travelingFormMapper' => function($sm) { 
                 	return new TravelingFormMapper($sm->get('sqlServerAdapter'), 

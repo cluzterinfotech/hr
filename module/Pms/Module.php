@@ -36,7 +36,13 @@ class Module {
 				    return new PmsFormMapper($sm->get('sqlServerAdapter'),
 									  $sm->get('entityCollection'),$sm); 
 				},'pmsFormService' => function ($sm) { 
-				    return new PmsFormService($sm->get('pmsFormMapper'),$sm); 
+				    return new PmsFormService(
+				        $sm->get('leaveMapper'),$sm->get('approvalService'),
+				        $sm->get('userInfoService'),$sm->get('transactionDatabase'),
+				        $sm->get('mailService'),$sm->get('positionService'),
+				        $sm->get('nonWorkingDays'),$sm->get('dateMethods'),
+				        $sm->get('travelingFormMapper'),$sm->get('pmsFormMapper'),$sm
+				    );     
 				},
 			)
          ); 

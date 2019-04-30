@@ -140,6 +140,46 @@ class LeaveFormMapper extends AbstractDataMapper {
 		return $this->insert($entity);
 	}
 	
+	public function isHaveHajjLeave($employeeId) {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'Leave'))
+        	   ->columns(array('id'))
+        	   ->where(array('employeeId' => $employeeId))
+        	    ->where(array('LkpLeaveTypeId' => 4))
+	    ;
+	    $sqlString = $sql->getSqlStringForSqlObject($select);
+	    //echo $sqlString;
+	    //exit;
+	    $results = $this->adapter->query($sqlString)->execute()->current();
+	    if($results) {
+	        return 1;
+	    }
+	    return 0; 
+	}
+	
+	public function isHaveHajjLeaveId($employeeId,$id) {
+	    $adapter = $this->adapter;
+	    $qi = function($name) use ($adapter) {
+	        return $adapter->platform->quoteIdentifier($name);
+	    };
+	    $fp = function($name) use ($adapter) {
+	        return $adapter->driver->formatParameterName($name);
+	    };
+	    $statement = $adapter->query("select top 1 id from ".$qi('Leave')." where
+					employeeId  = '".$employeeId."' and
+					LkpLeaveTypeId  = '4' and
+					id   != '".$id."'
+		");
+	    // echo $statement->getSql();
+	    // exit;
+	    $results = $statement->execute()->current();
+	    if($results['id']) {
+	        return 1;
+	    }
+	    return 0;
+	}
+	
 	public function updateAdminLeave($entity) {
 		$this->setEntityTable($this->leave);
 		$sql = $this->getSql();
@@ -173,6 +213,15 @@ class LeaveFormMapper extends AbstractDataMapper {
 	protected function loadAdminLeave(array $row) {
 		$entity = new LeaveAdmin(); 
 		return $this->arrayToEntity($row,$entity);
+	}
+	
+	public function getLeaveFormLoaList() {
+	    $sql = $this->getSql();
+	    $select = $sql->select();
+	    $select->from(array('e' => 'LeaveApprovalLevel'))
+	           ->columns(array('id','ApprovalLevelName','ApprovalSequence'))
+	    ; 
+	    return $select; 
 	}
     
     public function fetchLeaveById($id) { 

@@ -25,7 +25,7 @@ class OverTime extends AbstractAllowance {
 				//$dateRange->setFromDate($topDate);
 				//$dateRange->setToDate($toDate); 
 				$otHour = $this->companyAllowance
-				              ->getEmployeeOTHour($employee,$dateRange);  
+				               ->getEmployeeOTHour($employee,$dateRange);  
 				if($otHour) { 
 					$otTotHr = 0;
 					$basic = $this->getBasic($employee,$company,$dateRange); 

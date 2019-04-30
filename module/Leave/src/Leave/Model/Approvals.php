@@ -3,7 +3,7 @@
 namespace Leave\Model;
 
 use Employee\Mapper\TravelingFormMapper; 
-use Leave\Model\ApprovalService;
+// use Leave\Model\ApprovalService;
 use User\Model\UserInfoService;
 use Application\Persistence\TransactionDatabase;
 use Application\Model\MailService;
@@ -13,6 +13,7 @@ use Payment\Model\DateMethods;
 use Leave\Mapper\LeaveFormMapper;
 //use Application\Model\LookupService;
 //use Application\Mapper\LookupMapper;
+use Pms\Mapper\PmsFormMapper;
 
 abstract class Approvals {
 	
@@ -26,13 +27,15 @@ abstract class Approvals {
 	protected $dateMethods;  
 	protected $travelingFormMapper;  
 	protected $services; 
+	protected $pmsFormMapper;  
 	//protected $lookupMapper; 
     
 	public function __construct(LeaveFormMapper $leaveMapper,
 			ApprovalService $approvalService,UserInfoService $userInfoService,
 			TransactionDatabase $transaction,MailService $mailService,
 			PositionService $positionService,NonWorkingDaysService $nonWorkingDays,
-			DateMethods $dateMethods,TravelingFormMapper $travelingFormMapper,$sm
+			DateMethods $dateMethods,TravelingFormMapper $travelingFormMapper,
+	        PmsFormMapper $pmsFormMapper,$sm
 			) {
 		$this->leaveFormMapper = $leaveMapper;
 		$this->approvalService = $approvalService;
@@ -43,6 +46,7 @@ abstract class Approvals {
 		$this->nonWorkingDays = $nonWorkingDays; 
 		$this->dateMethods = $dateMethods; 
 		$this->travelingFormMapper = $travelingFormMapper; 
+		$this->pmsFormMapper = $pmsFormMapper;
 		$this->services = $sm; 
 	} 
 	

@@ -12,7 +12,7 @@ class IndexController extends AbstractActionController  {
 	        $service->performDailyProcess();    
 	    }
 	}  
-	
+	 
 	public function unabletoprepareAction() {
 		return array();
 	}

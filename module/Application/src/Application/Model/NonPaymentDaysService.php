@@ -34,6 +34,34 @@ class NonPaymentDaysService extends DateMethods {
 		return $totalDays;
 	}
 	
+	public function getCarRentNonWorkingDays($employeeNumber,$fromDate,$toDate) {
+	    $totDays = 0;  
+	    $leaveWoPay = $this->leaveWithoutPay($employeeNumber,$fromDate,$toDate); 
+	    $sickLeaveDays = $this->otherLeaveDays($employeeNumber, $fromDate, $toDate,'7');
+	    if($sickLeaveDays < 10) {
+	        $sickLeaveDays = 0; 
+	    }
+	    $suspendDays = $this->paySuspendDays($employeeNumber, $fromDate, $toDate); 
+	    $annualLeaveDays = $this->otherLeaveDays($employeeNumber, $fromDate, $toDate,'1'); 
+	    $emergencyLeaveDays = $this->otherLeaveDays($employeeNumber, $fromDate, $toDate,'2'); 
+	    $examLeaveDays = $this->otherLeaveDays($employeeNumber, $fromDate, $toDate,'3'); 
+	    $hejjLeaveDays = $this->otherLeaveDays($employeeNumber, $fromDate, $toDate,'4'); 
+	    $materLeaveDays = $this->otherLeaveDays($employeeNumber, $fromDate, $toDate,'6'); 
+	    $totDays = $leaveWoPay + $sickLeaveDays + $suspendDays + $annualLeaveDays 
+	    + $emergencyLeaveDays + $examLeaveDays + $hejjLeaveDays + $materLeaveDays;
+	    $comments = 
+	    "  Leave Without Pay " . $leaveWoPay .
+	    "  Sick Leave " . $sickLeaveDays .
+	    "  Suspend Days " . $suspendDays .
+	    "  Annual Leaves" . $annualLeaveDays .
+	    "  emergencyDays = " . $emergencyLeaveDays .
+	    "  examDays = " . $examLeaveDays .
+	    "  hejjDays = " . $hejjLeaveDays .
+	    "  maternityDays = " . $materLeaveDays;  
+
+	    return array($totDays,$comments); 
+	}
+	
 	public function getEmployeeLeaveAllowanceNonWorkingDays($employeeNumber,$fromDate,$toDate) {
 		return $this->getEmployeePaysheetNonWorkingDays($employeeNumber,$fromDate,$toDate);
 	} 
@@ -88,6 +116,43 @@ class NonPaymentDaysService extends DateMethods {
 		} 
 		return 0; 
 	} 
+	
+	
+	public function otherLeaveDays($employeeNumber,$fromDate,$toDate,$leaveType = '1') {
+	    //$leaveType = 7;
+	    if($employeeNumber) {
+	        $daysCount = 0;
+	        foreach ($this->tables as $tableName) {
+	            $daysList = $this->lookupService
+	            ->getLeaveRange($tableName,$fromDate,$toDate,
+	                $employeeNumber,$leaveType);
+	            /*if($employeeNumber == '1291') {
+	             \Zend\Debug\Debug::dump($daysList);
+	             exit;
+	             } */
+	            if($daysList) {
+	                foreach($daysList as $days) {
+	                    $startingDate = $days['leaveFromDate'];
+	                    $endingDate = $days['leaveToDate'];
+	                    if ($startingDate <= $fromDate)
+	                        $startingDate = $fromDate;
+	                        if ($endingDate >= $toDate) {
+	                            $endingDate = $toDate;
+	                        }
+	                        $numberOfDays = $this->numberOfDaysBetween(
+	                            $startingDate,$endingDate);
+	                        $daysCount += $numberOfDays;
+	                }
+	            }
+	        }
+	        /*if($employeeNumber == '1291') {
+	         echo $daysCount;
+	         exit;
+	         }*/
+	        return $daysCount;
+	    }
+	    return 0;
+	}
 	
 	public function paySuspendDays($employeeNumber,$fromDate,$toDate) { 
 		if($employeeNumber) {

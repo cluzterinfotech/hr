@@ -3,12 +3,18 @@
 namespace Pms\Controller; 
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 use Zend\Http\PhpEnvironment\Response;
 use Pms\Form\IpcForm; 
 use Pms\Form\ManageFormValidator;
 use Pms\Grid\ManageGrid;
 //use Pms\Grid\ManageGrid;
 use Zend\View\Model\JsonModel;
+use Pms\Grid\PmsReportGrid;
+use Pms\Grid\PmsStatusGrid;
+use Pms\Grid\IpcAppGrid;
+use Application\Form\LeaveApprovalForm;
+use Application\Form\LeaveApprovalFormValidator;
      
 class PmsformController extends AbstractActionController {
     
@@ -19,13 +25,36 @@ class PmsformController extends AbstractActionController {
 	public function listAction() { }  
     
 	public function ajaxlistAction() { 
-		$grid = $this->getGrid(); 
+	    $grid = $this->getStatusGrid(); 
+	    $employeeId = $this->getUser(); 
 		$grid->setAdapter($this->getDbAdapter())
-		     ->setSource($this->getService()->select())
+		->setSource($this->getService()->selectStatus($employeeId))
 		     ->setParamAdapter($this->getRequest()->getPost());
 		return $this->htmlResponse($grid->render()); 
 	}
 	
+	public function applistAction() { }
+	
+	public function ajaxapplistAction() {
+	    $grid = $this->getAppGrid();
+	    $employeeId = $this->getUser();
+	    $grid->setAdapter($this->getDbAdapter())
+	    ->setSource($this->getService()->getIpcFormApprovalList($employeeId))
+	    ->setParamAdapter($this->getRequest()->getPost());
+	    return $this->htmlResponse($grid->render());
+	}
+	
+	public function reportlistAction() { }
+	
+	public function reportajaxlistAction() {
+	    $grid = $this->getGrid();
+	    $employeeId = $this->getUser(); 
+	    $grid->setAdapter($this->getDbAdapter())
+	         ->setSource($this->getService()->selectReport($employeeId))
+	         ->setParamAdapter($this->getRequest()->getPost());  
+	    return $this->htmlResponse($grid->render()); 
+	}   
+	 
 	public function ipcAction() { 
 		$service = $this->getService(); 
 		$year = date('Y');
@@ -40,14 +69,24 @@ class PmsformController extends AbstractActionController {
 			     ->addMessage('IPC is not opened at the moment');  
 			$this->redirect ()->toRoute('pmsform',array ( 
 					'action' => 'status'
-			)); 
+			));  
 		} 
+		// check if IPC is Submitted
+		$isIpcSubmitted = $this->getService()->isIpcSubmitted($employeeId,$id);
+		if($isIpcSubmitted) {
+		    $this->flashMessenger()
+		         ->setNamespace('info')
+		         ->addMessage('IPC is already submitted to supervisor');
+		    $this->redirect ()->toRoute('pmsform',array (
+		        'action' => 'status'
+		    ));  
+		}
 		// check is have ipc 
 		if(!$id) { 
 			$service->prepareNewIpc($employeeId,$pmsId); 
 			$this->redirect ()->toRoute('pmsform',array (
 					'action' => 'ipc'
-			));
+			)); 
 		} 
 		$isNonEx = $service->isNonExecutive($employeeId); 
 		$form = $this->getForm();   
@@ -142,6 +181,20 @@ class PmsformController extends AbstractActionController {
 				$prg
 		);
 	}
+	
+	public function submittosupAction() {  
+	    $checkIsIpcValid = $this->getService()->isMyrValid($this->getUser());  
+	    if(!$checkIsIpcValid[0]) { 
+	        $a = array('s' => 11,'m' => $checkIsIpcValid[1]);
+	    } else {
+	        //$m = "Weightage is not 100";
+	        $m .= "Form is incomplete, please check entries"
+	        ;
+	        $a = array('s' => 12,'m' => $checkIsIpcValid[1]);  
+	    }
+	    return $this->jsonResponse($a); 
+	} 
+	
 	
 	// save new Objective
 	public function saveobjectiveAction() {
@@ -298,17 +351,94 @@ class PmsformController extends AbstractActionController {
 		exit;
 	}
 	
-	public function reportAction() {
-		
-	}
+	public function reportAction() { }
+	
+	public function ipcreportAction() { 
+	    $id = (int) $this->params()->fromRoute('id',0);
+	    $viewmodel = new ViewModel();
+	    $viewmodel->setTerminal(1);
+	    $request = $this->getRequest();
+	    $output = " ";
+	    $output = $this->getService()->getIpcReport($id); 
+        //\Zend\Debug\Debug::dump($output) ;
+	    $viewmodel->setVariables(array(
+	        'report'     => $output,
+	    )); 
+	    return $viewmodel; 
+	} 
 	
 	public function ipcapproveAction() {
 	
 	} 
 	
+	public function approveAction() { 
+	    $id = (int) $this->params()->fromRoute('id',0);
+	    if (!$id) {
+	        $this->flashMessenger()->setNamespace('info')
+	             ->addMessage('Form not found,Please Add');
+	        $this->redirect()->toRoute('pmsform', array(
+	            'action' => 'add'
+	        )); 
+	    } 
+	    $service = $this->getService();
+	    $leaveInfo = $service->getIpcReport($id);
+	    $form = $this->getApprovalForm();
+	    // $form->bind($leave);
+	    $form->get('id')->setValue($id);
+	    // $form->get('submit')->setAttribute('value','Approve Annual Leave');
+	    $prg = $this->prg('/pmsform/approve/'.$id, true);
+	    
+	    if ($prg instanceof Response ) {
+	        return $prg;
+	    } elseif ($prg === false) {
+	        return array ('form' => $form,'report' => $leaveInfo,);
+	    } 
+	    $formValidator = $this->getApprovalFormValidator(); 
+	    $form->setInputFilter($formValidator->getInputFilter()); 
+	    $form->setData($prg); 
+	    if ($form->isValid()) { 
+	        $data = $form->getData(); 
+	        //\Zend\Debug\Debug::dump($data);  
+	        //exit;  
+	        $message = $service->approveIpc($data,'1');
+	        //$message = "From Submitted Successfully";//$service->approveIpc($data,'1');
+	        $this->flashMessenger()->setNamespace('info')
+	             ->addMessage($message); 
+	        $this->redirect ()->toRoute('pmsform',array (
+	            'action' => 'ipcapprove'
+	        ));   
+	    } 
+	    return array(
+	        'id'        => $id,
+	        'form'      => $form,
+	        'report' => $leaveInfo,
+	        $prg
+	    ); 
+	}
+	
+	private function getApprovalForm() {
+	    return new LeaveApprovalForm();
+	    // return $form;
+	} 
+	
+	private function getApprovalFormValidator() {
+	    return new LeaveApprovalFormValidator(); 
+	}
+	
 	public function statusAction() {
-		$status = "not opened";// $this->getService()->getPmsStatus($this->getUser());
-	    return array('status' => $status); 
+	    $empId = $this->getUser(); 
+	    //$viewmodel = new ViewModel();
+	    //$viewmodel->setTerminal(1);
+	    //$request = $this->getRequest();
+	    $output = " ";
+	    $output = $this->getService()->getPmsStatus($empId);
+	    //\Zend\Debug\Debug::dump($output) ;
+	    //$viewmodel->setVariables(array(
+	        //'report'     => $output,
+	    //));
+	    return array(
+	        'report'     => $output,
+	    ); 
 	}
     
 	public function htmlResponse($html) {
@@ -323,7 +453,11 @@ class PmsformController extends AbstractActionController {
 	}
 	
 	private function getGrid() {
-		return new ManageGrid();
+		return new PmsReportGrid();  
+	}
+	
+	private function getAppGrid() {
+	    return new IpcAppGrid(); 
 	}
     
 	private function getDbAdapter() {
@@ -365,7 +499,6 @@ class PmsformController extends AbstractActionController {
 		return $this->getLookupService()->getEmpTypeList();
 	} 
 	
-	
 	private function getLookupService() {
 		return $this->getServiceLocator()->get('lookupService');
 	}
@@ -377,5 +510,16 @@ class PmsformController extends AbstractActionController {
 	private function getUserInfoService() {
 		return $this->getServiceLocator()->get('userInfoService');
 	} 
+	
+	public function jsonResponse($data)
+	{
+	    if(!is_array($data)){
+	        throw new \Exception('$data param must be array');
+	    }
+	    $response = $this->getResponse();
+	    $response->setStatusCode(200);
+	    $response->setContent(json_encode($data));
+	    return $response;
+	}
 	
 }   

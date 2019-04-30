@@ -8,12 +8,12 @@
 
 <?php 
 	echo $this->form()->openTag($form); 
-	//echo $this->formLabel($form->get('applyeEfectiveDate'));
-	//echo $this->formElement($form->get('applyeEfectiveDate'));
-	//echo $this->formElementErrors($form->get('applyeEfectiveDate')); 
-	//echo $this->formLabel($form->get('incColaPercentage'));
-    //echo $this->formElement($form->get('incColaPercentage'));
-    //echo $this->formElementErrors($form->get('incColaPercentage'));
+	echo $this->formLabel($form->get('applyeEfectiveDate'));
+	echo $this->formElement($form->get('applyeEfectiveDate'));
+	echo $this->formElementErrors($form->get('applyeEfectiveDate')); 
+	echo $this->formLabel($form->get('incColaPercentage'));
+    echo $this->formElement($form->get('incColaPercentage'));
+    echo $this->formElementErrors($form->get('incColaPercentage'));
 	echo $this->formSubmit($form->get('submit'));  
 	echo $this->form()->closeTag();  
 ?> 

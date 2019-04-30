@@ -37,12 +37,12 @@ $form->prepare();
             <div style="float:left;width:320px;margin:-10px 0 0 0;">
             <?php 
                 echo $this->form()->openTag($form); 
-			    echo $this->formLabel($form->get('month'));
-			    echo $this->formElement($form->get('month'));
-			    echo $this->formElementErrors($form->get('month'));
-			    echo $this->formLabel($form->get('year'));
+			    echo $this->formLabel($form->get('laBatch'));
+			    echo $this->formElement($form->get('laBatch'));
+			    echo $this->formElementErrors($form->get('laBatch'));
+			    /*echo $this->formLabel($form->get('year'));
 			    echo $this->formElement($form->get('year'));
-			    echo $this->formElementErrors($form->get('year'));
+			    echo $this->formElementErrors($form->get('year'));*/
 			    echo $this->formSubmit($form->get('submit'));
 			    echo $this->form()->closeTag();
             ?>
